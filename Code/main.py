@@ -1,38 +1,57 @@
-###
 
-#call the GUI window
-import PyQt5
-from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
-from PyQt5 import QtCore
-
-#################################### CREATE THE APPLICATION
-QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts)
-app = QApplication([])
+import plotly.express as px
+import pandas as pd
 
 
-################################### RUN HOME GUI###
-import home_gui
-homeapp,run = home_gui.runit(app)
-succ, usertype = homeapp.login_button()
-if succ != True:
-    print("Home Closed.. Quitting App..")
-    home_gui.stop(run)
-else:
-    print("Home Screen Closed")
-    homeapp.close()
+import plotly.graph_objects as go
 
-################# START BY RUNNING THE CAMERA ##################
-if usertype == "Employee":
-    print("Running Employee Terminal")
-    import camera
-    camapp,run = camera.runit(app)
+import pandas as pd
+df = pd.read_csv("US_Accidents_Dec19.csv")
+#df = pd.read_csv("https://www.kaggle.com/sobhanmoosavi/us-accidents#US_Accidents_Dec19.csv")
+df = df.sample(10000)
+print(df.head(10))
 
 
-#import geopandas as gpd
-#shapefile = 'data/countries_110m/ne_110m_admin_0_countries.shp'
-#Read shapefile using Geopandas
-#gdf = gpd.read_file(shapefile)[['ADMIN', 'ADM0_A3', 'geometry']]
-#Rename columns.
-#gdf.columns = ['country', 'country_code', 'geometry']
-#gdf.head()
 
+#df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/2011_february_us_airport_traffic.csv')
+df['text'] = "helo"
+scl = [0,"rgb(150,0,90)"],[0.125,"rgb(0, 0, 200)"],[0.25,"rgb(0, 25, 255)"],\
+[0.375,"rgb(0, 152, 255)"],[0.5,"rgb(44, 255, 150)"],[0.625,"rgb(151, 255, 0)"],\
+[0.75,"rgb(255, 234, 0)"],[0.875,"rgb(255, 111, 0)"],[1,"rgb(255, 0, 0)"]
+
+
+fig = go.Figure(data=go.Scattergeo(
+        lon = df['Start_Lng'],
+        lat = df['Start_Lat'],
+        text = df['text'],
+        mode = 'markers',
+        #marker_color = df['Visibility(mi)'],
+        marker = dict(
+                color = df['Visibility(mi)'],
+                colorscale = "Inferno",
+                reversescale = True,
+                opacity = 0.7,
+                size = 2,
+                colorbar = dict(
+                    titleside = "right",
+                    outlinecolor = "rgba(68, 68, 68, 0)",
+                    ticks = "outside",
+                    showticksuffix = "last",
+                    dtick = 10
+                        ))
+
+        ))
+
+fig.update_layout(
+        title = 'USA Traffic Accidents 2019<br>(Hover for accident details)',
+        geo_scope='usa',
+        #height=300, margin={"r":0,"t":0,"l":0,"b":0}
+    )
+fig.update_geos(
+        showland=True, landcolor="#222222",
+        #showcoastlines=True, coastlinecolor="dimgrey",
+        #showocean=True, oceancolor="dimgrey",
+        #showlakes=True, lakecolor="dimgrey",
+        #showrivers=True, rivercolor="dimgrey"
+)
+fig.show()
