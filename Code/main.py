@@ -1,60 +1,69 @@
 
-import plotly.express as px
 import pandas as pd
-import plotly.graph_objects as go
-import pandas as pd
-
+import pip
+#pip.main(['install', 'git+https://github.com/geopy/geopy'])
+#pip.main(['install', 'git+https://github.com/python-visualization/folium'])
+from geopy.geocoders import Nominatim, GoogleV3
+import folium
+from PyQt5.QtWebEngineWidgets import QWebEngineView as QWebView,QWebEnginePage as QWebPage
+from PyQt5.QtWebEngineWidgets import QWebEngineSettings as QWebSettings
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QApplication, QMainWindow, QGroupBox, QGridLayout
+from PyQt5.QtCore import QUrl
+import sys
+import os
 
 #########-------------------------------------- DATA FRAME -------------------------------------- #########
-df = pd.read_csv("US_Accidents_Dec19.csv")
-#df = pd.read_csv("https://www.kaggle.com/sobhanmoosavi/us-accidents#US_Accidents_Dec19.csv")
-#df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/2011_february_us_airport_traffic.csv')
-df = df.sample(100)
-print(df.columns)
-del df['Source']
-print(df.columns)
-print(df.head(10))
+#data = pd.read_csv("https://www.kaggle.com/sobhanmoosavi/us-accidents#US_Accidents_Dec19.csv")
+#data = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/2011_february_us_airport_traffic.csv')
+
+data = pd.read_csv("US_Accidents_Dec19.csv")
+# take random sample number of the 2 million rows
+data = data.sample(1000)
+print(data.columns)
 
 
 
-df['text'] = df['Street'] +', '+ df['City']+ ', '+ df['County']+ ' ' + df['State']+ ' '+ df['Zipcode'].astype(str)
-scl = [0,"rgb(150,0,90)"],[0.125,"rgb(0, 0, 200)"],[0.25,"rgb(0, 25, 255)"],\
-[0.375,"rgb(0, 152, 255)"],[0.5,"rgb(44, 255, 150)"],[0.625,"rgb(151, 255, 0)"],\
-[0.75,"rgb(255, 234, 0)"],[0.875,"rgb(255, 111, 0)"],[1,"rgb(255, 0, 0)"]
+
+#########-------------------------------------- DATA CLEANUP -------------------------------------- #########
+
+#delete uneccessary columns
+del data['Source']
+print(data.columns)
+print(data.head(10))
+print(len(data))
 
 
-fig = go.Figure(data=go.Scattergeo(
-        lon = df['Start_Lng'],
-        lat = df['Start_Lat'],
-        text = df['text'],
-        mode = 'markers',
-        #marker_color = df['Visibility(mi)'],
-        marker = dict(
-                color = df['Visibility(mi)'],
-                colorscale = "Inferno",
-                reversescale = True,
-                opacity = 0.7,
-                size = 2,
-                colorbar = dict(
-                    titleside = "right",
-                    outlinecolor = "rgba(68, 68, 68, 0)",
-                    ticks = "outside",
-                    showticksuffix = "last",
-                    dtick = 10
-                        ))
+#########-------------------------------------- CREATE APPLICATION  -------------------------------------- #########
+#create application instance. Should only be one running at a time
+app = QApplication(sys.argv)
 
-        ))
 
-fig.update_layout(
-        title = 'USA Traffic Accidents 2019<br>(Hover for accident details)',
-        geo_scope='usa',
-        #height=300, margin={"r":0,"t":0,"l":0,"b":0}
-    )
-fig.update_geos(
-        showland=True, landcolor="#222222",
-        #showcoastlines=True, coastlinecolor="dimgrey",
-        #showocean=True, oceancolor="dimgrey",
-        #showlakes=True, lakecolor="dimgrey",
-        #showrivers=True, rivercolor="dimgrey"
-)
-fig.show()
+#########-------------------------------------- CREATE MAP -------------------------------------- #########
+#create Qwebview Map instance
+from Code import map_view
+file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "map.html"))
+mapinstance = map_view.map_webview(file_path, data) #pass datapoints
+
+
+
+#########-------------------------------------- CREATE WINDOW -------------------------------------- #########
+#create window instance and put the map in
+from Code import main_window
+mainrun = main_window.runit(app, mapinstance)
+
+
+
+
+#browser = QWebView()
+#file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "map.html"))
+#local_url = QUrl.fromLocalFile(file_path)
+#browser.load(local_url)
+#browser.show()
+
+
+
+
+
+
+#app.exec_()
