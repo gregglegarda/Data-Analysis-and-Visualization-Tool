@@ -70,7 +70,7 @@ try:
 ### if not there, create a sample
 except:
     datafile = "US_Accidents_Dec19.csv"
-    sample_size = 6000
+    sample_size = 10000
     try:
         import pre_process
     except:
