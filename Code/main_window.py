@@ -1,10 +1,4 @@
 
-import pandas as pd
-import pip
-#pip.main(['install', 'git+https://github.com/geopy/geopy'])
-#pip.main(['install', 'git+https://github.com/python-visualization/folium'])
-from geopy.geocoders import Nominatim, GoogleV3
-import folium
 from PyQt5.QtWebEngineWidgets import QWebEngineView as QWebView,QWebEnginePage as QWebPage
 from PyQt5.QtWebEngineWidgets import QWebEngineSettings as QWebSettings
 from PyQt5 import QtWidgets

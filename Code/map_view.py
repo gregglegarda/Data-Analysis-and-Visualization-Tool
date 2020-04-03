@@ -33,7 +33,7 @@ class map_webview(QWebView):
                 #popup=data.iloc[i]['Street'] + ", " + data.iloc[i]['City'] + ", " + data.iloc[i]['State'] + ", " + data.iloc[i]['Zipcode'],
                 location=[lat, lan],
                 popup= description + ", " + street + ", " + city + ", " + state + ", " + zipcode,
-                radius=100,
+                radius=10,
                 #stroke settings
                 stroke = False,
                 weight=1,
@@ -42,7 +42,7 @@ class map_webview(QWebView):
                 #fill settings
                 fill=True,
                 fill_color="Yellow",
-                fill_opacity= 0.1,
+                fill_opacity= 0.8,
             ).add_to(m)
 
         # Filepath to the output
