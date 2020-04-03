@@ -8,28 +8,38 @@ from PyQt5.QtCore import QUrl
 import numpy as np
 import sys
 import os
-#########-------------------------------------- AUTO IMPORTS  -------------------------------------- #########
 import pip
-#pip.main(['install', 'git+https://github.com/geopy/geopy'])
-#pip.main(['install', 'git+https://github.com/python-visualization/folium'])
-os.system('pip install geopy')
-os.system('pip install folium')
-from geopy.geocoders import Nominatim, GoogleV3
-import folium
+#########-------------------------------------- AUTO IMPORTS  -------------------------------------- #########
+
+try:
+    from geopy.geocoders import Nominatim, GoogleV3
+    import folium
+except:
+    os.system('pip install geopy')
+    os.system('pip install folium')
+    pip.main(['install', 'git+https://github.com/geopy/geopy'])
+    pip.main(['install', 'git+https://github.com/python-visualization/folium'])
+    print("import exception occurred")
 
 
-#########-------------------------------------- PRE PROCESSING  -------------------------------------- #########
-print("--------------------------PRE PROCESSING--------------------------")
+#########-------------------------------------- PATHS  -------------------------------------- #########
 
-try:                                                                                                                        #Following code (try/except clauses) searches for this script, and then changes the current working directory to the folder that houses it.
-    start = '/Users'                                                                                                        #Code from https://stackoverflow.com/questions/43553742/finding-particular-path-in-directory-in-python
+try:   #Following code (try/except clauses) searches for this script, and then changes the current working directory to the folder that houses it.
+    start = '/Users'  #Code from https://stackoverflow.com/questions/43553742/finding-particular-path-in-directory-in-python
     for dirpath, dirnames, filenames in os.walk(start):
         for filename in filenames:
             if filename == "US_Accidents_Dec19.csv":
                 filename = os.path.join(dirpath, filename)
                 os.chdir(dirpath)
+    import pre_process
+    import map_view
+    import main_window
 except:
-    pass
+    from Code import pre_process
+    from Code import map_view
+    from Code import main_window
+    print("import exception")
+
 
 
 try:
@@ -39,13 +49,22 @@ try:
             if filename == "US_Accidents_Dec19.csv":
                 filename = os.path.join(dirpath, filename)
                 os.chdir(dirpath)
+    import pre_process
+    import map_view
+    import main_window
 except:
+    from Code import pre_process
+    from Code import map_view
+    from Code import main_window
+    print("import exception")
     pass
+
+#########-------------------------------------- PRE PROCESSING  -------------------------------------- #########
+print("--------------------------PRE PROCESSING--------------------------")
 
 datafile = "US_Accidents_Dec19.csv"
 sample_size = 500
 
-import pre_process
 data_instance = pre_process.data_frame(datafile, sample_size)
 data = data_instance.create_dataframe()
 data_instance.cleanup_data()
@@ -58,8 +77,8 @@ app = QApplication(sys.argv)
 
 
 #########-------------------------------------- CREATE MAP -------------------------------------- #########
+
 #create Qwebview Map instance
-import map_view
 file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "map.html"))
 mapinstance = map_view.map_webview(file_path, data) #pass datapoints
 
@@ -68,7 +87,6 @@ mapinstance = map_view.map_webview(file_path, data) #pass datapoints
 #########-------------------------------------- CREATE WINDOW -------------------------------------- #########
 
 #create window instance and put the map in
-import main_window
 mainrun = main_window.runit(app, mapinstance)
 
 
