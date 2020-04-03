@@ -28,10 +28,12 @@ accidents = pd.read_csv('US_Accidents_Dec19.csv')
 accidents.describe()
 
 plt.hist(accidents['Temperature(F)'],bins=50,range=[-10,120]) #fairly evenly distributed histogram; most accidents occur around the 60-70 degree mark
+plt.title('Temperature Histogram')
 plt.show()
 
 accidents['Start_Time'] = accidents['Start_Time'].astype('datetime64') #bifurcated histogram, with most accidents occuring during morning and evening rush hour
 plt.hist(accidents['Start_Time'].dt.time,bins=100)
+plt.title('Accident Times')
 plt.show()
 
 accidents.boxplot(column='Temperature(F)',by='Severity',showfliers=False) #accidents all seem to hover around 60-70 degree weather. some of the outlier temperatures seem way too high and way too low, so I excluded from the graph
@@ -47,6 +49,7 @@ accidents['Time_Delta'] = accidents['End_Time']-accidents['Start_Time'] #time el
 accidents['Time_Delta'] = accidents['Time_Delta'].astype('timedelta64[m]') #converts time elapsed to minutes
 
 plt.hist(accidents['Time_Delta'],bins=25,range=[0,400]) #most accidents are cleared within an hour. heavily right-skewed data
+plt.title('Time Delta Histogram')
 plt.show()
 
 accidents.boxplot(column='Time_Delta',by='Severity').set_yscale('log') #the most severe accidents seem to take the longest time to clear
