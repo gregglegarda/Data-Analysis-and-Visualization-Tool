@@ -34,6 +34,7 @@ try:
     from Code import pre_process
     from Code import map_view
     from Code import main_window
+    from Code import eda_stats
 
 except:   #Following code (try/except clauses) searches for this script, and then changes the current working directory to the folder that houses it.
 
@@ -53,7 +54,7 @@ except:   #Following code (try/except clauses) searches for this script, and the
                     filename = os.path.join(dirpath, filename)
                     os.chdir(dirpath)
 
-
+print("Path Created")
 
 
 #########-------------------------------------- DATA PROCESSING -------------------------------------- #########
@@ -63,19 +64,30 @@ print("--------------------------DATA PROCESSING--------------------------")
 try:
     pre_processed_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "pre_processed_data.csv"))
     data = pd.read_csv(pre_processed_path)
+    print("Using preprocesses data")
 
 
 ### if not there, create a sample
 except:
     datafile = "US_Accidents_Dec19.csv"
-    sample_size = 5000
+    sample_size = 6000
     try:
         import pre_process
     except:
         print("import exception")
+
     data_instance = pre_process.data_frame(datafile, sample_size)
     data = data_instance.create_dataframe()
     data_instance.cleanup_data()
+
+#########-------------------------------------- DATA ANALYSIS -------------------------------------- #########
+print("--------------------------DATA ANALYSIS--------------------------")
+try:
+    import eda_stats
+except:
+    print("import exception")
+data_analysis = eda_stats.eda(data)
+data_analysis.perform_eda()
 
 
 #########-------------------------------------- CREATE APPLICATION  -------------------------------------- #########

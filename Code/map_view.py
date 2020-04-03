@@ -23,6 +23,7 @@ class map_webview(QWebView):
             zoom_start=3.5,
             min_zoom=3.5,
 
+
         )
 
         # MARKERS  - Add the dataframe markers in the map
