@@ -68,7 +68,7 @@ class main_window(QMainWindow):
         self.widget.layout().addWidget(self.GroupBox2, 0, 1, 1, 3)
 
         # ==================# ADDED WIDGETS #==================#
-        #Qwebview map
+        #Qwebview maps
         layout1.addWidget(self.map, 0, 0, 1, 3)
 
         #Buttons
