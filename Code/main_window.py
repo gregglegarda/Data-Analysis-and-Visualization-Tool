@@ -19,6 +19,7 @@ from PyQt5.QtCore import QItemSelectionModel
 import sys
 import os
 import ntpath
+import qdarkstyle
 
 def runit(app, map):
 
@@ -42,7 +43,8 @@ class main_window(QMainWindow):
         self.setWindowTitle("Main Window")
         self.showMaximized()
         #THEME COLOR
-        self.setStyleSheet("QMainWindow {background-image: url(background/background.jpg)}")
+        #self.setStyleSheet("QMainWindow {background-image: url(background/background.jpg)}")
+        self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
         print("Opened Main Window")
 
         #Small group1

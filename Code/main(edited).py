@@ -14,12 +14,14 @@ import pip
 try:
     from geopy.geocoders import Nominatim, GoogleV3
     import folium
+    import qdarkstyle
 except:
+    #pip.main(['install', 'git+https://github.com/geopy/geopy'])
+    #pip.main(['install', 'git+https://github.com/python-visualization/folium'])
     os.system('pip install geopy')
     os.system('pip install folium')
-    pip.main(['install', 'git+https://github.com/geopy/geopy'])
-    pip.main(['install', 'git+https://github.com/python-visualization/folium'])
-    print("import exception occurred")
+    os.system('pip install qdarkstyle')
+    print("imported packages")
 
 
 #########-------------------------------------- PATHS  -------------------------------------- #########

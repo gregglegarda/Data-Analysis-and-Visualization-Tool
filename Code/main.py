@@ -15,12 +15,42 @@ import pip
 try:
     from geopy.geocoders import Nominatim, GoogleV3
     import folium
+    import qdarkstyle
 except:
+    #pip.main(['install', 'git+https://github.com/geopy/geopy'])
+    #pip.main(['install', 'git+https://github.com/python-visualization/folium'])
     os.system('pip install geopy')
     os.system('pip install folium')
-    pip.main(['install', 'git+https://github.com/geopy/geopy'])
-    pip.main(['install', 'git+https://github.com/python-visualization/folium'])
-    print("import exception occurred")
+    os.system('pip install qdarkstyle')
+    print("imported packages")
+
+
+
+#########-------------------------------------- PATHS  -------------------------------------- #########
+print("--------------------------PATHS--------------------------")
+print("Creating path...")
+try:   #Following code (try/except clauses) searches for this script, and then changes the current working directory to the folder that houses it.
+    start = '/Users'  #Code from https://stackoverflow.com/questions/43553742/finding-particular-path-in-directory-in-python
+    for dirpath, dirnames, filenames in os.walk(start):
+        for filename in filenames:
+            if filename == "US_Accidents_Dec19.csv":
+                filename = os.path.join(dirpath, filename)
+                os.chdir(dirpath)
+except:
+    pass
+
+
+
+try:
+    start1 = "C:\\Users"
+    for dirpath, dirnames, filenames in os.walk(start1):
+        for filename in filenames:
+            if filename == "US_Accidents_Dec19.csv":
+                filename = os.path.join(dirpath, filename)
+                os.chdir(dirpath)
+except:
+    pass
+print("Path created")
 
 
 
@@ -34,7 +64,6 @@ try:
     import pre_process
 
 except:
-    from Code import pre_process
     print("import exception")
 data_instance = pre_process.data_frame(datafile, sample_size)
 data = data_instance.create_dataframe()
@@ -52,7 +81,6 @@ app = QApplication(sys.argv)
 try:
     import map_view
 except:
-    from Code import main_window
     print("import exception")
 
 file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "map.html"))
@@ -66,7 +94,6 @@ mapinstance = map_view.map_webview(file_path, data) #pass datapoints
 try:
     import main_window
 except:
-    from Code import main_window
     print("import exception")
 
 mainrun = main_window.runit(app, mapinstance)
