@@ -43,8 +43,8 @@ class main_window(QMainWindow):
         self.setWindowTitle("Main Window")
         self.showMaximized()
         #THEME COLOR
-        #self.setStyleSheet("QMainWindow {background-image: url(background/background.jpg)}")
-        self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+        self.setStyleSheet("QMainWindow {background-image: url(background.jpg)}")
+        #self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
         print("Opened Main Window")
 
         #Small group1

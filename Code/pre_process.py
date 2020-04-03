@@ -1,6 +1,7 @@
 
 import pandas as pd
 import numpy as np
+import os
 
 
 
@@ -10,6 +11,7 @@ class data_frame():
             self.datafile = datafile
             self.samplesize = samplesize
             super(data_frame, self).__init__()
+
 
 
       def create_dataframe(self):
@@ -26,6 +28,7 @@ class data_frame():
 
       def cleanup_data(self):
             #########-------------------------------------- DATA CLEANUP -------------------------------------- #########
+            print("Cleaning Dataframe...")
             #delete uneccessary columns
             del self.data['ID']
             del self.data['Source']
@@ -54,4 +57,5 @@ class data_frame():
             print("--------------------------NUMBER OF SAMPLES--------------------------\n",
                   len(self.data),"Data points randomly selected from ", len(self.dataframe), "\n\n")
 
-
+            self.data.to_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), "pre_processed_data.csv")), index=False,
+                      header=True)
