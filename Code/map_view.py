@@ -4,10 +4,6 @@ from PyQt5.QtWebEngineWidgets import QWebEngineView as QWebView
 from PyQt5.QtCore import QUrl
 
 
-def runit(filepath,data):
-    gui = map_webview(filepath,data)
-    return gui
-
 class map_webview(QWebView):
     def __init__(self, file_path,data):
 
@@ -33,9 +29,13 @@ class map_webview(QWebView):
             folium.Circle(
                 location=[data.iloc[i]['Start_Lat'], data.iloc[i]['Start_Lng']],
                 popup=data.iloc[i]['Street'],
-                radius=10,
+                radius=100,
+                #stroke settings
+                stroke = False,
                 weight=1,
                 color="Yellow",
+                opacity = 0.2,
+                #fill settings
                 fill=True,
                 fillColor="Yellow",
                 fillOpacity=0.2,
