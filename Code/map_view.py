@@ -2,6 +2,7 @@
 import folium
 from PyQt5.QtWebEngineWidgets import QWebEngineView as QWebView
 from PyQt5.QtCore import QUrl
+from folium.plugins import FastMarkerCluster
 
 
 class map_webview(QWebView):
@@ -25,10 +26,13 @@ class map_webview(QWebView):
         )
 
         # MARKERS  - Add the dataframe markers in the map
-        for i in range(0, len(data)):
+        for lat, lan, description, street, city, state, zipcode in zip(data['Start_Lat'], data['Start_Lng'], data['Description'], data['Street'], data['City'], data['State'], data['Zipcode']):
+            print(description,type(description),street, type(street), city, type(city),state, type(state),zipcode, type(zipcode))
             folium.Circle(
-                location=[data.iloc[i]['Start_Lat'], data.iloc[i]['Start_Lng']],
-                popup=data.iloc[i]['Street'],
+                #location=[data.iloc[i]['Start_Lat'], data.iloc[i]['Start_Lng']],
+                #popup=data.iloc[i]['Street'] + ", " + data.iloc[i]['City'] + ", " + data.iloc[i]['State'] + ", " + data.iloc[i]['Zipcode'],
+                location=[lat, lan],
+                popup= description + ", " + street + ", " + city + ", " + state + ", " + zipcode,
                 radius=100,
                 #stroke settings
                 stroke = False,
@@ -37,8 +41,8 @@ class map_webview(QWebView):
                 opacity = 0.2,
                 #fill settings
                 fill=True,
-                fillColor="Yellow",
-                fillOpacity=0.2,
+                fill_color="Yellow",
+                fill_opacity= 0.1,
             ).add_to(m)
 
         # Filepath to the output
