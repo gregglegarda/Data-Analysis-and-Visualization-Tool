@@ -167,7 +167,6 @@ class main_window(QMainWindow):
         #self.model.rowsInserted.connect(lambda: QtCore.QTimer.singleShot(0, self.tableView.scrollToBottom))
         self.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
-
         self.tableView.setModel(self.model)
         layout3.addWidget(self.tableView, 1, 0, 1, 4)
 
