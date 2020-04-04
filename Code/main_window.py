@@ -161,7 +161,7 @@ class main_window(QMainWindow):
         self.model.setVerticalHeaderLabels(
             ['count', 'mean', 'std', 'min', '25%', '50%', '75%', 'max'])
         self.tableView = QTableView(self.widget)
-        self.tableView.setStyleSheet("QTableView{ background-color: rgb(45, 45, 45);  }")  # cell color
+        #self.tableView.setStyleSheet("QTableView{ background-color: rgb(45, 45, 45);  }")  # cell color
         self.tableView.horizontalHeader().setStretchLastSection(True)
         self.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
