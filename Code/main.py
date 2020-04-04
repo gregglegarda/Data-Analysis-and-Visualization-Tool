@@ -1,5 +1,7 @@
 
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 from PyQt5.QtWebEngineWidgets import QWebEngineView as QWebView,QWebEnginePage as QWebPage
 from PyQt5.QtWebEngineWidgets import QWebEngineSettings as QWebSettings
@@ -82,6 +84,47 @@ except:
     data_instance = pre_process.data_frame(datafile, sample_size)
     data = data_instance.create_dataframe()
     data_instance.cleanup_data()
+
+    
+### fill the missing value
+df1 = df.reindex(list(range(df.index.min(),df.index.max()+1)),fill_value=0)
+print(df1)
+
+
+### Sort the df ascending and not ascending
+print(df1.sort_index())
+print(df1.sort_index(ascending=False))
+
+
+### start time as the 
+def get_acc_cnt(df_in, state_name, time_str):
+    return df_in.loc[lambda df: df["Start_Time"].str.startswith(time_str) & 
+                                (df["State"]==state_name), :].shape[0]
+
+print("Ohio in 2016-02-08: ",get_acc_cnt(df, 'OH', "2016-02-08"))
+print("Ohio in 2016-02: ",get_acc_cnt(df, 'OH', "2016-02"))
+
+
+state_list = df['State'].unique()
+### acquire car accident information from assigned state on assigned date
+def get_acc_timelist(df_in, state_name, select="day"):
+    if select=="year":
+        strlen = 4
+    elif select=="month":
+        strlen = 7
+    else:
+        strlen = 10 
+        
+    df_state = df_in.loc[df["State"]=="OH", :]
+    time_list = df_state["Start_Time"].str[0:strlen].unique()
+    cnt_list = []
+    for time_str in time_list:
+        cnt_list.append(get_acc_cnt(df_state, state_name, time_str))
+        
+    return time_list, cnt_list
+
+get_acc_timelist(df, "OH", "month")
+
 
 #########-------------------------------------- DATA ANALYSIS -------------------------------------- #########
 print("--------------------------DATA ANALYSIS--------------------------")
