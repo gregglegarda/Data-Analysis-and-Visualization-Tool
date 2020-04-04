@@ -54,3 +54,46 @@ plt.show()
 
 accidents.boxplot(column='Time_Delta',by='Severity').set_yscale('log') #the most severe accidents seem to take the longest time to clear
 
+######################### extra
+### fill the missing value
+df1 = accidents.reindex(list(range(accidents.index.min(), accidents.index.max() + 1)), fill_value=0)
+print(df1)
+
+### Sort the df ascending and not ascending
+print(df1.sort_index())
+print(df1.sort_index(ascending=False))
+
+
+### start time as the
+def get_acc_cnt(df_in, state_name, time_str):
+    return df_in.loc[lambda df: df["Start_Time"].str.startswith(time_str) &
+                                (df["State"] == state_name), :].shape[0]
+
+
+print("Ohio in 2016-02-08: ", get_acc_cnt(accidents, 'OH', "2016-02-08"))
+print("Ohio in 2016-02: ", get_acc_cnt(accidents, 'OH', "2016-02"))
+
+state_list = accidents['State'].unique()
+
+
+### acquire car accident information from assigned state on assigned date
+def get_acc_timelist(df_in, state_name, select="day"):
+    if select == "year":
+        strlen = 4
+    elif select == "month":
+        strlen = 7
+    else:
+        strlen = 10
+
+    df_state = df_in.loc[accidents["State"] == "OH", :]
+    time_list = df_state["Start_Time"].str[0:strlen].unique()
+    cnt_list = []
+    for time_str in time_list:
+        cnt_list.append(get_acc_cnt(df_state, state_name, time_str))
+
+    return time_list, cnt_list
+
+
+get_acc_timelist(accidents, "OH", "month")
+
+######################### extra
