@@ -163,8 +163,6 @@ class main_window(QMainWindow):
         self.tableView = QTableView(self.widget)
         self.tableView.setStyleSheet("QTableView{ background-color: rgb(45, 45, 45);  }")  # cell color
         self.tableView.horizontalHeader().setStretchLastSection(True)
-        self.tableView.setSortingEnabled(True)
-        #self.model.rowsInserted.connect(lambda: QtCore.QTimer.singleShot(0, self.tableView.scrollToBottom))
         self.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
         self.tableView.setModel(self.model)

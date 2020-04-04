@@ -35,7 +35,5 @@ class eda():
 
 
 
-
-
         plt.tight_layout()
         plt.savefig('temp_hist.png', facecolor = '#222222', transparent = True)
