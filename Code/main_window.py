@@ -42,8 +42,8 @@ class main_window(QMainWindow):
         self.widget.layout().setSpacing(5)
         self.widget.layout().setColumnStretch(0, 3)
         self.widget.layout().setColumnStretch(1,1)
-        self.widget.layout().setRowStretch(0, 3)
-        self.widget.layout().setRowStretch(1, 2)
+        self.widget.layout().setRowStretch(0, 2)
+        self.widget.layout().setRowStretch(1, 1)
         self.setWindowTitle("Main Window")
         self.showMaximized()
         #THEME COLOR
@@ -65,7 +65,7 @@ class main_window(QMainWindow):
         self.GroupBox2.setLayout(layout2)
         layout2.setContentsMargins(5, 5, 5, 5)
         layout2.setSpacing(5)
-        self.widget.layout().addWidget(self.GroupBox2, 1, 0, 1, 1)
+        self.widget.layout().addWidget(self.GroupBox2, 0, 1, 1, 1)
 
         # Small group3
         self.GroupBox3 = QGroupBox()
@@ -73,7 +73,7 @@ class main_window(QMainWindow):
         self.GroupBox3.setLayout(layout3)
         layout3.setContentsMargins(5, 5, 5, 5)
         layout3.setSpacing(5)
-        self.widget.layout().addWidget(self.GroupBox3, 0, 1, 2, 1)
+        self.widget.layout().addWidget(self.GroupBox3, 1, 0, 2, 2)
 
         # ==================# TABS WIDGET LAYOUT #==================#
         #Tabs
@@ -81,40 +81,59 @@ class main_window(QMainWindow):
         self.tabs = QTabWidget()
         self.tab1 = QWidget()
         self.tab2 = QWidget()
-        self.tabs.resize(300, 200)
+        self.tab3 = QWidget()
+        self.tab4 = QWidget()
+        self.tab5 = QWidget()
+        #self.tabs.resize(300, 200)
 
 
         # Add tabs
         #tab1
-        self.tabs.addTab(self.tab1, "Temperature")
+        self.tabs.addTab(self.tab1, "Histograms")
         tab1_layout = QVBoxLayout(self)
         self.tab1.setLayout(tab1_layout)
 
         # tab2
-        self.tabs.addTab(self.tab2, "Tab 2")
+        self.tabs.addTab(self.tab2, "GeoMap")
+        tab2_layout = QVBoxLayout(self)
+        self.tab2.setLayout(tab2_layout)
 
+        # tab3
+        self.tabs.addTab(self.tab3, "Correlation")
+        tab3_layout = QVBoxLayout(self)
+        self.tab3.setLayout(tab3_layout)
+
+        # tab4
+        self.tabs.addTab(self.tab4, "Boxplots")
+        tab4_layout = QVBoxLayout(self)
+        self.tab4.setLayout(tab4_layout)
+
+        # tab5
+        self.tabs.addTab(self.tab5, "Summary")
+        tab5_layout = QVBoxLayout(self)
+        self.tab5.setLayout(tab5_layout)
 
         # Add tabs to widget
-        layout3.addWidget(self.tabs)
+        layout2.addWidget(self.tabs)
 
 
 
 
         # ==================# ADDED WIDGETS #==================#
         #Qwebview maps
-        layout1.addWidget(self.map, 0, 0, 1, 3)
+        tab2_layout.addWidget(self.map)
 
         #Button 1
         Button1 = QtWidgets.QPushButton(self.widget)
-        Button1.setText("Button 1")
+        Button1.setText("Preprocess Random Sample")
         Button1.clicked.connect(self.on_Button1_clicked)
-        layout2.addWidget(Button1, 0, 0, 1, 1)
+        layout1.addWidget(Button1, 0, 0, 1, 1)
 
         #button2
         Button2 = QtWidgets.QPushButton(self.widget)
         Button2.setText("Button2")
         Button2.clicked.connect(self.on_Button2_clicked)
-        layout2.addWidget(Button2, 0, 1, 1, 1)
+        layout1.addWidget(Button2, 0, 1, 1, 1)
 
 
         # Image
@@ -127,16 +146,55 @@ class main_window(QMainWindow):
         #self.scroll.setWidget(self.imageView)
         tab1_layout.addWidget(self.imageView)
 
+        # ==================# TABLE DATABASE #==================#
+        filename = os.path.expanduser(os.path.abspath(os.path.join(os.path.dirname(__file__), "statistic_summary.csv")))
+        self.items = []
+        self.fileName = filename
+        self.on_Button1_clicked
+
+        self.model = QtGui.QStandardItemModel(self.widget)
+
+        self.model.setHorizontalHeaderLabels(
+            ['severity', 'latitude', 'longitude', 'distance(mi)', 'number', 'temperature',
+             'wind chill(F)', 'humidity%', 'pressure(in)', 'visibility(mi)',
+             'wind speed(mph)', 'precipitation(in)'])
+        self.model.setVerticalHeaderLabels(
+            ['count', 'mean', 'std', 'min', '25%', '50%', '75%', 'max'])
+        self.tableView = QTableView(self.widget)
+        self.tableView.setStyleSheet("QTableView{ background-color: rgb(45, 45, 45);  }")  # cell color
+        self.tableView.horizontalHeader().setStretchLastSection(True)
+        self.tableView.setSortingEnabled(True)
+        #self.model.rowsInserted.connect(lambda: QtCore.QTimer.singleShot(0, self.tableView.scrollToBottom))
+        self.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
 
+        self.tableView.setModel(self.model)
+        layout3.addWidget(self.tableView, 1, 0, 1, 4)
 
-
+        # ==================# SHOW EVERYTHING #==================#
         self.show()
 
-
-
+#########################################   FUNCTIONS   #####################################################
+    @QtCore.pyqtSlot()
     def on_Button1_clicked(self):
-        print("button 1 clicked")
+        self.loadCsv(self.fileName)
+        print("button1 clicked")
+
+    def loadCsv(self, fileName):
+        while (self.model.rowCount() > 0):
+            self.model.removeRow(0)
+        try:
+            with open(fileName, "r") as fileInput:
+                for row in csv.reader(fileInput):
+                    self.items = [
+                        QtGui.QStandardItem(field)
+                        for field in row
+                    ]
+                    self.model.appendRow(self.items)
+            self.model.setVerticalHeaderLabels(
+                ['count', 'mean', 'std', 'min', '25%', '50%', '75%', 'max'])
+        except:
+            print("No Database")
 
     def on_Button2_clicked(self):
         print("button 2 clicked")

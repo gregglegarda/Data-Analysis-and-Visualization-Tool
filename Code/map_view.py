@@ -23,8 +23,20 @@ class map_webview(QWebView):
                 # cartodbdark_matter #cartodbpositron #stamenwatercolor #stamenterrain #openstreetmap
                 zoom_start=3.5,
                 min_zoom=3.5,
+
             )
-            m2.add_child(FastMarkerCluster(data[['Start_Lat', 'Start_Lng']].values.tolist()))
+
+            #callback = ('''
+            #        function (cluster) {
+            #        var circle = L.circle(new L.LatLng(row[0], row[1],
+            #        {color: 'red', radius: 20000});
+            #        return circle};
+             #                       ''')
+
+            m2.add_child(FastMarkerCluster(data[['Start_Lat', 'Start_Lng']].values.tolist()  ))#,callback=callback))
+
+
+
             m2.save("map.html")
             #m2.save("mapcluster.html")
         else:
