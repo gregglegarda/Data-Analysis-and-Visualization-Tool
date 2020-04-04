@@ -15,25 +15,27 @@ class eda():
 
         #summary
         summary = self.data.describe()
-        summary.to_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), "statistic_summary.csv")),
-                         index=False,
-                         header=False)
+        summary.to_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), "statistic_summary.csv")), index=False, header=False)
         print(summary)
 
 
         #temperature histogram
-        plt.title('Temperature Histogram')
+        title_obj = plt.title('Temperature Histogram')
         # fairly evenly distributed histogram; most accidents occur around the 60-70 degree mark
         plt.hist(self.data['Temperature(F)'],bins=50,range=[-10,120], rwidth=0.9)
 
-        # accident times histogram
-        #self.data['Start_Time'] = self.data['Start_Time'].astype('datetime64')
-        #self.data['Start_Time'] = pd.to_datetime(self.data['Start_Time'])
-        # bifurcated histogram, with most accidents occuring during morning and evening rush hour
-        #plt.hist(self.data['Start_Time'].dt.time, bins=100, rwidth=0.9)
-        #plt.title('Accident Times')
-
-
+        #line colors
+        plt.setp(title_obj, color='w')
+        plt.tick_params(axis='both', colors='white')
+        ax = plt.gca()
+        ax.spines['bottom'].set_color('w')
+        ax.spines['top'].set_color('w')
+        ax.spines['right'].set_color('w')
+        ax.spines['left'].set_color('w')
 
         plt.tight_layout()
-        plt.savefig('temp_hist.png', facecolor = '#222222', transparent = True)
+        plt.savefig('temp_hist.png',
+                    facecolor = '#1a1a1a',
+                    transparent = True,
+
+                    )

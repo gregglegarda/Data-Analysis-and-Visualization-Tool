@@ -38,13 +38,14 @@ class main_window(QMainWindow):
         self.widget = QtWidgets.QWidget()
         self.setCentralWidget(self.widget)
         self.widget.setLayout(QtWidgets.QGridLayout())
-        self.widget.layout().setContentsMargins(20, 20, 20, 20)
+        self.widget.layout().setContentsMargins(20, 5, 20, 20)
         self.widget.layout().setSpacing(5)
         self.widget.layout().setColumnStretch(0, 3)
         self.widget.layout().setColumnStretch(1,1)
-        self.widget.layout().setRowStretch(0, 2)
-        self.widget.layout().setRowStretch(1, 1)
-        self.setWindowTitle("Main Window")
+        self.widget.layout().setColumnStretch(2, 2)
+        self.widget.layout().setRowStretch(0, 1)
+        self.widget.layout().setRowStretch(1, 4)
+        self.setWindowTitle("US Accidents Data Mining")
         self.showMaximized()
         #THEME COLOR
         self.setStyleSheet("QMainWindow {background-image: url(background.jpg)}")
@@ -57,7 +58,7 @@ class main_window(QMainWindow):
         self.GroupBox1.setLayout(layout1)
         layout1.setContentsMargins(5, 5, 5, 5)
         layout1.setSpacing(5)
-        self.widget.layout().addWidget(self.GroupBox1, 0, 0, 1, 1)
+        self.widget.layout().addWidget(self.GroupBox1, 0, 0, 1, 2)
 
         # Small group2
         self.GroupBox2 = QGroupBox()
@@ -65,7 +66,7 @@ class main_window(QMainWindow):
         self.GroupBox2.setLayout(layout2)
         layout2.setContentsMargins(5, 5, 5, 5)
         layout2.setSpacing(5)
-        self.widget.layout().addWidget(self.GroupBox2, 0, 1, 1, 1)
+        self.widget.layout().addWidget(self.GroupBox2, 0, 2, 2, 1)
 
         # Small group3
         self.GroupBox3 = QGroupBox()
@@ -73,7 +74,7 @@ class main_window(QMainWindow):
         self.GroupBox3.setLayout(layout3)
         layout3.setContentsMargins(5, 5, 5, 5)
         layout3.setSpacing(5)
-        self.widget.layout().addWidget(self.GroupBox3, 1, 0, 2, 2)
+        self.widget.layout().addWidget(self.GroupBox3, 2, 0, 1, 3)
 
         # ==================# TABS WIDGET LAYOUT #==================#
         #Tabs
@@ -127,13 +128,20 @@ class main_window(QMainWindow):
         Button1 = QtWidgets.QPushButton(self.widget)
         Button1.setText("Preprocess Random Sample")
         Button1.clicked.connect(self.on_Button1_clicked)
-        layout1.addWidget(Button1, 0, 0, 1, 1)
+        self.widget.layout().addWidget(Button1, 1, 0, 1, 1)
+
+        # spinbox1
+        SpinBox1 = QtWidgets.QSpinBox(self.widget)
+        SpinBox1.setMaximum(1000000)
+        self.widget.layout().addWidget(SpinBox1, 1, 1, 1, 1)
 
         #button2
         Button2 = QtWidgets.QPushButton(self.widget)
         Button2.setText("Button2")
         Button2.clicked.connect(self.on_Button2_clicked)
         layout1.addWidget(Button2, 0, 1, 1, 1)
+
+
 
 
         # Image
@@ -155,11 +163,11 @@ class main_window(QMainWindow):
         self.model = QtGui.QStandardItemModel(self.widget)
 
         self.model.setHorizontalHeaderLabels(
-            ['severity', 'latitude', 'longitude', 'distance(mi)', 'number', 'temperature',
-             'wind chill(F)', 'humidity%', 'pressure(in)', 'visibility(mi)',
-             'wind speed(mph)', 'precipitation(in)'])
+            ['Severity', 'Latitude', 'Longitude', 'Distance(mi)', 'Number', 'Temperature',
+             'Wind Chill(F)', 'Humidity%', 'Pressure(in)', 'Visibility(mi)',
+             'Wind Speed(mph)', 'Precipitation(in)'])
         self.model.setVerticalHeaderLabels(
-            ['count', 'mean', 'std', 'min', '25%', '50%', '75%', 'max'])
+            ['Count', 'Mean', 'Std', 'Min', '25%', '50%', '75%', 'Max'])
         self.tableView = QTableView(self.widget)
         #self.tableView.setStyleSheet("QTableView{ background-color: rgb(45, 45, 45);  }")  # cell color
         self.tableView.horizontalHeader().setStretchLastSection(True)
@@ -189,7 +197,7 @@ class main_window(QMainWindow):
                     ]
                     self.model.appendRow(self.items)
             self.model.setVerticalHeaderLabels(
-                ['count', 'mean', 'std', 'min', '25%', '50%', '75%', 'max'])
+                ['Count', 'Mean', 'Std', 'Min', '25%', '50%', '75%', 'Max'])
         except:
             print("No Database")
 
