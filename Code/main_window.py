@@ -8,7 +8,7 @@ import sys
 import os
 from PyQt5.QtWidgets import (QMainWindow, QTableView, QTabWidget, QWidget, QVBoxLayout,
                             QGridLayout, QGroupBox,
-                            QLabel, QLineEdit,  QPushButton,
+                            QLabel, QLineEdit, QLCDNumber, QPushButton,
                             QMessageBox, QAbstractItemView,
                             QPlainTextEdit)
 from PyQt5.QtGui import QPixmap
@@ -56,7 +56,7 @@ class main_window(QMainWindow):
         self.GroupBox1 = QGroupBox()
         layout1 = QGridLayout()
         self.GroupBox1.setLayout(layout1)
-        layout1.setContentsMargins(5, 5, 5, 5)
+        layout1.setContentsMargins(20, 5, 20, 5)
         layout1.setSpacing(5)
         self.widget.layout().addWidget(self.GroupBox1, 0, 0, 1, 2)
 
@@ -76,7 +76,114 @@ class main_window(QMainWindow):
         layout3.setSpacing(5)
         self.widget.layout().addWidget(self.GroupBox3, 2, 0, 1, 3)
 
-        # ==================# TABS WIDGET LAYOUT #==================#
+        # ==================# GROUP 1 WIDGETS #==================#
+
+
+        #Latitude
+        self.latitude = QLabel("Latitude:")
+        layout1.addWidget(self.latitude, 0, 0, 1, 1)
+        self.line_edit_latitude = QLineEdit()
+        self.line_edit_latitude.setPlaceholderText('Enter Latitude')
+        layout1.addWidget(self.line_edit_latitude, 0, 1, 1, 1)
+
+        #Longitude
+        self.longitude = QLabel("Longitude:")
+        layout1.addWidget(self.longitude, 1, 0, 1, 1)
+        self.line_edit_longitude = QLineEdit()
+        self.line_edit_longitude.setPlaceholderText('Enter Longitude')
+        layout1.addWidget(self.line_edit_longitude, 1, 1, 1, 1)
+
+        #Distance(mi)
+        self.distance = QLabel("Distance:")
+        layout1.addWidget(self.distance, 2, 0, 1, 1)
+        self.line_edit_distance = QLineEdit()
+        self.line_edit_distance.setPlaceholderText('Enter Distance')
+        layout1.addWidget(self.line_edit_distance, 2, 1, 1, 1)
+
+        #Number
+        self.number = QLabel("Number:")
+        layout1.addWidget(self.number, 3, 0, 1, 1)
+        self.line_edit_number = QLineEdit()
+        self.line_edit_number.setPlaceholderText('Enter Number')
+        layout1.addWidget(self.line_edit_number, 3, 1, 1, 1)
+
+        #Temperature
+        self.temperature = QLabel("Temperature:")
+        layout1.addWidget(self.temperature, 4, 0, 1, 1)
+        self.line_edit_temperature = QLineEdit()
+        self.line_edit_temperature.setPlaceholderText('Enter Temperature')
+        layout1.addWidget(self.line_edit_temperature, 4, 1, 1, 1)
+
+        #Wind Chill(F)
+        self.wind_chill = QLabel("Wind Chill:")
+        layout1.addWidget(self.wind_chill, 5, 0, 1, 1)
+        self.line_edit_wind_chill = QLineEdit()
+        self.line_edit_wind_chill.setPlaceholderText('Enter Wind Chill')
+        layout1.addWidget(self.line_edit_wind_chill, 5, 1, 1, 1)
+
+        #Humidity%
+        self.humidity = QLabel("Humidity:")
+        layout1.addWidget(self.humidity, 6, 0, 1, 1)
+        self.line_edit_humidity = QLineEdit()
+        self.line_edit_humidity.setPlaceholderText('Enter Humidity')
+        layout1.addWidget(self.line_edit_humidity, 6, 1, 1, 1)
+
+        #Pressure(in)
+        self.pressure = QLabel("Pressure:")
+        layout1.addWidget(self.pressure, 7, 0, 1, 1)
+        self.line_edit_pressure = QLineEdit()
+        self.line_edit_pressure.setPlaceholderText('Enter Pressure')
+        layout1.addWidget(self.line_edit_pressure, 7, 1, 1, 1)
+
+        #Visibility(mi)
+        self.visibility = QLabel("Visibility:")
+        layout1.addWidget(self.visibility, 8, 0, 1, 1)
+        self.line_edit_visibility = QLineEdit()
+        self.line_edit_visibility.setPlaceholderText('Enter Visibility')
+        layout1.addWidget(self.line_edit_visibility, 8, 1, 1, 1)
+
+        #Wind Speed(mph)
+        self.wind_speed = QLabel("Wind Speed:")
+        layout1.addWidget(self.wind_speed, 9, 0, 1, 1)
+        self.line_edit_wind_speed = QLineEdit()
+        self.line_edit_wind_speed.setPlaceholderText('Enter Wind Speed')
+        layout1.addWidget(self.line_edit_wind_speed, 9, 1, 1, 1)
+
+        #Precipitation(in)
+        self.precipitation = QLabel("Precipitation:")
+        layout1.addWidget(self.precipitation, 10, 0, 1, 1)
+        self.line_edit_precipitation = QLineEdit()
+        self.line_edit_precipitation.setPlaceholderText('Enter Precipitation')
+        layout1.addWidget(self.line_edit_precipitation, 10, 1, 1, 1)
+
+        # Severity
+        self.severity = QLabel("Severity Prediction:")
+        layout1.addWidget(self.severity, 11, 0, 1, 1)
+        self.severity_display = QLCDNumber()
+        layout1.addWidget(self.severity_display, 11 , 1, 1, 1)
+
+
+        # predict button
+        Button_predict = QtWidgets.QPushButton(self.widget)
+        Button_predict.setText("Predict Severity of Accident")
+        Button_predict.clicked.connect(self.on_Button2_clicked)
+        layout1.addWidget(Button_predict, 12, 1, 1, 1)
+
+        # ==================# ADDED WIDGETS (BELOW GROUP 1#==================#
+
+        # button1
+        Button1 = QtWidgets.QPushButton(self.widget)
+        Button1.setText("Train Model")
+        Button1.clicked.connect(self.on_Button2_clicked)
+        self.widget.layout().addWidget(Button1, 1, 0, 1, 1)
+
+        # spinbox1
+        SpinBox1 = QtWidgets.QSpinBox(self.widget)
+        SpinBox1.setMaximum(1000000)
+        self.widget.layout().addWidget(SpinBox1, 1, 1, 1, 1)
+
+
+        # ==================# GROUP 2 WIDGETS (TABS WIDGET LAYOUT) #==================#
         #Tabs
         # Initialize tab screen
         self.tabs = QTabWidget()
@@ -118,28 +225,26 @@ class main_window(QMainWindow):
         layout2.addWidget(self.tabs)
 
 
-
-
-        # ==================# ADDED WIDGETS #==================#
-        #Qwebview maps
+        # ==================# INDIVIDUAL TAB WIDGETS (INSIDE GROUP 2)#==================#
+        # Qwebview maps
         tab2_layout.addWidget(self.map)
 
-        #Button 1
-        Button1 = QtWidgets.QPushButton(self.widget)
-        Button1.setText("Preprocess Random Sample")
-        Button1.clicked.connect(self.on_Button1_clicked)
-        self.widget.layout().addWidget(Button1, 1, 0, 1, 1)
 
-        # spinbox1
-        SpinBox1 = QtWidgets.QSpinBox(self.widget)
-        SpinBox1.setMaximum(1000000)
-        self.widget.layout().addWidget(SpinBox1, 1, 1, 1, 1)
 
-        #button2
-        Button2 = QtWidgets.QPushButton(self.widget)
-        Button2.setText("Button2")
-        Button2.clicked.connect(self.on_Button2_clicked)
-        layout1.addWidget(Button2, 0, 1, 1, 1)
+        # ==================# GROUP 3 WIDGETS #==================#
+
+        #Button stat summary
+        Button_stat_summary = QtWidgets.QPushButton(self.widget)
+        Button_stat_summary.setText("View Statistical Summary")
+        Button_stat_summary.clicked.connect(self.on_Button1_clicked)
+        layout3.addWidget(Button_stat_summary, 0, 0, 1, 1)
+
+
+
+
+
+
+
 
 
 
