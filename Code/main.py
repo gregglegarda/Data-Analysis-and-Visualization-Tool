@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QGroupBox, QGridLayout
 from PyQt5.QtCore import QUrl
 import numpy as np
 from PyQt5 import Qt
-help(Qt)
+#help(Qt)
 from PyQt5.Qt import QPalette, QColor
 import sys
 import os
@@ -62,42 +62,6 @@ except:   #Following code (try/except clauses) searches for this script, and the
 print("Path Created")
 
 
-#########-------------------------------------- DATA PROCESSING -------------------------------------- #########
-print("--------------------------DATA PROCESSING--------------------------")
-
-### try opening pre processed sample
-try:
-    pre_processed_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "pre_processed_data.csv"))
-    data = pd.read_csv(pre_processed_path)
-    print("Using preprocesses data")
-
-
-### if not there, create a sample
-except:
-    datafile = "US_Accidents_Dec19.csv"
-    sample_size = 10000
-    try:
-        import pre_process
-    except:
-        print("import exception")
-
-    data_instance = pre_process.data_frame(datafile, sample_size)
-    data = data_instance.create_dataframe()
-    data_instance.cleanup_data()
-
-    
-
-
-#########-------------------------------------- DATA ANALYSIS -------------------------------------- #########
-print("--------------------------DATA ANALYSIS--------------------------")
-try:
-    import eda_stats
-except:
-    print("import exception")
-data_analysis = eda_stats.eda(data)
-data_analysis.perform_eda()
-
-
 #########-------------------------------------- CREATE APPLICATION  -------------------------------------- #########
 print("--------------------------APPLICATION--------------------------\nRunning Application...")
 #create application instance. Should only be one running at a time
@@ -120,17 +84,6 @@ palette.setColor(QPalette.HighlightedText, QColor(0, 0, 0))
 app.setPalette(palette)
 
 
-#########-------------------------------------- CREATE MAP -------------------------------------- #########
-#create Qwebview Map instance
-try:
-    import map_view
-except:
-    print("import exception")
-
-file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "map.html"))
-mapinstance = map_view.map_webview(file_path, data) #pass datapoints
-
-
 
 #########-------------------------------------- CREATE WINDOW -------------------------------------- #########
 
@@ -140,7 +93,16 @@ try:
 except:
     print("import exception")
 
-mainrun = main_window.runit(app, mapinstance)
+mainrun = main_window.runit(app)
+mainrun.get_attributes
+
+
+
+
+
+
+
+
 
 
 

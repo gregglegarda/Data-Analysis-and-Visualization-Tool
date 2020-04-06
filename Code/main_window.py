@@ -8,7 +8,7 @@ import sys
 import os
 from PyQt5.QtWidgets import (QMainWindow, QTableView, QTabWidget, QWidget, QVBoxLayout,
                             QGridLayout, QGroupBox,
-                            QLabel, QLineEdit, QLCDNumber, QPushButton,
+                            QLabel, QLineEdit, QLCDNumber, QPushButton, QFrame,
                             QMessageBox, QAbstractItemView,
                             QPlainTextEdit)
 from PyQt5.QtGui import QPixmap
@@ -21,16 +21,19 @@ import os
 import ntpath
 import qdarkstyle
 
-def runit(app, map):
+def runit(app):
 
-    gui = main_window(app, map)
+    gui = main_window(app)
     run = app.exec_()
     return gui, run
 
 class main_window(QMainWindow):
-    def __init__(self,app, map):
+    def __init__(self,app):
         self.app = app
-        self.map = map
+        self.points=0
+
+
+
         super(main_window, self).__init__()
         #==================# MAIN WIDGET LAYOUT #==================#
 
@@ -38,43 +41,99 @@ class main_window(QMainWindow):
         self.widget = QtWidgets.QWidget()
         self.setCentralWidget(self.widget)
         self.widget.setLayout(QtWidgets.QGridLayout())
-        self.widget.layout().setContentsMargins(20, 5, 20, 20)
-        self.widget.layout().setSpacing(5)
-        self.widget.layout().setColumnStretch(0, 3)
-        self.widget.layout().setColumnStretch(1,1)
-        self.widget.layout().setColumnStretch(2, 2)
-        self.widget.layout().setRowStretch(0, 1)
-        self.widget.layout().setRowStretch(1, 4)
+        self.widget.layout().setContentsMargins(50, 10, 50, 10)
+        self.widget.layout().setSpacing(10)
+        self.widget.layout().setColumnStretch(0, 4)
+        self.widget.layout().setColumnStretch(1, 5)
+        self.widget.layout().setColumnStretch(2, 5)
+        self.widget.layout().setRowStretch(0, 13)
+        self.widget.layout().setRowStretch(1, 15)
+        self.widget.layout().setRowStretch(2, 15)
         self.setWindowTitle("US Accidents Data Mining")
         self.showMaximized()
         #THEME COLOR
         self.setStyleSheet("QMainWindow {background-image: url(background.jpg)}")
-        print("Opened Main Window")
+        print("Main window opened")
 
         # ==================# GROUP WIDGET LAYOUT #==================#
-        # Small group1
+        # Small group0 (training)
+        self.GroupBox0 = QGroupBox()
+        layout0 = QGridLayout()
+        self.GroupBox0.setLayout(layout0)
+        layout0.setContentsMargins(20, 5, 20, 5)
+        layout0.setSpacing(5)
+        self.widget.layout().addWidget(self.GroupBox0, 0, 0, 1, 1)
+
+        # Small group1 (predicting)
         self.GroupBox1 = QGroupBox()
         layout1 = QGridLayout()
         self.GroupBox1.setLayout(layout1)
         layout1.setContentsMargins(20, 5, 20, 5)
         layout1.setSpacing(5)
-        self.widget.layout().addWidget(self.GroupBox1, 0, 0, 1, 2)
+        self.widget.layout().addWidget(self.GroupBox1, 1, 0,3 , 1)
 
-        # Small group2
+        # Small group2 (tabs and map)
         self.GroupBox2 = QGroupBox()
         layout2 = QGridLayout()
         self.GroupBox2.setLayout(layout2)
         layout2.setContentsMargins(5, 5, 5, 5)
         layout2.setSpacing(5)
-        self.widget.layout().addWidget(self.GroupBox2, 0, 2, 2, 1)
+        self.widget.layout().addWidget(self.GroupBox2, 0, 1, 2, 1)
 
-        # Small group3
+        # Small group3 (summary of stats)
         self.GroupBox3 = QGroupBox()
         layout3 = QGridLayout()
         self.GroupBox3.setLayout(layout3)
         layout3.setContentsMargins(5, 5, 5, 5)
         layout3.setSpacing(5)
-        self.widget.layout().addWidget(self.GroupBox3, 2, 0, 1, 3)
+        self.widget.layout().addWidget(self.GroupBox3, 2, 1, 2, 2)
+
+        # Small group4
+        self.GroupBox4 = QGroupBox()
+        layout4 = QGridLayout()
+        self.GroupBox4.setLayout(layout4)
+        layout4.setContentsMargins(5, 5, 5, 5)
+        layout4.setSpacing(5)
+        self.widget.layout().addWidget(self.GroupBox4, 0, 2, 2, 1)
+
+        # ==================# GROUP 0 WIDGETS #==================#
+
+        # Number of Samples
+        self.num_samples = QLabel("Number of Samples:")
+        layout0.addWidget(self.num_samples, 0, 0, 1, 1)
+        self.SpinBox1 = QtWidgets.QSpinBox(self.widget)
+        self.SpinBox1.setMaximum(1000000)
+        layout0.addWidget(self.SpinBox1, 0, 1, 1, 1)
+
+        # Train Percent
+        self.train_percent = QLabel("Train Pecentage:")
+        layout0.addWidget(self.train_percent, 1, 0, 1, 1)
+        self.SpinBox2 = QtWidgets.QSpinBox(self.widget)
+        self.SpinBox2.setMaximum(100)
+        layout0.addWidget(self.SpinBox2, 1, 1, 1, 1)
+
+        # Test Percent
+        self.test_percent = QLabel("Test Pecentage:")
+        layout0.addWidget(self.test_percent, 2, 0, 1, 1)
+        self.SpinBox3 = QtWidgets.QSpinBox(self.widget)
+        self.SpinBox3.setMaximum(100)
+        layout0.addWidget(self.SpinBox3, 2, 1, 1, 1)
+
+        # Model Accuracy
+        self.accuracy = QLabel("Model Accuracy:")
+        layout0.addWidget(self.accuracy, 3, 0, 1, 1)
+        self.accuracy_display = QLCDNumber()
+        self.accuracy_display.setMaximumHeight(50)
+        layout0.addWidget(self.accuracy_display, 3, 1, 1, 1)
+
+
+        # Train Model
+        Button1 = QtWidgets.QPushButton(self.widget)
+        Button1.setText("Train Model")
+        Button1.clicked.connect(self.on_Button_train_clicked)
+        layout0.addWidget(Button1, 4, 0, 1, 2)
+
+
 
         # ==================# GROUP 1 WIDGETS #==================#
 
@@ -160,27 +219,17 @@ class main_window(QMainWindow):
         self.severity = QLabel("Severity Prediction:")
         layout1.addWidget(self.severity, 11, 0, 1, 1)
         self.severity_display = QLCDNumber()
+        self.severity_display.setMaximumHeight(50)
         layout1.addWidget(self.severity_display, 11 , 1, 1, 1)
 
 
         # predict button
         Button_predict = QtWidgets.QPushButton(self.widget)
         Button_predict.setText("Predict Severity of Accident")
-        Button_predict.clicked.connect(self.on_Button2_clicked)
-        layout1.addWidget(Button_predict, 12, 1, 1, 1)
+        Button_predict.clicked.connect(self.on_Button_predict_clicked)
+        layout1.addWidget(Button_predict, 12, 0, 1, 2)
 
-        # ==================# ADDED WIDGETS (BELOW GROUP 1#==================#
 
-        # button1
-        Button1 = QtWidgets.QPushButton(self.widget)
-        Button1.setText("Train Model")
-        Button1.clicked.connect(self.on_Button2_clicked)
-        self.widget.layout().addWidget(Button1, 1, 0, 1, 1)
-
-        # spinbox1
-        SpinBox1 = QtWidgets.QSpinBox(self.widget)
-        SpinBox1.setMaximum(1000000)
-        self.widget.layout().addWidget(SpinBox1, 1, 1, 1, 1)
 
 
         # ==================# GROUP 2 WIDGETS (TABS WIDGET LAYOUT) #==================#
@@ -203,8 +252,8 @@ class main_window(QMainWindow):
 
         # tab2
         self.tabs.addTab(self.tab2, "GeoMap")
-        tab2_layout = QVBoxLayout(self)
-        self.tab2.setLayout(tab2_layout)
+        self.tab2_layout = QVBoxLayout(self)
+        self.tab2.setLayout(self.tab2_layout)
 
         # tab3
         self.tabs.addTab(self.tab3, "Correlation")
@@ -227,25 +276,20 @@ class main_window(QMainWindow):
 
         # ==================# INDIVIDUAL TAB WIDGETS (INSIDE GROUP 2)#==================#
         # Qwebview maps
-        tab2_layout.addWidget(self.map)
+        #create map instance and update later when the train button is clicked
+        self.map = 0
+        self.create_map_instance()
+        self.tab2_layout.addWidget(self.map)
 
 
 
         # ==================# GROUP 3 WIDGETS #==================#
 
         #Button stat summary
-        Button_stat_summary = QtWidgets.QPushButton(self.widget)
-        Button_stat_summary.setText("View Statistical Summary")
-        Button_stat_summary.clicked.connect(self.on_Button1_clicked)
-        layout3.addWidget(Button_stat_summary, 0, 0, 1, 1)
-
-
-
-
-
-
-
-
+        #Button_stat_summary = QtWidgets.QPushButton(self.widget)
+        #Button_stat_summary.setText("View Statistical Summary")
+        #Button_stat_summary.clicked.connect(self.on_Button1_clicked)
+        #layout3.addWidget(Button_stat_summary, 0, 0, 1, 1)
 
 
 
@@ -263,16 +307,16 @@ class main_window(QMainWindow):
         filename = os.path.expanduser(os.path.abspath(os.path.join(os.path.dirname(__file__), "statistic_summary.csv")))
         self.items = []
         self.fileName = filename
-        self.on_Button1_clicked
+        #self.on_Button1_clicked
 
         self.model = QtGui.QStandardItemModel(self.widget)
 
         self.model.setHorizontalHeaderLabels(
+            ['Count', 'Mean', 'Std', 'Min', '25%', '50%', '75%', 'Max'])
+        self.model.setVerticalHeaderLabels(
             ['Severity', 'Latitude', 'Longitude', 'Distance(mi)', 'Number', 'Temperature',
              'Wind Chill(F)', 'Humidity%', 'Pressure(in)', 'Visibility(mi)',
              'Wind Speed(mph)', 'Precipitation(in)'])
-        self.model.setVerticalHeaderLabels(
-            ['Count', 'Mean', 'Std', 'Min', '25%', '50%', '75%', 'Max'])
         self.tableView = QTableView(self.widget)
         #self.tableView.setStyleSheet("QTableView{ background-color: rgb(45, 45, 45);  }")  # cell color
         self.tableView.horizontalHeader().setStretchLastSection(True)
@@ -285,10 +329,12 @@ class main_window(QMainWindow):
         self.show()
 
 #########################################   FUNCTIONS   #####################################################
-    @QtCore.pyqtSlot()
-    def on_Button1_clicked(self):
-        self.loadCsv(self.fileName)
-        print("button1 clicked")
+
+    #=============== VIEW STATISTICAL SUMMRY FUNCTION ====================#
+   # @QtCore.pyqtSlot()
+    #def on_Button1_clicked(self):
+        #self.loadCsv(self.fileName)
+        #print("Statistical summary button clicked")
 
     def loadCsv(self, fileName):
         while (self.model.rowCount() > 0):
@@ -302,12 +348,118 @@ class main_window(QMainWindow):
                     ]
                     self.model.appendRow(self.items)
             self.model.setVerticalHeaderLabels(
-                ['Count', 'Mean', 'Std', 'Min', '25%', '50%', '75%', 'Max'])
+                ['Severity', 'Latitude', 'Longitude', 'Distance(mi)', 'Number', 'Temperature',
+                 'Wind Chill(F)', 'Humidity%', 'Pressure(in)', 'Visibility(mi)',
+                 'Wind Speed(mph)', 'Precipitation(in)'])
         except:
+            self.model.setVerticalHeaderLabels(
+                ['Severity', 'Latitude', 'Longitude', 'Distance(mi)', 'Number', 'Temperature',
+                 'Wind Chill(F)', 'Humidity%', 'Pressure(in)', 'Visibility(mi)',
+                 'Wind Speed(mph)', 'Precipitation(in)'])
             print("No Database")
 
-    def on_Button2_clicked(self):
-        print("button 2 clicked")
+
+
+    #====================== GET ATTRIBUTES  FUNCTION=========================#
+
+    def get_predict_attributes(self):
+        print(
+            "Data in predict button is: ",
+            #self.severity_display.text(),
+            self.line_edit_latitude.text(),
+            self.line_edit_longitude.text(),
+            self.line_edit_distance.text(),
+            self.line_edit_number.text(),
+            self.line_edit_temperature.text(),
+            self.line_edit_wind_chill.text(),
+            self.line_edit_humidity.text(),
+            self.line_edit_pressure.text(),
+            self.line_edit_visibility.text(),
+            self.line_edit_wind_speed.text(),
+            self.line_edit_precipitation.text()
+        )
+        return(
+            # self.severity_display.text(),
+            self.line_edit_latitude.text(),
+            self.line_edit_longitude.text(),
+            self.line_edit_distance.text(),
+            self.line_edit_number.text(),
+            self.line_edit_temperature.text(),
+            self.line_edit_wind_chill.text(),
+            self.line_edit_humidity.text(),
+            self.line_edit_pressure.text(),
+            self.line_edit_visibility.text(),
+            self.line_edit_wind_speed.text(),
+            self.line_edit_precipitation.text()
+        )
+
+    def get_train_attributes(self):
+        print(
+            "Data in train button is: ",
+            self.SpinBox1.text(),
+            self.SpinBox2.text(),
+            self.SpinBox3.text(),
+            #self.accuracy_display.text()
+        )
+        return(
+            self.SpinBox1.text(),
+            self.SpinBox2.text(),
+            self.SpinBox3.text(),
+            # self.accuracy_display.text()
+        )
+
+
+    def on_Button_train_clicked(self):
+        print("Button train clicked")
+        attributes = self.get_train_attributes()
+        try:
+            import train_model
+        except:
+            print("import exception")
+        model1 = train_model.train(attributes)
+        self.points = model1.get_map_data_points()
+        self.update_screen_widgets()
+
+
+    def update_screen_widgets(self):
+        # update image in screen
+        self.pixmap = QPixmap("temp_hist.png")
+        self.imageView.setPixmap(self.pixmap)
+        self.imageView.update()
+
+        # update map
+        self.tab2_layout.removeWidget(self.map)
+        self.create_map_instance()
+        # self.map.update()
+        self.tab2_layout.addWidget(self.map)
+
+        # update summary table
+        filename = os.path.expanduser(os.path.abspath(os.path.join(os.path.dirname(__file__), "statistic_summary.csv")))
+        self.items = []
+        self.fileName = filename
+        self.loadCsv(self.fileName)
+
+    def on_Button_predict_clicked(self):
+        print("Button predict clicked")
+        attributes = self.get_predict_attributes()
+        try:
+            import predict
+        except:
+            print("import exception")
+        predict1 = predict.predict(attributes)
 
     def eda_tab(self):
         print("eda tab clicked")
+
+    def create_map_instance(self):
+        #########-------------------------------------- INITIALIZE MAP -------------------------------------- #########
+        # create Qwebview Map instance
+        try:
+            import map_view
+        except:
+            print("import exception")
+
+        # create initial dummy data for map
+        #initial self.points is 0
+        file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "map.html"))
+        self.map = map_view.map_webview(file_path, self.points)  # pass datapoints

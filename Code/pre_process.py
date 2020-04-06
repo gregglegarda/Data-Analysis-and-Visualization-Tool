@@ -9,7 +9,7 @@ class data_frame():
       def __init__(self, datafile,samplesize):
             self.data = 0
             self.datafile = datafile
-            self.samplesize = samplesize
+            self.samplesize = int(samplesize[0])
             super(data_frame, self).__init__()
 
 
