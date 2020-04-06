@@ -56,7 +56,7 @@ Astronomical_Twilight
 
 ################################### TEMPERATURE HISTOGRAM ##################################
 # fairly evenly distributed histogram; most accidents occur around the 60-70 degree mark
-plt.figure(figsize=(6, 4))
+#plt.figure(figsize=(8, 6))
 plt.hist(data['Temperature(F)'],bins=50,range=[-10,120], rwidth=0.9)
 
 #line colors

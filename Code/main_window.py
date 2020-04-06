@@ -44,8 +44,8 @@ class main_window(QMainWindow):
         self.widget.layout().setContentsMargins(50, 10, 50, 10)
         self.widget.layout().setSpacing(10)
         self.widget.layout().setColumnStretch(0, 4)
-        self.widget.layout().setColumnStretch(1, 5)
-        self.widget.layout().setColumnStretch(2, 5)
+        self.widget.layout().setColumnStretch(1, 4)
+        self.widget.layout().setColumnStretch(2, 7)
         self.widget.layout().setRowStretch(0, 13)
         self.widget.layout().setRowStretch(1, 15)
         self.widget.layout().setRowStretch(2, 15)
@@ -90,10 +90,10 @@ class main_window(QMainWindow):
 
         # Small group4
         self.GroupBox4 = QGroupBox()
-        layout4 = QGridLayout()
-        self.GroupBox4.setLayout(layout4)
-        layout4.setContentsMargins(5, 5, 5, 5)
-        layout4.setSpacing(5)
+        self.layout4 = QGridLayout()
+        self.GroupBox4.setLayout(self.layout4)
+        self.layout4.setContentsMargins(5, 5, 5, 5)
+        self.layout4.setSpacing(5)
         self.widget.layout().addWidget(self.GroupBox4, 0, 2, 2, 1)
 
         # ==================# GROUP 0 WIDGETS #==================#
@@ -240,7 +240,6 @@ class main_window(QMainWindow):
         self.tab2 = QWidget()
         self.tab3 = QWidget()
         self.tab4 = QWidget()
-        self.tab5 = QWidget()
         #self.tabs.resize(300, 200)
 
 
@@ -251,7 +250,7 @@ class main_window(QMainWindow):
         self.tab1.setLayout(tab1_layout)
 
         # tab2
-        self.tabs.addTab(self.tab2, "GeoMap")
+        self.tabs.addTab(self.tab2, "HeatMap")
         self.tab2_layout = QVBoxLayout(self)
         self.tab2.setLayout(self.tab2_layout)
 
@@ -265,34 +264,10 @@ class main_window(QMainWindow):
         tab4_layout = QVBoxLayout(self)
         self.tab4.setLayout(tab4_layout)
 
-        # tab5
-        self.tabs.addTab(self.tab5, "Summary")
-        tab5_layout = QVBoxLayout(self)
-        self.tab5.setLayout(tab5_layout)
-
         # Add tabs to widget
         layout2.addWidget(self.tabs)
 
-
         # ==================# INDIVIDUAL TAB WIDGETS (INSIDE GROUP 2)#==================#
-        # Qwebview maps
-        #create map instance and update later when the train button is clicked
-        self.map = 0
-        self.create_map_instance()
-        self.tab2_layout.addWidget(self.map)
-
-
-
-        # ==================# GROUP 3 WIDGETS #==================#
-
-        #Button stat summary
-        #Button_stat_summary = QtWidgets.QPushButton(self.widget)
-        #Button_stat_summary.setText("View Statistical Summary")
-        #Button_stat_summary.clicked.connect(self.on_Button1_clicked)
-        #layout3.addWidget(Button_stat_summary, 0, 0, 1, 1)
-
-
-
         # Image
         # image box
         self.imageView = QLabel(self.widget)
@@ -303,7 +278,9 @@ class main_window(QMainWindow):
         #self.scroll.setWidget(self.imageView)
         tab1_layout.addWidget(self.imageView)
 
-        # ==================# TABLE DATABASE #==================#
+
+
+        # ==================# GROUP 3 WIDGETS (TABLE DATABASE) #==================#
         filename = os.path.expanduser(os.path.abspath(os.path.join(os.path.dirname(__file__), "statistic_summary.csv")))
         self.items = []
         self.fileName = filename
@@ -324,6 +301,16 @@ class main_window(QMainWindow):
 
         self.tableView.setModel(self.model)
         layout3.addWidget(self.tableView, 1, 0, 1, 4)
+
+
+        # ==================# GROUP 4 WIDGETS #==================#
+        # Qwebview maps
+        #create map instance and update later when the train button is clicked
+        self.map = 0
+        self.create_map_instance()
+        self.layout4.addWidget(self.map)
+
+
 
         # ==================# SHOW EVERYTHING #==================#
         self.show()
@@ -428,10 +415,10 @@ class main_window(QMainWindow):
         self.imageView.update()
 
         # update map
-        self.tab2_layout.removeWidget(self.map)
+        self.layout4.removeWidget(self.map)
         self.create_map_instance()
         # self.map.update()
-        self.tab2_layout.addWidget(self.map)
+        self.layout4.addWidget(self.map)
 
         # update summary table
         filename = os.path.expanduser(os.path.abspath(os.path.join(os.path.dirname(__file__), "statistic_summary.csv")))

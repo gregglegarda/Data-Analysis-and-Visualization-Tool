@@ -15,15 +15,15 @@ class eda():
 
         ################################### SUMMARY OF STATS ##################################
         summary = self.data.describe()
-        summary = summary.T
+        summary = (summary.T).round(4)
         summary.to_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), "statistic_summary.csv")), index=False, header=False)
         print(summary)
 
 
         ################################### TEMPERATURE HISTOGRAM ##################################
         # fairly evenly distributed histogram; most accidents occur around the 60-70 degree mark
-        plt.figure(figsize=(6, 4))
-        plt.hist(self.data['Temperature(F)'],bins=50,range=[-10,120], rwidth=0.9)
+        plt.figure(figsize=(4, 3))
+        plt.hist(self.data['Temperature(F)'],bins=50,range=[-10,120], color="grey")#, rwidth=0.95)
 
         #line colors
         title_obj = plt.title('Temperature Histogram')
