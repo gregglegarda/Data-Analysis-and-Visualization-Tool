@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 from matplotlib import pyplot as plt
+import numpy as np
 from datetime import datetime
 
 
@@ -22,8 +23,10 @@ class eda():
 
         ################################### TEMPERATURE HISTOGRAM ##################################
         # fairly evenly distributed histogram; most accidents occur around the 60-70 degree mark
+
+
         plt.figure(figsize=(4, 3))
-        plt.hist(self.data['Temperature(F)'],bins=50,range=[-10,120], color="grey")#, rwidth=0.95)
+        plt.hist(self.data['Temperature(F)'],bins=30, range=[-10,120], color="gray", edgecolor='darkgray', linewidth=0.5)
 
         #line colors
         title_obj = plt.title('Temperature Histogram')
@@ -39,3 +42,5 @@ class eda():
         plt.savefig('temp_hist.png',
                     facecolor = '#1a1a1a',
                     transparent = True,)
+
+        ################################### SEVERITY HISTOGRAM ##################################

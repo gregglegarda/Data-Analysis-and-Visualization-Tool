@@ -14,7 +14,8 @@ Start_Lat
 Start_Lng	
 Distance(mi)	
 
-Description	Number	
+Description	
+Number	
 Street	
 Side	
 City	
@@ -74,3 +75,9 @@ plt.savefig('sample_hist.png',
             facecolor = '#1a1a1a',
             transparent = True,
             )
+
+
+print("first",data['Severity'].mean())
+print("second",data['Severity'])
+data['Severity'] = data['Severity'].fillna(0)
+print("third",data['Severity'])

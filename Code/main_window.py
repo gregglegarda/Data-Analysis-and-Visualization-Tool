@@ -15,7 +15,7 @@ from PyQt5.QtGui import QPixmap
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import csv
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QItemSelectionModel
+from PyQt5.QtCore import pyqtSignal, QObject
 import sys
 import os
 import ntpath
@@ -58,10 +58,10 @@ class main_window(QMainWindow):
         # ==================# GROUP WIDGET LAYOUT #==================#
         # Small group0 (training)
         self.GroupBox0 = QGroupBox()
-        layout0 = QGridLayout()
-        self.GroupBox0.setLayout(layout0)
-        layout0.setContentsMargins(20, 5, 20, 5)
-        layout0.setSpacing(5)
+        self.layout0 = QGridLayout()
+        self.GroupBox0.setLayout(self.layout0)
+        self.layout0.setContentsMargins(20, 5, 20, 5)
+        self.layout0.setSpacing(5)
         self.widget.layout().addWidget(self.GroupBox0, 0, 0, 1, 1)
 
         # Small group1 (predicting)
@@ -100,38 +100,47 @@ class main_window(QMainWindow):
 
         # Number of Samples
         self.num_samples = QLabel("Number of Samples:")
-        layout0.addWidget(self.num_samples, 0, 0, 1, 1)
+        self.layout0.addWidget(self.num_samples, 0, 0, 1, 1)
         self.SpinBox1 = QtWidgets.QSpinBox(self.widget)
-        self.SpinBox1.setMaximum(1000000)
-        layout0.addWidget(self.SpinBox1, 0, 1, 1, 1)
+        self.SpinBox1.setMaximum(200000)
+        self.SpinBox1.setMinimum(100)
+        self.SpinBox1.setSingleStep(100)
+        self.layout0.addWidget(self.SpinBox1, 0, 1, 1, 1)
 
         # Train Percent
-        self.train_percent = QLabel("Train Pecentage:")
-        layout0.addWidget(self.train_percent, 1, 0, 1, 1)
+        self.train_percent = QLabel("Train Split:")
+        self.layout0.addWidget(self.train_percent, 1, 0, 1, 1)
         self.SpinBox2 = QtWidgets.QSpinBox(self.widget)
-        self.SpinBox2.setMaximum(100)
-        layout0.addWidget(self.SpinBox2, 1, 1, 1, 1)
+        self.SpinBox2.setMaximum(90)
+        self.SpinBox2.setMinimum(70)
+        self.SpinBox2.setSingleStep(10)
+        self.SpinBox2.setSuffix("%")
+        self.layout0.addWidget(self.SpinBox2, 1, 1, 1, 1)
+
+       
 
         # Test Percent
-        self.test_percent = QLabel("Test Pecentage:")
-        layout0.addWidget(self.test_percent, 2, 0, 1, 1)
-        self.SpinBox3 = QtWidgets.QSpinBox(self.widget)
-        self.SpinBox3.setMaximum(100)
-        layout0.addWidget(self.SpinBox3, 2, 1, 1, 1)
+        self.model_algorithm_label = QLabel("Algorithm:")
+        self.layout0.addWidget(self.model_algorithm_label, 2, 0, 1, 1)
+        self.model_algorithm_combo = QtWidgets.QComboBox(self.widget)
+        self.model_algorithm_combo.addItem("Decision Trees")
+        self.model_algorithm_combo.addItem("Random Forest")
+        self.model_algorithm_combo.addItem("Regression")
+        self.layout0.addWidget(self.model_algorithm_combo, 2, 1, 1, 1)
 
         # Model Accuracy
         self.accuracy = QLabel("Model Accuracy:")
-        layout0.addWidget(self.accuracy, 3, 0, 1, 1)
+        self.layout0.addWidget(self.accuracy, 3, 0, 1, 1)
         self.accuracy_display = QLCDNumber()
         self.accuracy_display.setMaximumHeight(50)
-        layout0.addWidget(self.accuracy_display, 3, 1, 1, 1)
+        self.layout0.addWidget(self.accuracy_display, 3, 1, 1, 1)
 
 
         # Train Model
         Button1 = QtWidgets.QPushButton(self.widget)
         Button1.setText("Train Model")
         Button1.clicked.connect(self.on_Button_train_clicked)
-        layout0.addWidget(Button1, 4, 0, 1, 2)
+        self.layout0.addWidget(Button1, 4, 0, 1, 2)
 
 
 
@@ -385,13 +394,13 @@ class main_window(QMainWindow):
             "Data in train button is: ",
             self.SpinBox1.text(),
             self.SpinBox2.text(),
-            self.SpinBox3.text(),
+            self.model_algorithm_combo.currentText(),
             #self.accuracy_display.text()
         )
         return(
             self.SpinBox1.text(),
             self.SpinBox2.text(),
-            self.SpinBox3.text(),
+            self.model_algorithm_combo.currentText(),
             # self.accuracy_display.text()
         )
 
@@ -405,6 +414,7 @@ class main_window(QMainWindow):
             print("import exception")
         model1 = train_model.train(attributes)
         self.points = model1.get_map_data_points()
+        self.accuracy_display.display(model1.get_model_accuracy())  # set the lcd accuract digit
         self.update_screen_widgets()
 
 
@@ -425,6 +435,9 @@ class main_window(QMainWindow):
         self.items = []
         self.fileName = filename
         self.loadCsv(self.fileName)
+
+        #update lcd
+        self.accuracy_display.update()
 
     def on_Button_predict_clicked(self):
         print("Button predict clicked")
