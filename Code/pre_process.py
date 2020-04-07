@@ -36,6 +36,14 @@ class data_frame():
             del self.data['End_Lat']
             del self.data['End_Lng']
             del self.data['Country']
+            del self.data['Timezone']
+            del self.data['Airport_Code']
+            del self.data['Weather_Timestamp']
+            del self.data['Wind_Direction']
+
+            del self.data['Weather_Condition']
+
+
 
 
             #########-------------------------------------- FILL MISSING VALUES -------------------------------------- #########
@@ -77,6 +85,6 @@ class data_frame():
             print("--------------------------HEAD--------------------------\n", self.data.head(10))
             print("--------------------------NUMBER OF SAMPLES--------------------------\n",
                   len(self.data),"Data points randomly selected from ", len(self.dataframe), "\n\n")
-
+            print("--------------------------INFO AFTER CLEANING--------------------------\n", self.data.info())
             self.data.to_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), "pre_processed_data.csv")), index=False,
                       header=True)

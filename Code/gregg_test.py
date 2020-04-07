@@ -1,6 +1,8 @@
 import os
 import pandas as pd
 from matplotlib import pyplot as plt
+import seaborn as sns
+import numpy as np
 
 
 
@@ -71,13 +73,30 @@ ax.spines['right'].set_color('w')
 ax.spines['left'].set_color('w')
 
 plt.tight_layout()
-plt.savefig('sample_hist.png',
-            facecolor = '#1a1a1a',
-            transparent = True,
-            )
-
+#plt.savefig('gregg_output.png',
+            #facecolor = '#1a1a1a',
+            #transparent = True,
+            #)
 
 print("first",data['Severity'].mean())
 print("second",data['Severity'])
 data['Severity'] = data['Severity'].fillna(0)
 print("third",data['Severity'])
+
+
+
+
+
+
+################################### TEMPERATURE HISTOGRAM ##################################
+# calculate the correlation matrix
+
+sns.set()
+
+ax = sns.heatmap(data)
+
+# Saving image
+#plt.savefig('heatmap-02.png')
+
+# In case you dont want to save image but just displya it
+plt.show()

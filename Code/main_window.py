@@ -277,15 +277,24 @@ class main_window(QMainWindow):
         layout2.addWidget(self.tabs)
 
         # ==================# INDIVIDUAL TAB WIDGETS (INSIDE GROUP 2)#==================#
-        # Image
-        # image box
+
+        # HISTOGRAMS
         self.imageView = QLabel(self.widget)
-        self.pixmap = QPixmap("temp_hist.png")
+        self.pixmap = QPixmap("sample_hist.png")
         self.imageView.setPixmap(self.pixmap)
         # scroller
         #self.scroll = QtWidgets.QScrollArea(self.widget)
         #self.scroll.setWidget(self.imageView)
         tab1_layout.addWidget(self.imageView)
+
+        # CORRELATION
+        self.imageView3 = QLabel(self.widget)
+        self.pixmap3 = QPixmap("sample_hist.png")
+        self.imageView3.setPixmap(self.pixmap3)
+        # scroller
+        # self.scroll = QtWidgets.QScrollArea(self.widget)
+        # self.scroll.setWidget(self.imageView)
+        tab3_layout.addWidget(self.imageView3)
 
 
 
@@ -424,6 +433,13 @@ class main_window(QMainWindow):
         self.imageView.setPixmap(self.pixmap)
         self.imageView.update()
 
+        # update image in screen
+        self.pixmap3 = QPixmap("correlation_matrix.png")
+        self.imageView3.setPixmap(self.pixmap3)
+        self.imageView3.update()
+
+
+
         # update map
         self.layout4.removeWidget(self.map)
         self.create_map_instance()
@@ -448,8 +464,6 @@ class main_window(QMainWindow):
             print("import exception")
         predict1 = predict.predict(attributes)
 
-    def eda_tab(self):
-        print("eda tab clicked")
 
     def create_map_instance(self):
         #########-------------------------------------- INITIALIZE MAP -------------------------------------- #########
