@@ -254,14 +254,23 @@ class main_window(QMainWindow):
         # ==================# GROUP STATUS WIDGETS (STATUS LAYOUT) #==================#
 
 
-        self.status_label = QLabel("Status:")
-        self.layoutstatus.addWidget(self.status_label, 0, 0, 1, 1)
-        self.status_display = QLCDNumber()
-        self.status_display.display("ready")
-        self.status_display.setStyleSheet("QLCDNumber { color: black ; background-color: green}")
-        self.status_display.setMaximumHeight(25)
-        self.status_display.setSegmentStyle(QLCDNumber.Flat)
-        self.layoutstatus.addWidget(self.status_display, 0, 1, 1, 1)
+        self.status_label_model = QLabel("ML MODEL:")
+        self.layoutstatus.addWidget(self.status_label_model, 0, 0, 1, 1)
+        self.status_display_model = QLCDNumber()
+        self.status_display_model.display("oooo")
+        self.status_display_model.setStyleSheet("QLCDNumber { color: black ; background-color: yellow}")
+        self.status_display_model.setMaximumHeight(25)
+        self.status_display_model.setSegmentStyle(QLCDNumber.Flat)
+        self.layoutstatus.addWidget(self.status_display_model, 1, 0, 1, 1)
+
+        self.status_map = QLabel("GEOMAP:")
+        self.layoutstatus.addWidget(self.status_map, 0, 1, 1, 1)
+        self.status_display_map = QLCDNumber()
+        self.status_display_map.display("ready")
+        self.status_display_map.setStyleSheet("QLCDNumber { color: black ; background-color: green}")
+        self.status_display_map.setMaximumHeight(25)
+        self.status_display_map.setSegmentStyle(QLCDNumber.Flat)
+        self.layoutstatus.addWidget(self.status_display_map, 1, 1, 1, 1)
 
 
 
@@ -456,10 +465,19 @@ class main_window(QMainWindow):
         self.accuracy_display.display(model1.get_model_accuracy())  # set the lcd accuract digit
         self.update_screen_widgets()
 
+        #self.app.processEvents()
+        #time.sleep(10)
+        self.status_display_map.display("ready")
+        self.status_display_map.setStyleSheet("QLCDNumber { color: black ; background-color: green}")
+        self.status_display_map.update()
+
     def update_status_bar(self):
-        self.status_display.display("busy")
-        self.status_display.setStyleSheet("QLCDNumber { color: black ; background-color: red}")
-        self.status_display.update()
+        self.status_display_model.display("busy")
+        self.status_display_model.setStyleSheet("QLCDNumber { color: black ; background-color: red}")
+        self.status_display_model.update()
+        self.status_display_map.display("busy")
+        self.status_display_map.setStyleSheet("QLCDNumber { color: black ; background-color: red}")
+        self.status_display_map.update()
 
 
 
@@ -486,13 +504,23 @@ class main_window(QMainWindow):
         self.fileName = filename
         self.loadCsv(self.fileName)
 
-        #update lcd
+        #update lcd train
         #self.accuracy_display.setStyleSheet("QLCDNumber { color: black ; background-color: #1f77b4 }")
         self.accuracy_display.update()
 
-        self.status_display.display("ready")
-        self.status_display.setStyleSheet("QLCDNumber { color: black ; background-color: green}")
-        self.status_display.update()
+
+        #status bar update
+        self.status_display_model.display("ready")
+        self.status_display_model.setStyleSheet("QLCDNumber { color: black ; background-color: green}")
+        self.status_display_model.update()
+        self.status_display_map.display("busy")
+        self.status_display_map.setStyleSheet("QLCDNumber { color: black ; background-color: yellow}")
+        self.status_display_map.update()
+
+
+
+
+
 
     #########-------------------------------------- PREDICT FUNCTION -------------------------------------- #########
     def on_Button_predict_clicked(self):

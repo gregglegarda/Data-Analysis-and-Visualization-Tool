@@ -76,7 +76,7 @@ class map_webview(QWebView):
                     if sev == 1:
                         color= "green"
                     elif sev == 2:
-                        color= "blue"
+                        color= "#1f77b4"
                     elif sev == 3:
                         color= "#5800a7"
                     elif sev == 4:
