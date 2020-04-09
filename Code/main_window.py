@@ -31,7 +31,10 @@ def runit(app):
 class main_window(QMainWindow):
     def __init__(self,app):
         self.app = app
-        self.points=0
+        self.points = 0
+
+        #dt model
+        self.dt_model =0
 
 
 
@@ -113,7 +116,7 @@ class main_window(QMainWindow):
         self.num_samples = QLabel("Number of Samples:")
         self.layout0.addWidget(self.num_samples, 0, 0, 1, 1)
         self.SpinBox1 = QtWidgets.QSpinBox(self.widget)
-        self.SpinBox1.setMaximum(500000)
+        self.SpinBox1.setMaximum(2000000)
         self.SpinBox1.setMinimum(100)
         self.SpinBox1.setSingleStep(100)
         self.layout0.addWidget(self.SpinBox1, 0, 1, 1, 1)
@@ -419,7 +422,7 @@ class main_window(QMainWindow):
             self.line_edit_wind_speed.text(),
             self.line_edit_precipitation.text()
         )
-        return(
+        return[
             # self.severity_display.text(),
             self.line_edit_latitude.text(),
             self.line_edit_longitude.text(),
@@ -432,7 +435,7 @@ class main_window(QMainWindow):
             self.line_edit_visibility.text(),
             self.line_edit_wind_speed.text(),
             self.line_edit_precipitation.text()
-        )
+        ]
 
     def get_train_attributes(self):
         print(
@@ -449,19 +452,41 @@ class main_window(QMainWindow):
             # self.accuracy_display.text()
         )
 
+    #########-------------------------------------- INITIALIZE MAP FUNCTION -------------------------------------- #########
+    def create_map_instance(self):
+
+        # create Qwebview Map instance
+        try:
+            import map_view
+        except:
+            print("import exception")
+
+        # create initial dummy data for map
+        # initial self.points is 0
+        file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "map.html"))
+        self.map = map_view.map_webview(file_path, self.points)  # pass datapoints
+
+
+
     #########-------------------------------------- TRAIN FUNCTION -------------------------------------- #########
     def on_Button_train_clicked(self):
         print("Button train clicked")
 
+        #make stus bar busy
         self.update_status_bar()
         self.app.processEvents()
         attributes = self.get_train_attributes()
+
+        # train model
         try:
             import train_model
         except:
             print("import exception")
         model1 = train_model.train(attributes)
         self.points = model1.get_map_data_points()
+        self.dt_model = model1.get_model_dt()
+
+        #update screen
         self.accuracy_display.display(model1.get_model_accuracy())  # set the lcd accuract digit
         self.update_screen_widgets()
 
@@ -504,9 +529,13 @@ class main_window(QMainWindow):
         self.fileName = filename
         self.loadCsv(self.fileName)
 
-        #update lcd train
+        #update lcd train (accuracy
         #self.accuracy_display.setStyleSheet("QLCDNumber { color: black ; background-color: #1f77b4 }")
         self.accuracy_display.update()
+
+        # update lcd predict (severity)
+        self.severity_display.display(0)
+        self.severity_display.update()
 
 
         #status bar update
@@ -527,22 +556,21 @@ class main_window(QMainWindow):
 
         print("Button predict clicked")
         attributes = self.get_predict_attributes()
+        print("button predcit", attributes)
+        print("button predcit", self.dt_model)
+
         try:
             import predict
         except:
             print("import exception")
-        predict1 = predict.predict(attributes)
 
-    #########-------------------------------------- INITIALIZE MAP FUNCTION -------------------------------------- #########
-    def create_map_instance(self):
 
-        # create Qwebview Map instance
-        try:
-            import map_view
-        except:
-            print("import exception")
+        predict1 = predict.predict(attributes, self.dt_model)
+        predict_result1 = predict1.predict_inputs()
+        self.severity_display.display(predict_result1)
 
-        # create initial dummy data for map
-        #initial self.points is 0
-        file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "map.html"))
-        self.map = map_view.map_webview(file_path, self.points)  # pass datapoints
+        #print("no model or missing inputs")
+
+
+
+

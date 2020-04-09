@@ -17,10 +17,13 @@ import pandas as pd
 class train():
     def __init__(self, train_inputs):
         super(train, self).__init__()
+       #attributes
         self.accuracy = 0
         self.data = 0
         self.train_inputs = train_inputs
+        self.model_clf_dt = 0
 
+        #functions
         self.data_processing()
         self.create_model()
 
@@ -65,12 +68,15 @@ class train():
 
         # Predict test from train
         y_pred = clf.predict(X_test)
+        print("shape of y_pred:", X_test.shape)
+        print("y_pred:", X_test)
         acc_score = accuracy_score(y_test, y_pred)
         self.accuracy = (acc_score*100).round(2)
         # Accuracy
         print('Accuracy:', acc_score)
         print('Accuracy:', self.accuracy)
-
+        self.model_clf_dt = clf
+        print("train model is:", clf)
 
 
 
@@ -103,3 +109,5 @@ class train():
         return self.data
     def get_model_accuracy(self):
         return self.accuracy
+    def get_model_dt(self):
+        return self.model_clf_dt
