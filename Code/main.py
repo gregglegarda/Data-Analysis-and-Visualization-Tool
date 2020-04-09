@@ -94,7 +94,7 @@ except:
     print("import exception")
 
 mainrun = main_window.runit(app)
-mainrun.get_attributes
+#mainrun.get_attributes
 
 
 

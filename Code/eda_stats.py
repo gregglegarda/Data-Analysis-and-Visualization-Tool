@@ -31,7 +31,7 @@ class eda():
 
         #create histogram
         plt.figure(figsize=(4, 3))
-        plt.hist(self.data['Temperature(F)'],bins=30, range=[-10,120], color="gray", edgecolor='darkgray', linewidth=0.5)
+        plt.hist(self.data['Temperature(F)'],bins=30, range=[-10,120],  edgecolor='darkgray', linewidth=0.5) #color="gray",)
 
         #figure settings
         title_obj = plt.title('Temperature Histogram')
@@ -88,7 +88,7 @@ class eda():
         #create correlation matrix
         corrmatrix = self.sns_data.corr()
         fig, ax = plt.subplots(1, 1, figsize=(4, 3))
-        heatplot = ax.imshow(corrmatrix, cmap='Greys_r')
+        heatplot = ax.imshow(corrmatrix, cmap='PuBu')
 
         print("corrmatrix:\n",corrmatrix)
         #heatmap settings

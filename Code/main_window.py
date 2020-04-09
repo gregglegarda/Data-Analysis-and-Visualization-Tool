@@ -18,6 +18,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import pyqtSignal, QObject
 import sys
 import os
+import time
 import ntpath
 import qdarkstyle
 
@@ -41,14 +42,15 @@ class main_window(QMainWindow):
         self.widget = QtWidgets.QWidget()
         self.setCentralWidget(self.widget)
         self.widget.setLayout(QtWidgets.QGridLayout())
-        self.widget.layout().setContentsMargins(50, 10, 50, 10)
+        self.widget.layout().setContentsMargins(50, 10, 50, 20)
         self.widget.layout().setSpacing(10)
         self.widget.layout().setColumnStretch(0, 4)
-        self.widget.layout().setColumnStretch(1, 4)
+        self.widget.layout().setColumnStretch(1, 5)
         self.widget.layout().setColumnStretch(2, 7)
-        self.widget.layout().setRowStretch(0, 13)
-        self.widget.layout().setRowStretch(1, 15)
-        self.widget.layout().setRowStretch(2, 15)
+        self.widget.layout().setRowStretch(0, 6)
+        self.widget.layout().setRowStretch(1, 7)
+        self.widget.layout().setRowStretch(2, 13)
+        self.widget.layout().setRowStretch(3, 15)
         self.setWindowTitle("US Accidents Data Mining")
         self.showMaximized()
         #THEME COLOR
@@ -62,7 +64,7 @@ class main_window(QMainWindow):
         self.GroupBox0.setLayout(self.layout0)
         self.layout0.setContentsMargins(20, 5, 20, 5)
         self.layout0.setSpacing(5)
-        self.widget.layout().addWidget(self.GroupBox0, 0, 0, 1, 1)
+        self.widget.layout().addWidget(self.GroupBox0, 0, 0, 2, 1)
 
         # Small group1 (predicting)
         self.GroupBox1 = QGroupBox()
@@ -70,15 +72,24 @@ class main_window(QMainWindow):
         self.GroupBox1.setLayout(layout1)
         layout1.setContentsMargins(20, 5, 20, 5)
         layout1.setSpacing(5)
-        self.widget.layout().addWidget(self.GroupBox1, 1, 0,3 , 1)
+        self.widget.layout().addWidget(self.GroupBox1, 2, 0,3 , 1)
 
-        # Small group2 (tabs and map)
+        #Small group (status)
+        self.GroupBox_status = QGroupBox()
+        self.layoutstatus = QGridLayout()
+        self.GroupBox_status.setLayout(self.layoutstatus)
+        self.layoutstatus.setContentsMargins(5, 5, 5, 5)
+        self.layoutstatus.setSpacing(5)
+        self.widget.layout().addWidget(self.GroupBox_status, 0, 1, 1, 1)
+
+
+        # Small group2 (tabs)
         self.GroupBox2 = QGroupBox()
         layout2 = QGridLayout()
         self.GroupBox2.setLayout(layout2)
         layout2.setContentsMargins(5, 5, 5, 5)
         layout2.setSpacing(5)
-        self.widget.layout().addWidget(self.GroupBox2, 0, 1, 2, 1)
+        self.widget.layout().addWidget(self.GroupBox2, 1, 1, 2, 1)
 
         # Small group3 (summary of stats)
         self.GroupBox3 = QGroupBox()
@@ -86,15 +97,15 @@ class main_window(QMainWindow):
         self.GroupBox3.setLayout(layout3)
         layout3.setContentsMargins(5, 5, 5, 5)
         layout3.setSpacing(5)
-        self.widget.layout().addWidget(self.GroupBox3, 2, 1, 2, 2)
+        self.widget.layout().addWidget(self.GroupBox3, 3, 1, 2, 2)
 
-        # Small group4
+        # Small group4 (map)
         self.GroupBox4 = QGroupBox()
         self.layout4 = QGridLayout()
         self.GroupBox4.setLayout(self.layout4)
         self.layout4.setContentsMargins(5, 5, 5, 5)
         self.layout4.setSpacing(5)
-        self.widget.layout().addWidget(self.GroupBox4, 0, 2, 2, 1)
+        self.widget.layout().addWidget(self.GroupBox4, 0, 2, 3, 1)
 
         # ==================# GROUP 0 WIDGETS #==================#
 
@@ -102,7 +113,7 @@ class main_window(QMainWindow):
         self.num_samples = QLabel("Number of Samples:")
         self.layout0.addWidget(self.num_samples, 0, 0, 1, 1)
         self.SpinBox1 = QtWidgets.QSpinBox(self.widget)
-        self.SpinBox1.setMaximum(200000)
+        self.SpinBox1.setMaximum(500000)
         self.SpinBox1.setMinimum(100)
         self.SpinBox1.setSingleStep(100)
         self.layout0.addWidget(self.SpinBox1, 0, 1, 1, 1)
@@ -133,6 +144,7 @@ class main_window(QMainWindow):
         self.layout0.addWidget(self.accuracy, 3, 0, 1, 1)
         self.accuracy_display = QLCDNumber()
         self.accuracy_display.setMaximumHeight(50)
+        self.accuracy_display.setSegmentStyle(QLCDNumber.Flat)
         self.layout0.addWidget(self.accuracy_display, 3, 1, 1, 1)
 
 
@@ -229,6 +241,7 @@ class main_window(QMainWindow):
         layout1.addWidget(self.severity, 11, 0, 1, 1)
         self.severity_display = QLCDNumber()
         self.severity_display.setMaximumHeight(50)
+        self.severity_display.setSegmentStyle(QLCDNumber.Flat)
         layout1.addWidget(self.severity_display, 11 , 1, 1, 1)
 
 
@@ -237,6 +250,20 @@ class main_window(QMainWindow):
         Button_predict.setText("Predict Severity of Accident")
         Button_predict.clicked.connect(self.on_Button_predict_clicked)
         layout1.addWidget(Button_predict, 12, 0, 1, 2)
+
+        # ==================# GROUP STATUS WIDGETS (STATUS LAYOUT) #==================#
+
+
+        self.status_label = QLabel("Status:")
+        self.layoutstatus.addWidget(self.status_label, 0, 0, 1, 1)
+        self.status_display = QLCDNumber()
+        self.status_display.display("ready")
+        self.status_display.setStyleSheet("QLCDNumber { color: black ; background-color: green}")
+        self.status_display.setMaximumHeight(25)
+        self.status_display.setSegmentStyle(QLCDNumber.Flat)
+        self.layoutstatus.addWidget(self.status_display, 0, 1, 1, 1)
+
+
 
 
 
@@ -264,7 +291,7 @@ class main_window(QMainWindow):
         self.tab2.setLayout(self.tab2_layout)
 
         # tab3
-        self.tabs.addTab(self.tab3, "Correlation")
+        self.tabs.addTab(self.tab3, "Correlogram")
         tab3_layout = QVBoxLayout(self)
         self.tab3.setLayout(tab3_layout)
 
@@ -280,7 +307,7 @@ class main_window(QMainWindow):
 
         # HISTOGRAMS
         self.imageView = QLabel(self.widget)
-        self.pixmap = QPixmap("sample_hist.png")
+        self.pixmap = QPixmap("analysis.png")
         self.imageView.setPixmap(self.pixmap)
         # scroller
         #self.scroll = QtWidgets.QScrollArea(self.widget)
@@ -289,7 +316,7 @@ class main_window(QMainWindow):
 
         # CORRELATION
         self.imageView3 = QLabel(self.widget)
-        self.pixmap3 = QPixmap("sample_hist.png")
+        self.pixmap3 = QPixmap("analysis.png")
         self.imageView3.setPixmap(self.pixmap3)
         # scroller
         # self.scroll = QtWidgets.QScrollArea(self.widget)
@@ -321,7 +348,7 @@ class main_window(QMainWindow):
         layout3.addWidget(self.tableView, 1, 0, 1, 4)
 
 
-        # ==================# GROUP 4 WIDGETS #==================#
+        # ==================# GROUP 4 WIDGETS (MAP) #==================#
         # Qwebview maps
         #create map instance and update later when the train button is clicked
         self.map = 0
@@ -413,9 +440,12 @@ class main_window(QMainWindow):
             # self.accuracy_display.text()
         )
 
-
+    #########-------------------------------------- TRAIN FUNCTION -------------------------------------- #########
     def on_Button_train_clicked(self):
         print("Button train clicked")
+
+        self.update_status_bar()
+        self.app.processEvents()
         attributes = self.get_train_attributes()
         try:
             import train_model
@@ -425,6 +455,12 @@ class main_window(QMainWindow):
         self.points = model1.get_map_data_points()
         self.accuracy_display.display(model1.get_model_accuracy())  # set the lcd accuract digit
         self.update_screen_widgets()
+
+    def update_status_bar(self):
+        self.status_display.display("busy")
+        self.status_display.setStyleSheet("QLCDNumber { color: black ; background-color: red}")
+        self.status_display.update()
+
 
 
     def update_screen_widgets(self):
@@ -437,8 +473,6 @@ class main_window(QMainWindow):
         self.pixmap3 = QPixmap("correlation_matrix.png")
         self.imageView3.setPixmap(self.pixmap3)
         self.imageView3.update()
-
-
 
         # update map
         self.layout4.removeWidget(self.map)
@@ -453,9 +487,16 @@ class main_window(QMainWindow):
         self.loadCsv(self.fileName)
 
         #update lcd
+        #self.accuracy_display.setStyleSheet("QLCDNumber { color: black ; background-color: #1f77b4 }")
         self.accuracy_display.update()
 
+        self.status_display.display("ready")
+        self.status_display.setStyleSheet("QLCDNumber { color: black ; background-color: green}")
+        self.status_display.update()
+
+    #########-------------------------------------- PREDICT FUNCTION -------------------------------------- #########
     def on_Button_predict_clicked(self):
+
         print("Button predict clicked")
         attributes = self.get_predict_attributes()
         try:
@@ -464,9 +505,9 @@ class main_window(QMainWindow):
             print("import exception")
         predict1 = predict.predict(attributes)
 
-
+    #########-------------------------------------- INITIALIZE MAP FUNCTION -------------------------------------- #########
     def create_map_instance(self):
-        #########-------------------------------------- INITIALIZE MAP -------------------------------------- #########
+
         # create Qwebview Map instance
         try:
             import map_view
