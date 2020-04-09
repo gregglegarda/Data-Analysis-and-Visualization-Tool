@@ -44,6 +44,7 @@ accidents.boxplot(column='Precipitation(in)',by='Severity').set_yscale('log') #n
 
 
 accidents['End_Time'] = pd.to_datetime(accidents['End_Time'])
+accidents['Start_Time'] = pd.to_datetime(accidents['Start_Time'])
 accidents['Time_Delta'] = accidents['End_Time']-accidents['Start_Time'] #time elapsed from start of accident to time it was cleared
 
 accidents['Time_Delta'] = accidents['Time_Delta'].astype('timedelta64[m]') #converts time elapsed to minutes
