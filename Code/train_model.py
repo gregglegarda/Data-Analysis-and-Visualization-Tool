@@ -82,7 +82,7 @@ class train():
         datafile = "US_Accidents_Dec19.csv"
 
         try:
-            from Code import pre_process
+            import pre_process
         except:
             print("import exception")
 
