@@ -15,6 +15,8 @@ from PyQt5.Qt import QPalette, QColor
 import sys
 import os
 import pip
+import faulthandler
+faulthandler.enable()
 #########-------------------------------------- AUTO IMPORTS  -------------------------------------- #########
 
 try:
