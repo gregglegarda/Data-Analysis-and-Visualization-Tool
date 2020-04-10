@@ -559,17 +559,29 @@ class main_window(QMainWindow):
         print("button predcit", attributes)
         print("button predcit", self.dt_model)
 
-        try:
-            import predict
-        except:
-            print("import exception")
 
+        #make sure there is a model and there are no missing values
+        if self.dt_model == 0:
+            print("missing model", self.dt_model)
+            msg = QMessageBox()
+            msg.setText('No Model Available')
+            msg.exec_()
+        elif "" in attributes :
+            print("missing values", attributes)
+            msg = QMessageBox()
+            msg.setText('Missing Values')
+            msg.exec_()
+        else:
+            ###predict the inputs with the current model
+            try:
+                import predict
+            except:
+                print("import exception")
+            predict1 = predict.predict(attributes, self.dt_model)
+            predict_result1 = predict1.predict_inputs()
+            self.severity_display.display(predict_result1)
 
-        predict1 = predict.predict(attributes, self.dt_model)
-        predict_result1 = predict1.predict_inputs()
-        self.severity_display.display(predict_result1)
-
-        #print("no model or missing inputs")
+            #print("no model or missing inputs")
 
 
 
