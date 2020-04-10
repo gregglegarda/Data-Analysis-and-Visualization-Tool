@@ -65,4 +65,4 @@ errors = abs(predictions - y_test)# Print out the mean absolute error (mae)
 # Calculate mean absolute percentage error (MAPE)
 mape = 100 * (errors / y_test)# Calculate and display accuracy
 accuracy = 100 - np.mean(mape)
-print('Accuracy:', round(accuracy, 2), '%.')
+print('Random Forest Model Accuracy:', round(accuracy, 2), '%.')

@@ -33,8 +33,8 @@ class main_window(QMainWindow):
         self.app = app
         self.points = 0
 
-        #dt model
-        self.dt_model =0
+        #current model
+        self.current_model =0
 
 
 
@@ -484,7 +484,7 @@ class main_window(QMainWindow):
             print("import exception")
         model1 = train_model.train(attributes)
         self.points = model1.get_map_data_points()
-        self.dt_model = model1.get_model_dt()
+        self.current_model = model1.get_model()
 
         #update screen
         self.accuracy_display.display(model1.get_model_accuracy())  # set the lcd accuract digit
@@ -557,12 +557,12 @@ class main_window(QMainWindow):
         print("Button predict clicked")
         attributes = self.get_predict_attributes()
         print("button predcit", attributes)
-        print("button predcit", self.dt_model)
+        print("button predcit", self.current_model)
 
 
         #make sure there is a model and there are no missing values
-        if self.dt_model == 0:
-            print("missing model", self.dt_model)
+        if self.current_model == 0:
+            print("missing model", self.current_model)
             msg = QMessageBox()
             msg.setText('No Model Available')
             msg.exec_()
@@ -577,7 +577,7 @@ class main_window(QMainWindow):
                 import predict
             except:
                 print("import exception")
-            predict1 = predict.predict(attributes, self.dt_model)
+            predict1 = predict.predict(attributes, self.current_model)
             predict_result1 = predict1.predict_inputs()
             self.severity_display.display(predict_result1)
 
