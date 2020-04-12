@@ -7,6 +7,7 @@ from sklearn import metrics #Import scikit-learn metrics module for accuracy cal
 from sklearn import preprocessing
 from sklearn.ensemble import RandomForestClassifier
 import numpy as np
+from sklearn.metrics import accuracy_score
 
 try:                                                                                                                        #Following code (try/except clauses) searches for this script, and then changes the current working directory to the folder that houses it.
     start = '/Users'                                                                                                        #Code from https://stackoverflow.com/questions/43553742/finding-particular-path-in-directory-in-python
@@ -61,8 +62,4 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_
 rf = RandomForestClassifier(n_estimators = 100, random_state = 23,verbose=3,n_jobs=-1) #https://stackoverflow.com/questions/43640546/how-to-make-randomforestclassifier-faster
 rf.fit(X_train, y_train)                                                              #https://towardsdatascience.com/random-forest-in-python-24d0893d51c0
 predictions = rf.predict(X_test)# Calculate the absolute errors
-errors = abs(predictions - y_test)# Print out the mean absolute error (mae)
-# Calculate mean absolute percentage error (MAPE)
-mape = 100 * (errors / y_test)# Calculate and display accuracy
-accuracy = 100 - np.mean(mape)
-print('Random Forest Model Accuracy:', round(accuracy, 2), '%.')
+print(accuracy_score(y_test,predictions))
