@@ -74,9 +74,5 @@ model_ordinal = mord.LogisticAT(max_iter=100,verbose=3) # http://rikunert.com/or
 
 model_ordinal.fit(X_train2,y_train2)
 predictions2 = model_ordinal.predict(X_test2)
-errors2 = abs(predictions2 - y_test2)# Print out the mean absolute error (mae)
-# Calculate mean absolute percentage error (MAPE)
-mape2 = 100 * (errors2 / y_test2)       # Calculate and display accuracy https://towardsdatascience.com/random-forest-in-python-24d0893d51c0
-accuracy2 = 100 - np.mean(mape2)
-print('Accuracy:', round(accuracy2, 2), '%.')
+print(accuracy_score(y_test2,predictions2))
 
