@@ -1,18 +1,10 @@
-import os
-import pandas as pd
-from matplotlib import pyplot as plt
-from datetime import datetime
+
 import numpy as np
-import pydotplus
-import pandas as pd
-import numpy as np
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-from sklearn.metrics import confusion_matrix
 from sklearn import tree
 from sklearn.ensemble import RandomForestClassifier
-import collections
-import pandas as pd
+from sklearn.linear_model import LogisticRegression
+
 
 
 class train():
@@ -61,6 +53,14 @@ class train():
             self.decision_tree(X_train, X_test, y_train, y_test)
         elif self.train_inputs[2] == "Random Forest":
             self.random_forest(X_train, X_test, y_train, y_test)
+        elif self.train_inputs[2] == "Logistic Regression":
+            self.logistic_regression(X_train, X_test, y_train, y_test)
+        elif self.train_inputs[2] == "KNN":
+            self.knn_classifier(X_train, X_test, y_train, y_test)
+        elif self.train_inputs[2] == "SVM":
+            self.svm_classifier(X_train, X_test, y_train, y_test)
+        elif self.train_inputs[2] == "Naive Bayes":
+            self.naive_bayes(X_train, X_test, y_train, y_test)
 
 
 ###================================ MACHINE LEARNING FUNCTIONS =====================================###
@@ -97,17 +97,75 @@ class train():
                                     n_jobs=-1)  # https://stackoverflow.com/questions/43640546/how-to-make-randomforestclassifier-faster
         rf.fit(X_train, y_train)  # https://towardsdatascience.com/random-forest-in-python-24d0893d51c0
         predictions = rf.predict(X_test)  # Calculate the absolute errors
-        errors = abs(predictions - y_test)  # Print out the mean absolute error (mae)
-        # Calculate mean absolute percentage error (MAPE)
-        mape = 100 * (errors / y_test)  # Calculate and display accuracy
 
         # Accuracy
-        accuracy = 100 - np.mean(mape)
+        accuracy = accuracy_score(y_test, predictions)*100
         print('Random Forest Model Accuracy:', round(accuracy, 2), '%.')
+
+
         self.accuracy = round(accuracy, 2)
         self.model_algorithm = rf
         print("train model is:", rf)
 
+    def logistic_regression(self, X_train, X_test, y_train, y_test):
+        regressor = LogisticRegression()
+        regressor.fit(X_train, y_train)  # training the algorithm
+        predictions = regressor.predict(X_test)
+
+        # Accuracy
+        accuracy = accuracy_score(y_test, predictions)*100
+        reg_score = regressor.score(X_test,y_test)
+        print('Logistic Regression Model Accuracy:', round(accuracy, 2), '%.')
+        print('Logistic Regression Score:', round(reg_score, 2), '%.')
+
+
+        self.accuracy = round(accuracy, 2)
+        self.model_algorithm = regressor
+        print("train model is:", regressor)
+
+    def knn_classifier(self, X_train, X_test, y_train, y_test):
+        from sklearn.neighbors import KNeighborsClassifier
+        neigh = KNeighborsClassifier(n_neighbors=3)
+        neigh.fit(X_train, y_train)
+        predictions = neigh.predict(X_test)
+
+        # Accuracy
+        accuracy = accuracy_score(y_test, predictions)*100
+        print('KNN Model Accuracy:', round(accuracy, 2), '%.')
+
+        self.accuracy = round(accuracy, 2)
+        self.model_algorithm = neigh
+        print("train model is:", neigh)
+
+    def svm_classifier(self, X_train, X_test, y_train, y_test):
+        from sklearn.svm import LinearSVC
+        clf = LinearSVC(random_state=0, tol=1e-5)
+        clf.fit(X_train, y_train)
+
+        predictions = clf.predict(X_test)
+
+        # Accuracy
+        accuracy = accuracy_score(y_test, predictions) * 100
+        print('SVM Accuracy:', round(accuracy, 2), '%.')
+
+        self.accuracy = round(accuracy, 2)
+        self.model_algorithm = clf
+        print("train model is:", clf)
+
+    def naive_bayes(self, X_train, X_test, y_train, y_test):
+        from sklearn.naive_bayes import GaussianNB
+        clf = GaussianNB()
+        clf.fit(X_train, y_train)
+
+        predictions = clf.predict(X_test)
+
+        # Accuracy
+        accuracy = accuracy_score(y_test, predictions) * 100
+        print('Naive Bayes Model Accuracy:', round(accuracy, 2), '%.')
+
+        self.accuracy = round(accuracy, 2)
+        self.model_algorithm = clf
+        print("train model is:", clf)
 
 #########-------------------------------------- DATA PROCESSING AND ANALYSIS -------------------------------------- #########
     def data_processing(self):

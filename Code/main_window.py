@@ -139,7 +139,10 @@ class main_window(QMainWindow):
         self.model_algorithm_combo = QtWidgets.QComboBox(self.widget)
         self.model_algorithm_combo.addItem("Decision Trees")
         self.model_algorithm_combo.addItem("Random Forest")
-        self.model_algorithm_combo.addItem("Regression")
+        self.model_algorithm_combo.addItem("Logistic Regression")
+        self.model_algorithm_combo.addItem("KNN")
+        self.model_algorithm_combo.addItem("SVM")
+        self.model_algorithm_combo.addItem("Naive Bayes")
         self.layout0.addWidget(self.model_algorithm_combo, 2, 1, 1, 1)
 
         # Model Accuracy
