@@ -287,40 +287,85 @@ class main_window(QMainWindow):
         #Tabs
         # Initialize tab screen
         self.tabs = QTabWidget()
+        self.tab0 = QWidget()
         self.tab1 = QWidget()
         self.tab2 = QWidget()
         self.tab3 = QWidget()
         self.tab4 = QWidget()
+        self.tab5 = QWidget()
+        self.tab6 = QWidget()
+        self.tab7 = QWidget()
+        self.tab8 = QWidget()
+        self.tab9 = QWidget()
         #self.tabs.resize(300, 200)
 
 
         # Add tabs
+        # tab0
+        self.tabs.addTab(self.tab0, "cor")
+        tab0_layout = QVBoxLayout(self)
+        self.tab0.setLayout(tab0_layout)
+
         #tab1
-        self.tabs.addTab(self.tab1, "Histograms")
+        self.tabs.addTab(self.tab1, "sev")
         tab1_layout = QVBoxLayout(self)
         self.tab1.setLayout(tab1_layout)
 
         # tab2
-        self.tabs.addTab(self.tab2, "HeatMap")
+        self.tabs.addTab(self.tab2, "dis")
         self.tab2_layout = QVBoxLayout(self)
         self.tab2.setLayout(self.tab2_layout)
 
         # tab3
-        self.tabs.addTab(self.tab3, "Correlogram")
-        tab3_layout = QVBoxLayout(self)
-        self.tab3.setLayout(tab3_layout)
+        self.tabs.addTab(self.tab3, "tmp")
+        self.tab3_layout = QVBoxLayout(self)
+        self.tab3.setLayout(self.tab3_layout)
 
         # tab4
-        self.tabs.addTab(self.tab4, "Boxplots")
-        tab4_layout = QVBoxLayout(self)
-        self.tab4.setLayout(tab4_layout)
+        self.tabs.addTab(self.tab4, "wch")
+        self.tab4_layout = QVBoxLayout(self)
+        self.tab4.setLayout(self.tab4_layout)
+
+        # tab5
+        self.tabs.addTab(self.tab5, "hum")
+        self.tab5_layout = QVBoxLayout(self)
+        self.tab5.setLayout(self.tab5_layout)
+
+        # tab6
+        self.tabs.addTab(self.tab6, "prs")
+        self.tab6_layout = QVBoxLayout(self)
+        self.tab6.setLayout(self.tab6_layout)
+
+        # tab7
+        self.tabs.addTab(self.tab7, "vis")
+        self.tab7_layout = QVBoxLayout(self)
+        self.tab7.setLayout(self.tab7_layout)
+
+        # tab8
+        self.tabs.addTab(self.tab8, "wsp")
+        self.tab8_layout = QVBoxLayout(self)
+        self.tab8.setLayout(self.tab8_layout)
+
+        # tab9
+        self.tabs.addTab(self.tab9, "prc")
+        self.tab9_layout = QVBoxLayout(self)
+        self.tab9.setLayout(self.tab9_layout)
 
         # Add tabs to widget
         layout2.addWidget(self.tabs)
 
         # ==================# INDIVIDUAL TAB WIDGETS (INSIDE GROUP 2)#==================#
+        # CORRELATION
+        self.imageView0 = QLabel(self.widget)
+        self.pixmap0 = QPixmap("analysis.png")
+        self.imageView0.setPixmap(self.pixmap0)
+        # scroller
+        # self.scroll = QtWidgets.QScrollArea(self.widget)
+        # self.scroll.setWidget(self.imageView)
+        tab0_layout.addWidget(self.imageView0)
 
-        # HISTOGRAMS
+
+        # Severity
         self.imageView = QLabel(self.widget)
         self.pixmap = QPixmap("analysis.png")
         self.imageView.setPixmap(self.pixmap)
@@ -329,16 +374,53 @@ class main_window(QMainWindow):
         #self.scroll.setWidget(self.imageView)
         tab1_layout.addWidget(self.imageView)
 
-        # CORRELATION
+        #Distance
+        self.imageView2 = QLabel(self.widget)
+        self.pixmap2 = QPixmap("analysis.png")
+        self.imageView2.setPixmap(self.pixmap2)
+        self.tab2_layout.addWidget(self.imageView2)
+
+        #temperature
         self.imageView3 = QLabel(self.widget)
         self.pixmap3 = QPixmap("analysis.png")
         self.imageView3.setPixmap(self.pixmap3)
-        # scroller
-        # self.scroll = QtWidgets.QScrollArea(self.widget)
-        # self.scroll.setWidget(self.imageView)
-        tab3_layout.addWidget(self.imageView3)
+        self.tab3_layout.addWidget(self.imageView3)
 
+        # wind chill
+        self.imageView4 = QLabel(self.widget)
+        self.pixmap4 = QPixmap("analysis.png")
+        self.imageView4.setPixmap(self.pixmap4)
+        self.tab4_layout.addWidget(self.imageView4)
 
+        # humidity
+        self.imageView5 = QLabel(self.widget)
+        self.pixmap5 = QPixmap("analysis.png")
+        self.imageView5.setPixmap(self.pixmap5)
+        self.tab5_layout.addWidget(self.imageView5)
+
+        # pressure
+        self.imageView6 = QLabel(self.widget)
+        self.pixmap6 = QPixmap("analysis.png")
+        self.imageView6.setPixmap(self.pixmap6)
+        self.tab6_layout.addWidget(self.imageView6)
+
+        # visibility
+        self.imageView7 = QLabel(self.widget)
+        self.pixmap7 = QPixmap("analysis.png")
+        self.imageView7.setPixmap(self.pixmap7)
+        self.tab7_layout.addWidget(self.imageView7)
+
+        # wind speed
+        self.imageView8 = QLabel(self.widget)
+        self.pixmap8 = QPixmap("analysis.png")
+        self.imageView8.setPixmap(self.pixmap8)
+        self.tab8_layout.addWidget(self.imageView8)
+
+        # precipitation
+        self.imageView9 = QLabel(self.widget)
+        self.pixmap9 = QPixmap("analysis.png")
+        self.imageView9.setPixmap(self.pixmap9)
+        self.tab9_layout.addWidget(self.imageView9)
 
         # ==================# GROUP 3 WIDGETS (TABLE DATABASE) #==================#
         filename = os.path.expanduser(os.path.abspath(os.path.join(os.path.dirname(__file__), "statistic_summary.csv")))
@@ -511,14 +593,57 @@ class main_window(QMainWindow):
 
     def update_screen_widgets(self):
         # update image in screen
-        self.pixmap = QPixmap("temp_hist.png")
+        self.pixmap0 = QPixmap("correlation_matrix.png")
+        self.imageView0.setPixmap(self.pixmap0)
+        self.imageView0.update()
+
+        # update image in screen
+        self.pixmap = QPixmap("sev_hist.png")
         self.imageView.setPixmap(self.pixmap)
         self.imageView.update()
 
         # update image in screen
-        self.pixmap3 = QPixmap("correlation_matrix.png")
+        self.pixmap2 = QPixmap("dis_hist.png")
+        self.imageView2.setPixmap(self.pixmap2)
+        self.imageView2.update()
+
+        # update image in screen
+        self.pixmap3 = QPixmap("temp_hist.png")
         self.imageView3.setPixmap(self.pixmap3)
         self.imageView3.update()
+
+
+        # update image in screen
+        self.pixmap4 = QPixmap("wch_hist.png")
+        self.imageView4.setPixmap(self.pixmap4)
+        self.imageView4.update()
+
+        # update image in screen
+        self.pixmap5 = QPixmap("hum_hist.png")
+        self.imageView5.setPixmap(self.pixmap5)
+        self.imageView5.update()
+
+        # update image in screen
+        self.pixmap6 = QPixmap("prs_hist.png")
+        self.imageView6.setPixmap(self.pixmap6)
+        self.imageView6.update()
+
+        # update image in screen
+        self.pixmap7 = QPixmap("vis_hist.png")
+        self.imageView7.setPixmap(self.pixmap7)
+        self.imageView7.update()
+
+        # update image in screen
+        self.pixmap8 = QPixmap("wsp_hist.png")
+        self.imageView8.setPixmap(self.pixmap8)
+        self.imageView8.update()
+
+        # update image in screen
+        self.pixmap9 = QPixmap("prc_hist.png")
+        self.imageView9.setPixmap(self.pixmap9)
+        self.imageView9.update()
+
+
 
         # update map
         self.layout4.removeWidget(self.map)

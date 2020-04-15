@@ -26,12 +26,43 @@ class eda():
         print(summary)
 
 
+
+
+
+
+
+        ################################### DISTANCE HISTOGRAM ##################################
+
+        # create histogram
+        plt.figure(figsize=(4, 3))
+        plt.hist(self.data['Distance(mi)'], bins=10, range=[0,0.02], edgecolor='darkgray',
+                 linewidth=0.5)  # color="gray",)
+
+        # figure settings
+        title_obj = plt.title('Distance Histogram')
+        plt.setp(title_obj, color='w')
+        plt.tick_params(axis='both', colors='white')
+        ax = plt.gca()
+        # ax.locator_params(axis='x', integer=True)
+        ax.spines['bottom'].set_color('w')
+        ax.spines['top'].set_color('w')
+        ax.spines['right'].set_color('w')
+        ax.spines['left'].set_color('w')
+        plt.tight_layout()
+
+        # save hist
+        plt.savefig('dis_hist.png',
+                    facecolor='#1a1a1a',
+                    transparent=True, )
+
+
+
         ################################### TEMPERATURE HISTOGRAM ##################################
         # fairly evenly distributed histogram; most accidents occur around the 60-70 degree mark
 
         #create histogram
         plt.figure(figsize=(4, 3))
-        plt.hist(self.data['Temperature(F)'],bins=30, range=[-10,120],  edgecolor='darkgray', linewidth=0.5) #color="gray",)
+        plt.hist(self.data['Temperature(F)'],bins=30, range=[-9,121],  edgecolor='darkgray', linewidth=0.5) #color="gray",)
 
         #figure settings
         title_obj = plt.title('Temperature Histogram')
@@ -48,6 +79,179 @@ class eda():
         plt.savefig('temp_hist.png',
                     facecolor = '#1a1a1a',
                     transparent = True,)
+
+
+        ################################### WIND CHILL HISTOGRAM ##################################
+
+        # create histogram
+        plt.figure(figsize=(4, 3))
+        plt.hist(self.data['Wind_Chill(F)'], bins=30, edgecolor='darkgray',
+                 linewidth=0.5,  range=[24, 76], align='mid') # color="gray",)
+
+        # figure settings
+        title_obj = plt.title('Wind Chill Histogram')
+        plt.setp(title_obj, color='w')
+        plt.tick_params(axis='both', colors='white')
+        ax = plt.gca()
+        #ax.locator_params(axis='x', integer=True)
+        ax.spines['bottom'].set_color('w')
+        ax.spines['top'].set_color('w')
+        ax.spines['right'].set_color('w')
+        ax.spines['left'].set_color('w')
+        plt.tight_layout()
+
+        # save hist
+        plt.savefig('wch_hist.png',
+                    facecolor='#1a1a1a',
+                    transparent=True, )
+
+
+
+        ################################### HUMIDITY HISTOGRAM ##################################
+
+        # create histogram
+        plt.figure(figsize=(4, 3))
+        plt.hist(self.data['Humidity(%)'], bins=30, edgecolor='darkgray',
+                 linewidth=0.5,  range=[-1, 101]) # color="gray",)
+
+        # figure settings
+        title_obj = plt.title('Humidity Histogram')
+        plt.setp(title_obj, color='w')
+        plt.tick_params(axis='both', colors='white')
+        ax = plt.gca()
+        #ax.locator_params(axis='x', integer=True)
+        ax.spines['bottom'].set_color('w')
+        ax.spines['top'].set_color('w')
+        ax.spines['right'].set_color('w')
+        ax.spines['left'].set_color('w')
+        plt.tight_layout()
+
+        # save hist
+        plt.savefig('hum_hist.png',
+                    facecolor='#1a1a1a',
+                    transparent=True, )
+
+        ################################### PRESSURE HISTOGRAM ##################################
+
+        # create histogram
+        plt.figure(figsize=(4, 3))
+        plt.hist(self.data['Pressure(in)'], bins=10, range=[28,32],edgecolor='darkgray',
+                 linewidth=0.5)  # color="gray",)
+
+        # figure settings
+        title_obj = plt.title('Pressure Histogram')
+        plt.setp(title_obj, color='w')
+        plt.tick_params(axis='both', colors='white')
+        ax = plt.gca()
+        # ax.locator_params(axis='x', integer=True)
+        ax.spines['bottom'].set_color('w')
+        ax.spines['top'].set_color('w')
+        ax.spines['right'].set_color('w')
+        ax.spines['left'].set_color('w')
+        plt.tight_layout()
+
+        # save hist
+        plt.savefig('prs_hist.png',
+                    facecolor='#1a1a1a',
+                    transparent=True, )
+
+        ################################### VISIBILITY HISTOGRAM ##################################
+
+        # create histogram
+        plt.figure(figsize=(4, 3))
+        plt.hist(self.data['Visibility(mi)'], bins=np.arange(-1,11)+0.5, edgecolor='darkgray',
+                 linewidth=0.5)  # color="gray",)
+
+        # figure settings
+        title_obj = plt.title('Visibility Histogram')
+        plt.setp(title_obj, color='w')
+        plt.tick_params(axis='both', colors='white')
+        ax = plt.gca()
+        # ax.locator_params(axis='x', integer=True)
+        ax.spines['bottom'].set_color('w')
+        ax.spines['top'].set_color('w')
+        ax.spines['right'].set_color('w')
+        ax.spines['left'].set_color('w')
+        plt.tight_layout()
+
+        # save hist
+        plt.savefig('vis_hist.png',
+                    facecolor='#1a1a1a',
+                    transparent=True, )
+
+        ################################### WIND SPEED HISTOGRAM ##################################
+
+        # create histogram
+        plt.figure(figsize=(4, 3))
+        plt.hist(self.data['Wind_Speed(mph)'], bins=20, edgecolor='darkgray',
+                 linewidth=0.5, range=[0, 21])  # color="gray",)
+
+        # figure settings
+        title_obj = plt.title('Wind Speed Histogram')
+        plt.setp(title_obj, color='w')
+        plt.tick_params(axis='both', colors='white')
+        ax = plt.gca()
+        # ax.locator_params(axis='x', integer=True)
+        ax.spines['bottom'].set_color('w')
+        ax.spines['top'].set_color('w')
+        ax.spines['right'].set_color('w')
+        ax.spines['left'].set_color('w')
+        plt.tight_layout()
+
+        # save hist
+        plt.savefig('wsp_hist.png',
+                    facecolor='#1a1a1a',
+                    transparent=True, )
+
+        ################################### PRECIPITATION HISTOGRAM ##################################
+
+        # create histogram
+        plt.figure(figsize=(4, 3))
+        plt.hist(self.data['Precipitation(in)'], bins=10, range = [0,0.5], edgecolor='darkgray',
+                 linewidth=0.5 ) # color="gray",)
+
+        # figure settings
+        title_obj = plt.title('Precipitation Histogram')
+        plt.setp(title_obj, color='w')
+        plt.tick_params(axis='both', colors='white')
+        ax = plt.gca()
+        # ax.locator_params(axis='x', integer=True)
+        ax.spines['bottom'].set_color('w')
+        ax.spines['top'].set_color('w')
+        ax.spines['right'].set_color('w')
+        ax.spines['left'].set_color('w')
+        plt.tight_layout()
+
+        # save hist
+        plt.savefig('prc_hist.png',
+                    facecolor='#1a1a1a',
+                    transparent=True, )
+
+        ################################### SEVERITY HISTOGRAM ##################################
+
+        # create histogram
+        plt.figure(figsize=(4, 3))
+        plt.hist(self.data['Severity'], bins=np.arange(0, 5) + 0.5, ec="k", edgecolor='darkgray',
+                 linewidth=0.5)  # range=[1, 4], # color="gray",)
+
+        # figure settings
+        title_obj = plt.title('Severity Histogram')
+        plt.setp(title_obj, color='w')
+        plt.tick_params(axis='both', colors='white')
+        ax = plt.gca()
+        ax.locator_params(axis='x', integer=True)
+        ax.spines['bottom'].set_color('w')
+        ax.spines['top'].set_color('w')
+        ax.spines['right'].set_color('w')
+        ax.spines['left'].set_color('w')
+        plt.tight_layout()
+
+        # save hist
+        plt.savefig('sev_hist.png',
+                    facecolor='#1a1a1a',
+                    transparent=True, )
+
+
 
         ################################### HEAT MAP ##################################
 
