@@ -53,6 +53,7 @@ except:   #Following code (try/except clauses) searches for this script, and the
                     filename = os.path.join(dirpath, filename)
                     os.chdir(dirpath)
 
+
     except:
         start1 = "C:\\Users"
         for dirpath, dirnames, filenames in os.walk(start1):
