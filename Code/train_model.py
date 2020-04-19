@@ -6,7 +6,6 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 
 
-
 class train():
     def __init__(self, train_inputs):
         super(train, self).__init__()
@@ -22,6 +21,7 @@ class train():
 
         print("Training complete")
 ####==================================   CREATE MODEL FUNCTION ====================================############
+
     def create_model(self):
         print("Creating model...")
         print("Data in model class is:",self.train_inputs)
@@ -43,9 +43,20 @@ class train():
         X = np.transpose(X)
         y = list(self.data["Severity"])
 
+        X_PCA = [list(self.data["Start_Lat"]), list(self.data["Start_Lng"]), list(self.data["Distance(mi)"]),
+             list(self.data["Temperature(F)"]), list(self.data["Wind_Chill(F)"]), list(self.data["Humidity(%)"]),
+             list(self.data["Pressure(in)"]),
+             list(self.data["Visibility(mi)"]), list(self.data["Wind_Speed(mph)"]),
+             list(self.data["Precipitation(in)"])]
+        X_PCA = np.transpose(X_PCA)
+
         # data pre processing if split into 70:30
         from sklearn.model_selection import train_test_split
+        from sklearn.decomposition import PCA
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_split, random_state=0)
+        X_reduce = PCA().fit_transform(X_PCA)
+        y_PCA = list(self.data['Severity'])
+        X_train_PCA, X_test_PCA, y_train_PCA, y_test_PCA = train_test_split(X_reduce, y_PCA, test_size=test_split, random_state=0)
 
 
         #########   PICKED MODEL GOES HERE   ###
@@ -123,19 +134,41 @@ class train():
         self.model_algorithm = regressor
         print("train model is:", regressor)
 
-    def knn_classifier(self, X_train, X_test, y_train, y_test):
+    def knn_classifier(self, X_train_PCA, X_test_PCA, y_train_PCA, y_test_PCA):
+        import matplotlib.pyplot as plt
+        import seaborn as sns
         from sklearn.neighbors import KNeighborsClassifier
-        neigh = KNeighborsClassifier(n_neighbors=3)
-        neigh.fit(X_train, y_train)
-        predictions = neigh.predict(X_test)
+        neigh = KNeighborsClassifier(n_neighbors=1,n_jobs=-1)
+        neigh.fit(X_train_PCA, y_train_PCA)
+        predictions = neigh.predict(X_test_PCA)
 
         # Accuracy
-        accuracy = accuracy_score(y_test, predictions)*100
+        accuracy = accuracy_score(y_test_PCA, predictions)*100
         print('KNN Model Accuracy:', round(accuracy, 2), '%.')
 
         self.accuracy = round(accuracy, 2)
         self.model_algorithm = neigh
         print("train model is:", neigh)
+
+        from sklearn.neighbors import KNeighborsClassifier
+        k_range = range(1, 26, 2)
+
+        # We can create Python dictionary using [] or dict()
+        scores = []
+
+        for k in k_range:
+            knn = KNeighborsClassifier(n_neighbors=k)
+            knn.fit(X_train_PCA, y_train_PCA)
+            y_pred = knn.predict(X_test_PCA)
+            scores.append(accuracy_score(y_test_PCA, y_pred))
+
+        # plot the relationship between K and testing accuracy
+        # plt.plot(x_axis, y_axis)
+        plt.clf()
+        plt.plot(k_range, scores)
+        plt.xlabel('Value of K for KNN')
+        plt.ylabel('Testing Accuracy')
+        plt.savefig('k_accuracy.png')
 
     def svm_classifier(self, X_train, X_test, y_train, y_test):
         from sklearn.svm import LinearSVC
