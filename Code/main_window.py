@@ -262,20 +262,14 @@ class main_window(QMainWindow):
 
         self.status_label_model = QLabel("ML MODEL:")
         self.layoutstatus.addWidget(self.status_label_model, 0, 0, 1, 1)
-        self.status_display_model = QLCDNumber()
-        self.status_display_model.display("oooo")
-        self.status_display_model.setStyleSheet("QLCDNumber { color: black ; background-color: yellow}")
-        self.status_display_model.setMaximumHeight(25)
-        self.status_display_model.setSegmentStyle(QLCDNumber.Flat)
+        self.status_display_model = QLabel("NONE")
+        self.status_display_model.setStyleSheet("QLabel { color: yellow ; font-weight: bold}")
         self.layoutstatus.addWidget(self.status_display_model, 1, 0, 1, 1)
 
         self.status_map = QLabel("GEOMAP:")
         self.layoutstatus.addWidget(self.status_map, 0, 1, 1, 1)
-        self.status_display_map = QLCDNumber()
-        self.status_display_map.display("ready")
-        self.status_display_map.setStyleSheet("QLCDNumber { color: black ; background-color: green}")
-        self.status_display_map.setMaximumHeight(25)
-        self.status_display_map.setSegmentStyle(QLCDNumber.Flat)
+        self.status_display_map = QLabel("READY")
+        self.status_display_map.setStyleSheet("QLabel { color: green ; font-weight: bold}")
         self.layoutstatus.addWidget(self.status_display_map, 1, 1, 1, 1)
 
 
@@ -435,7 +429,7 @@ class main_window(QMainWindow):
         self.model.setVerticalHeaderLabels(
             ['Severity', 'Latitude', 'Longitude', 'Distance(mi)', 'Number', 'Temperature',
              'Wind Chill(F)', 'Humidity%', 'Pressure(in)', 'Visibility(mi)',
-             'Wind Speed(mph)', 'Precipitation(in)'])
+             'Wind Speed(mph)                   ', 'Precipitation(in)'])
         self.tableView = QTableView(self.widget)
         #self.tableView.setStyleSheet("QTableView{ background-color: rgb(45, 45, 45);  }")  # cell color
         self.tableView.horizontalHeader().setStretchLastSection(True)
@@ -479,12 +473,12 @@ class main_window(QMainWindow):
             self.model.setVerticalHeaderLabels(
                 ['Severity', 'Latitude', 'Longitude', 'Distance(mi)', 'Number', 'Temperature',
                  'Wind Chill(F)', 'Humidity%', 'Pressure(in)', 'Visibility(mi)',
-                 'Wind Speed(mph)', 'Precipitation(in)'])
+                 'Wind Speed(mph)                   ', 'Precipitation(in)'])
         except:
             self.model.setVerticalHeaderLabels(
                 ['Severity', 'Latitude', 'Longitude', 'Distance(mi)', 'Number', 'Temperature',
                  'Wind Chill(F)', 'Humidity%', 'Pressure(in)', 'Visibility(mi)',
-                 'Wind Speed(mph)', 'Precipitation(in)'])
+                 'Wind Speed(mph)                   ', 'Precipitation(in)'])
             print("No Database")
 
 
@@ -573,25 +567,48 @@ class main_window(QMainWindow):
 
         #update screen
         self.accuracy_display.display(model1.get_model_accuracy())  # set the lcd accuract digit
-        self.update_screen_widgets()
+        self.update_screen_widgets(attributes)
 
-        #self.app.processEvents()
-        #time.sleep(10)
-        self.status_display_map.display("ready")
-        self.status_display_map.setStyleSheet("QLCDNumber { color: black ; background-color: green}")
+        #make model ready message
+        self.app.processEvents()
+        msg = QMessageBox()
+        msg.setText('Model Ready')
+        msg.exec_()
+
+        try:
+            import map_load_time
+        except:
+            print("import exception")
+
+        numsamples = int(attributes[0])
+        loadtime1 = map_load_time.map_load_time()
+        timetoloadmap = loadtime1.calculate_load_time(numsamples)
+
+
+        # make map ready after a few seconds depending on sample size
+        self.app.processEvents()
+        time.sleep(int(timetoloadmap))
+        self.status_display_map.setText("READY")
+        self.status_display_map.setStyleSheet("QLabel { color: green ; font-weight: bold}")
         self.status_display_map.update()
+
+
+
+
+
+
 
     def update_status_bar(self):
-        self.status_display_model.display("busy")
-        self.status_display_model.setStyleSheet("QLCDNumber { color: black ; background-color: red}")
+        self.status_display_model.setText("BUSY")
+        self.status_display_model.setStyleSheet("QLabel { color: yellow ; font-weight: bold}")
         self.status_display_model.update()
-        self.status_display_map.display("busy")
-        self.status_display_map.setStyleSheet("QLCDNumber { color: black ; background-color: red}")
+        self.status_display_map.setText("BUSY")
+        self.status_display_map.setStyleSheet("QLabel { color: yellow ; font-weight: bold}")
         self.status_display_map.update()
 
 
 
-    def update_screen_widgets(self):
+    def update_screen_widgets(self, attributes):
         # update image in screen
         self.pixmap0 = QPixmap("correlation_matrix.png")
         self.imageView0.setPixmap(self.pixmap0)
@@ -667,11 +684,11 @@ class main_window(QMainWindow):
 
 
         #status bar update
-        self.status_display_model.display("ready")
-        self.status_display_model.setStyleSheet("QLCDNumber { color: black ; background-color: green}")
+        self.status_display_model.setText(attributes[2])
+        self.status_display_model.setStyleSheet("QLabel { color: green ; font-weight: bold}")
         self.status_display_model.update()
-        self.status_display_map.display("busy")
-        self.status_display_map.setStyleSheet("QLCDNumber { color: black ; background-color: yellow}")
+        self.status_display_map.setText("BUSY")
+        self.status_display_map.setStyleSheet("QLabel { color: yellow ; font-weight: bold}")
         self.status_display_map.update()
 
 
