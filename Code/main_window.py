@@ -262,14 +262,14 @@ class main_window(QMainWindow):
 
         self.status_label_model = QLabel("ML MODEL:")
         self.layoutstatus.addWidget(self.status_label_model, 0, 0, 1, 1)
-        self.status_display_model = QLabel("NONE")
-        self.status_display_model.setStyleSheet("QLabel { color: yellow ; font-weight: bold}")
+        self.status_display_model = QLabel("NO MODEL")
+        self.status_display_model.setStyleSheet("QLabel { color: red ; font-weight: bold}")
         self.layoutstatus.addWidget(self.status_display_model, 1, 0, 1, 1)
 
         self.status_map = QLabel("GEOMAP:")
         self.layoutstatus.addWidget(self.status_map, 0, 1, 1, 1)
-        self.status_display_map = QLabel("READY")
-        self.status_display_map.setStyleSheet("QLabel { color: green ; font-weight: bold}")
+        self.status_display_map = QLabel("WAIT...")
+        self.status_display_map.setStyleSheet("QLabel { color: yellow ; font-weight: bold}")
         self.layoutstatus.addWidget(self.status_display_map, 1, 1, 1, 1)
 
 
@@ -451,6 +451,18 @@ class main_window(QMainWindow):
         # ==================# SHOW EVERYTHING #==================#
         self.show()
 
+        # make map ready message
+        self.app.processEvents()
+        msg = QMessageBox()
+        msg.setText("<p align = 'center'>WELCOME TO <br>US ACCIDENTS DATA ANALYSIS<br>AND VISUALIZATION TOOL<br>WITH GEO-GRAPHICAL MAPS</p>")
+        msg.exec_()
+
+        self.app.processEvents()
+        time.sleep(4)
+        self.status_display_map.setText("NO DATA POINTS")
+        self.status_display_map.setStyleSheet("QLabel { color: red ; font-weight: bold}")
+        self.status_display_map.update()
+
 #########################################   FUNCTIONS   #####################################################
 
     #=============== VIEW STATISTICAL SUMMRY FUNCTION ====================#
@@ -592,17 +604,21 @@ class main_window(QMainWindow):
         self.status_display_map.setStyleSheet("QLabel { color: green ; font-weight: bold}")
         self.status_display_map.update()
 
-
+        # make map ready message
+        self.app.processEvents()
+        msg = QMessageBox()
+        msg.setText('Geo Map Ready')
+        msg.exec_()
 
 
 
 
 
     def update_status_bar(self):
-        self.status_display_model.setText("BUSY")
+        self.status_display_model.setText("WAIT...")
         self.status_display_model.setStyleSheet("QLabel { color: yellow ; font-weight: bold}")
         self.status_display_model.update()
-        self.status_display_map.setText("BUSY")
+        self.status_display_map.setText("WAIT...")
         self.status_display_map.setStyleSheet("QLabel { color: yellow ; font-weight: bold}")
         self.status_display_map.update()
 
@@ -687,7 +703,7 @@ class main_window(QMainWindow):
         self.status_display_model.setText(attributes[2])
         self.status_display_model.setStyleSheet("QLabel { color: green ; font-weight: bold}")
         self.status_display_model.update()
-        self.status_display_map.setText("BUSY")
+        self.status_display_map.setText("WAIT...")
         self.status_display_map.setStyleSheet("QLabel { color: yellow ; font-weight: bold}")
         self.status_display_map.update()
 

@@ -1,5 +1,7 @@
 
 import folium
+from PyQt5.QtWidgets import ( QMessageBox, QAbstractItemView,
+                            QPlainTextEdit)
 from PyQt5.QtWebEngineWidgets import QWebEngineView as QWebView
 from PyQt5.QtCore import QUrl
 from folium.plugins import FastMarkerCluster
@@ -115,4 +117,5 @@ class map_webview(QWebView):
             )
             m3.save("map.html")
         print("Map created")
+
 
