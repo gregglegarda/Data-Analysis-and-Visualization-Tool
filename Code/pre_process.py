@@ -58,7 +58,7 @@ class data_frame():
             self.data['Visibility(mi)'] = self.data['Visibility(mi)'].fillna(self.data['Visibility(mi)'].mean())
             self.data['Wind_Speed(mph)'] = self.data['Wind_Speed(mph)'].fillna(self.data['Wind_Speed(mph)'].mean())
             self.data['Precipitation(in)'] = self.data['Precipitation(in)'].fillna(self.data['Precipitation(in)'].mean())
-            self.data['Severity'] = self.data['Severity'].fillna(self.data['Severity'].mean())
+            self.data['Severity'] = self.data['Severity'].fillna(self.data['Severity'].mode())
 
             # fill address with filler
             self.data['Description'] = self.data['Description'].fillna(0)
