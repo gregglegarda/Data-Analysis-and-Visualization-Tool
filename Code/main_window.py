@@ -166,18 +166,26 @@ class main_window(QMainWindow):
 
 
         #Latitude
-        self.latitude = QLabel("Latitude:")
-        layout1.addWidget(self.latitude, 0, 0, 1, 1)
-        self.line_edit_latitude = QLineEdit()
-        self.line_edit_latitude.setPlaceholderText('Enter Latitude')
-        layout1.addWidget(self.line_edit_latitude, 0, 1, 1, 1)
+        #self.latitude = QLabel("Latitude:")
+        #layout1.addWidget(self.latitude, 0, 0, 1, 1)
+        #self.line_edit_latitude = QLineEdit()
+        #self.line_edit_latitude.setPlaceholderText('Enter Latitude')
+        #layout1.addWidget(self.line_edit_latitude, 0, 1, 1, 1)
 
         #Longitude
-        self.longitude = QLabel("Longitude:")
-        layout1.addWidget(self.longitude, 1, 0, 1, 1)
-        self.line_edit_longitude = QLineEdit()
-        self.line_edit_longitude.setPlaceholderText('Enter Longitude')
-        layout1.addWidget(self.line_edit_longitude, 1, 1, 1, 1)
+        #self.longitude = QLabel("Longitude:")
+        #layout1.addWidget(self.longitude, 1, 0, 1, 1)
+        #self.line_edit_longitude = QLineEdit()
+        #self.line_edit_longitude.setPlaceholderText('Enter Longitude')
+        #layout1.addWidget(self.line_edit_longitude, 1, 1, 1, 1)
+
+        # Number
+        # self.number = QLabel("Number:")
+        # layout1.addWidget(self.number, 3, 0, 1, 1)
+        # self.line_edit_number = QLineEdit()
+        # self.line_edit_number.setPlaceholderText('Enter Number')
+        # layout1.addWidget(self.line_edit_number, 3, 1, 1, 1)
+
 
         #Distance(mi)
         self.distance = QLabel("Distance:")
@@ -186,12 +194,6 @@ class main_window(QMainWindow):
         self.line_edit_distance.setPlaceholderText('Enter Distance')
         layout1.addWidget(self.line_edit_distance, 2, 1, 1, 1)
 
-        #Number
-        self.number = QLabel("Number:")
-        layout1.addWidget(self.number, 3, 0, 1, 1)
-        self.line_edit_number = QLineEdit()
-        self.line_edit_number.setPlaceholderText('Enter Number')
-        layout1.addWidget(self.line_edit_number, 3, 1, 1, 1)
 
         #Temperature
         self.temperature = QLabel("Temperature:")
@@ -260,13 +262,13 @@ class main_window(QMainWindow):
         # ==================# GROUP STATUS WIDGETS (STATUS LAYOUT) #==================#
 
 
-        self.status_label_model = QLabel("ML MODEL:")
+        self.status_label_model = QLabel("CURRENT ML MODEL:")
         self.layoutstatus.addWidget(self.status_label_model, 0, 0, 1, 1)
         self.status_display_model = QLabel("NO MODEL")
         self.status_display_model.setStyleSheet("QLabel { color: red ; font-weight: bold}")
         self.layoutstatus.addWidget(self.status_display_model, 1, 0, 1, 1)
 
-        self.status_map = QLabel("GEOMAP:")
+        self.status_map = QLabel("GEOMAP STATUS:")
         self.layoutstatus.addWidget(self.status_map, 0, 1, 1, 1)
         self.status_display_map = QLabel("WAIT...")
         self.status_display_map.setStyleSheet("QLabel { color: yellow ; font-weight: bold}")
@@ -501,10 +503,11 @@ class main_window(QMainWindow):
         print(
             "Data in predict button is: ",
             #self.severity_display.text(),
-            self.line_edit_latitude.text(),
-            self.line_edit_longitude.text(),
+            #self.line_edit_latitude.text(),
+            #self.line_edit_longitude.text(),
+            #self.line_edit_number.text(),
+
             self.line_edit_distance.text(),
-            self.line_edit_number.text(),
             self.line_edit_temperature.text(),
             self.line_edit_wind_chill.text(),
             self.line_edit_humidity.text(),
@@ -515,10 +518,10 @@ class main_window(QMainWindow):
         )
         return[
             # self.severity_display.text(),
-            self.line_edit_latitude.text(),
-            self.line_edit_longitude.text(),
+            #self.line_edit_latitude.text(),
+            #self.line_edit_longitude.text(),
+            #self.line_edit_number.text(),
             self.line_edit_distance.text(),
-            self.line_edit_number.text(),
             self.line_edit_temperature.text(),
             self.line_edit_wind_chill.text(),
             self.line_edit_humidity.text(),

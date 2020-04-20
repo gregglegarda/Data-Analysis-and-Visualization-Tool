@@ -4,6 +4,8 @@ from sklearn.metrics import accuracy_score
 from sklearn import tree
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.decomposition import PCA
 
 
 class train():
@@ -33,31 +35,22 @@ class train():
         model_algorithim = self.train_inputs[2]
 
         # make table for preprocessing
-        column_names = ["Start_Lat", "Start_Lng", "Distance(mi)", "Number",
-                        "Temperature(F)","Wind_Chill(F)", "Humidity(%)", "Pressure(in)",
+        column_names = ["Distance(mi)", "Temperature(F)","Wind_Chill(F)", "Humidity(%)", "Pressure(in)",
                         "Visibility(mi)", "Wind_Speed(mph)", "Precipitation(in)",
                         "Severity"]
 
-        X = [list(self.data["Start_Lat"]), list(self.data["Start_Lng"]), list(self.data["Distance(mi)"]), list(self.data["Number"]),
-            list(self.data["Temperature(F)"]), list(self.data["Wind_Chill(F)"]), list(self.data["Humidity(%)"]), list(self.data["Pressure(in)"]),
+        X = [list(self.data["Distance(mi)"]), list(self.data["Temperature(F)"]),
+             list(self.data["Wind_Chill(F)"]), list(self.data["Humidity(%)"]), list(self.data["Pressure(in)"]),
              list(self.data["Visibility(mi)"]), list(self.data["Wind_Speed(mph)"]), list(self.data["Precipitation(in)"])]
         X = np.transpose(X)
         y = list(self.data["Severity"])
 
-        X_PCA = [list(self.data["Start_Lat"]), list(self.data["Start_Lng"]), list(self.data["Distance(mi)"]),
-             list(self.data["Temperature(F)"]), list(self.data["Wind_Chill(F)"]), list(self.data["Humidity(%)"]),
-             list(self.data["Pressure(in)"]),
-             list(self.data["Visibility(mi)"]), list(self.data["Wind_Speed(mph)"]),
-             list(self.data["Precipitation(in)"])]
-        X_PCA = np.transpose(X_PCA)
 
-        # data pre processing if split into 70:30
-        from sklearn.model_selection import train_test_split
-        from sklearn.decomposition import PCA
+        #if the model is KNN, perform PCA before splitting,
+        if self.train_inputs == "KNN":
+            X = PCA().fit_transform(X)
+
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_split, random_state=0)
-        X_reduce = PCA().fit_transform(X_PCA)
-        y_PCA = list(self.data['Severity'])
-        X_train_PCA, X_test_PCA, y_train_PCA, y_test_PCA = train_test_split(X_reduce, y_PCA, test_size=test_split, random_state=0)
 
 
         #########   PICKED MODEL GOES HERE   ###

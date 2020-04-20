@@ -29,6 +29,7 @@ Timezone
 Airport_Code	
 Weather_Timestamp	
 
+-------------------WEATHER CONDITIONS----------------
 Temperature(F)	
 Wind_Chill(F)	
 Humidity(%)	
@@ -38,7 +39,9 @@ Wind_Direction
 Wind_Speed(mph)	
 Precipitation(in)	
 Weather_Condition - Clear, Overcast, Partly Cloudy, Scattered Clouds, Mostly Cloudy, Fair, Wintry Mix
-	
+
+
+------------------STREET CONDITIONS---------------------
 Amenity	Bump	
 Crossing	
 Give_Way	
@@ -49,6 +52,8 @@ Station	Stop
 Traffic_Calming	
 Traffic_Signal	
 Turning_Loop	
+
+--------------- TIMEOF DAY CONDITIONS-------------
 Sunrise_Sunset	
 Civil_Twilight	
 Nautical_Twilight	
