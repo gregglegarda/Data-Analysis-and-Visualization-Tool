@@ -562,53 +562,69 @@ class main_window(QMainWindow):
     #########-------------------------------------- TRAIN FUNCTION -------------------------------------- #########
     def on_Button_train_clicked(self):
         print("Button train clicked")
-
-        #make stus bar busy
-        self.update_status_bar()
-        self.app.processEvents()
         attributes = self.get_train_attributes()
-
-        # train model
-        try:
-            import train_model
-        except:
-            print("import exception")
-        model1 = train_model.train(attributes)
-        self.points = model1.get_map_data_points()
-        self.current_model = model1.get_model()
-
-        #update screen
-        self.accuracy_display.display(model1.get_model_accuracy())  # set the lcd accuract digit
-        self.update_screen_widgets(attributes)
-
-        #make model ready message
-        self.app.processEvents()
-        msg = QMessageBox()
-        msg.setText('Model Ready')
-        msg.exec_()
-
-        try:
-            import map_load_time
-        except:
-            print("import exception")
-
-        numsamples = int(attributes[0])
-        loadtime1 = map_load_time.map_load_time()
-        timetoloadmap = loadtime1.calculate_load_time(numsamples)
+        submit_status = True
+        k_value = 0
 
 
-        # make map ready after a few seconds depending on sample size
-        self.app.processEvents()
-        time.sleep(int(timetoloadmap))
-        self.status_display_map.setText("READY")
-        self.status_display_map.setStyleSheet("QLabel { color: green ; font-weight: bold}")
-        self.status_display_map.update()
+        if attributes[2] == "KNN":
+            # pop up screen
+            try:
+                import pop_up_entry
+            except:
+                print("import error")
+            pop_up1 = pop_up_entry.pop_up_entry(self.app, attributes[2])
+            k_value, submit_status = pop_up1.get_status()
+            print(k_value)
+            print(submit_status)
 
-        # make map ready message
-        self.app.processEvents()
-        msg = QMessageBox()
-        msg.setText('Geo Map Ready')
-        msg.exec_()
+        if submit_status ==True:
+            #make stus bar busy
+            self.update_status_bar()
+            self.app.processEvents()
+
+
+            # train model
+            try:
+                import train_model
+            except:
+                print("import exception")
+            model1 = train_model.train(attributes, k_value)
+            self.points = model1.get_map_data_points()
+            self.current_model = model1.get_model()
+
+            #update screen
+            self.accuracy_display.display(model1.get_model_accuracy())  # set the lcd accuract digit
+            self.update_screen_widgets(attributes)
+
+            #make model ready message
+            self.app.processEvents()
+            msg = QMessageBox()
+            msg.setText('Model Ready')
+            msg.exec_()
+
+            try:
+                import map_load_time
+            except:
+                print("import exception")
+
+            numsamples = int(attributes[0])
+            loadtime1 = map_load_time.map_load_time()
+            timetoloadmap = loadtime1.calculate_load_time(numsamples)
+
+
+            # make map ready after a few seconds depending on sample size
+            self.app.processEvents()
+            time.sleep(int(timetoloadmap))
+            self.status_display_map.setText("READY")
+            self.status_display_map.setStyleSheet("QLabel { color: green ; font-weight: bold}")
+            self.status_display_map.update()
+
+            # make map ready message
+            self.app.processEvents()
+            msg = QMessageBox()
+            msg.setText('Geo Map Ready')
+            msg.exec_()
 
 
 
@@ -700,7 +716,7 @@ class main_window(QMainWindow):
 
 
         #status bar update
-        self.status_display_model.setText(attributes[2])
+        self.status_display_model.setText(attributes[2].upper())
         self.status_display_model.setStyleSheet("QLabel { color: green ; font-weight: bold}")
         self.status_display_model.update()
         self.status_display_map.setText("WAIT...")

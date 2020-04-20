@@ -12,8 +12,6 @@ class data_frame():
             self.samplesize = int(samplesize[0])
             super(data_frame, self).__init__()
 
-
-
       def create_dataframe(self):
             #########-------------------------------------- DATA FRAME -------------------------------------- #########
             #data = pd.read_csv("https://www.kaggle.com/sobhanmoosavi/us-accidents#US_Accidents_Dec19.csv")

@@ -27,7 +27,7 @@ class map_load_time():
             with open('map_load_time.csv', mode='w') as employee_file:
                 employee_writer = csv.writer(employee_file)
                 employee_writer.writerow(["x", "y"])
-                employee_writer.writerow([0.1, 0.1])
+                employee_writer.writerow([1, 1])
                 employee_writer.writerow([100, 3])
                 employee_writer.writerow([1000, 4])
                 employee_writer.writerow([10000, 5])
@@ -55,12 +55,22 @@ class map_load_time():
         print("y is:\n",y)
 
 
+        # SVC MODEL
+        from sklearn.svm import SVC
+        y=y1
+        model = SVC(kernel='poly')
+        model.fit(x, y)
+        y_pred = model.predict(x)
+        # model prediction
+        x1 = np.array(num_samples).reshape(-1, 1)
+        y_predict_point = float(model.predict(x1)[0])
+        print("model prediction from ", num_samples, " number of samples:\n", y_predict_point)
 
         # train the model to predict the linear regression line
-        from sklearn.linear_model import LinearRegression
-        model = LinearRegression()
-        model.fit(x, y)  # training the algorithm
-        y_pred = model.predict(x)
+        #from sklearn.linear_model import LinearRegression
+        #model = LinearRegression()
+        #model.fit(x, y)  # training the algorithm
+        #y_pred = model.predict(x)
         # model prediction
         #x1 = np.array(num_samples).reshape(-1, 1)
         #y_predict_point = float(model.predict(x1)[0])
@@ -68,17 +78,15 @@ class map_load_time():
 
 
         #curved model alternate to linear regression
-        x=x1
-        y=y1
-        xmult, yinter = np.polyfit(x,np.log(y),1)
-        #y_predict_point = (xmult* np.exp(num_samples)) + yinter
-        y_predict_point = np.exp(xmult * num_samples) * np.exp(yinter)
+        #x=x1
+        #y=y1
+        #xmult, yinter = np.polyfit(x,np.log(y),1)
+        #y_predict_point = np.exp(xmult * num_samples) * np.exp(yinter)
+        #print("model prediction from ", num_samples, " number of samples:\n", y_predict_point)
+        #y_pred = np.exp(xmult * x) * np.exp(yinter)
 
 
-        print("model prediction from ", num_samples, " number of samples:\n", y_predict_point)
-        #y_pred = (xmult* np.exp(x)) + yinter
-        y_pred = np.exp(xmult * x) * np.exp(yinter)
-
+        #if new data point is in the csv file, do not save.
 
 
         # save data points to make it better overtime

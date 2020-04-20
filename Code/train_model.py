@@ -7,13 +7,14 @@ from sklearn.linear_model import LogisticRegression
 
 
 class train():
-    def __init__(self, train_inputs):
+    def __init__(self, train_inputs, k_value):
         super(train, self).__init__()
        #attributes
         self.accuracy = 0
         self.data = 0
         self.train_inputs = train_inputs
         self.model_algorithm = 0
+        self.k_value = int(k_value)
 
         #functions
         self.data_processing()
@@ -138,7 +139,7 @@ class train():
         import matplotlib.pyplot as plt
         import seaborn as sns
         from sklearn.neighbors import KNeighborsClassifier
-        neigh = KNeighborsClassifier(n_neighbors=1,n_jobs=-1)
+        neigh = KNeighborsClassifier(n_neighbors=self.k_value,n_jobs=-1)
         neigh.fit(X_train_PCA, y_train_PCA)
         predictions = neigh.predict(X_test_PCA)
 
@@ -149,6 +150,9 @@ class train():
         self.accuracy = round(accuracy, 2)
         self.model_algorithm = neigh
         print("train model is:", neigh)
+
+
+
 
         from sklearn.neighbors import KNeighborsClassifier
         k_range = range(1, 26, 2)
