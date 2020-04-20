@@ -130,7 +130,6 @@ class train():
 
     def knn_classifier(self, X_train_PCA, X_test_PCA, y_train_PCA, y_test_PCA):
         import matplotlib.pyplot as plt
-        import seaborn as sns
         from sklearn.neighbors import KNeighborsClassifier
         neigh = KNeighborsClassifier(n_neighbors=self.k_value,n_jobs=-1)
         neigh.fit(X_train_PCA, y_train_PCA)
@@ -144,28 +143,26 @@ class train():
         self.model_algorithm = neigh
         print("train model is:", neigh)
 
+        ####================create a graph for KNN curve to find optimal elbow
+        # from 1 to length of training samples (usually 70%), step size is divided by 100
+        #k_range = range(1, len(X_train_PCA)-1, int(int(self.train_inputs[0])/100))
 
-
-
-        from sklearn.neighbors import KNeighborsClassifier
-        k_range = range(1, 26, 2)
-
-        # We can create Python dictionary using [] or dict()
+        k_range = range(1, 50, 2)
         scores = []
-
         for k in k_range:
             knn = KNeighborsClassifier(n_neighbors=k)
             knn.fit(X_train_PCA, y_train_PCA)
             y_pred = knn.predict(X_test_PCA)
-            scores.append(accuracy_score(y_test_PCA, y_pred))
-
-        # plot the relationship between K and testing accuracy
+            #scores.append(accuracy_score(y_test_PCA, y_pred))
+            scores.append(np.mean(y_pred != y_test_PCA))
+            print(k, k_range)
+        # plot the relationship between K and error
         # plt.plot(x_axis, y_axis)
         plt.clf()
         plt.plot(k_range, scores)
         plt.xlabel('Value of K for KNN')
-        plt.ylabel('Testing Accuracy')
-        plt.savefig('k_accuracy.png')
+        plt.ylabel('Error Rate')
+        plt.savefig('model_image.png')
 
     def svm_classifier(self, X_train, X_test, y_train, y_test):
         from sklearn.svm import LinearSVC

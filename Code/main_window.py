@@ -7,11 +7,11 @@ from PyQt5.QtCore import QUrl
 import sys
 import os
 from PyQt5.QtWidgets import (QMainWindow, QTableView, QTabWidget, QWidget, QVBoxLayout,
-                            QGridLayout, QGroupBox,
+                            QGridLayout, QGroupBox, QDialog,
                             QLabel, QLineEdit, QLCDNumber, QPushButton, QFrame,
                             QMessageBox, QAbstractItemView,
                             QPlainTextEdit)
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QIcon, QWindow
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import csv
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -262,13 +262,17 @@ class main_window(QMainWindow):
         # ==================# GROUP STATUS WIDGETS (STATUS LAYOUT) #==================#
 
 
-        self.status_label_model = QLabel("CURRENT ML MODEL:")
+        self.status_label_model = QPushButton(self.widget)
+        self.status_label_model.setText("CURRENT ML MODEL:")
+        self.status_label_model.clicked.connect(self.on_Button_model_clicked)
         self.layoutstatus.addWidget(self.status_label_model, 0, 0, 1, 1)
         self.status_display_model = QLabel("NO MODEL")
         self.status_display_model.setStyleSheet("QLabel { color: red ; font-weight: bold}")
         self.layoutstatus.addWidget(self.status_display_model, 1, 0, 1, 1)
 
-        self.status_map = QLabel("GEOMAP STATUS:")
+        self.status_map = QPushButton(self.widget)
+        self.status_map.setText("GEOMAP STATUS:")
+        self.status_map.clicked.connect(self.on_Button_geomap_clicked)
         self.layoutstatus.addWidget(self.status_map, 0, 1, 1, 1)
         self.status_display_map = QLabel("WAIT...")
         self.status_display_map.setStyleSheet("QLabel { color: yellow ; font-weight: bold}")
@@ -763,6 +767,35 @@ class main_window(QMainWindow):
 
             #print("no model or missing inputs")
 
+    #########-------------------------------------- VIEW GEOMAP LOAD TIME PNG FUNCTION -------------------------------------- #########
+    def on_Button_geomap_clicked(self):
+        display_img = QDialog()
+        label_image = QLabel()
+        pixmap1 = QPixmap('map_load_time.png')
+        label_image.setPixmap(pixmap1)
+        layout_show = QGridLayout()
+        display_img.setLayout(layout_show)
+        layout_show.addWidget(label_image,0,0)
+        display_img.exec_()
 
 
+        #msg = QMessageBox()
+        #msg.setIconPixmap(QPixmap("map_load_time.png"))
+        #msg.exec_()
+        print("geobuttonmap clicked")
+    #########-------------------------------------- VIEW ML MODEL PNG FUNCTION -------------------------------------- #########
+    def on_Button_model_clicked(self):
+        display_img = QDialog()
+        label_image = QLabel()
+        if self.current_model == 0:
+            pixmap1 = QPixmap('analysis.png')
+        else:
+            pixmap1 = QPixmap('model_image.png')
 
+        label_image.setPixmap(pixmap1)
+        layout_show = QGridLayout()
+        display_img.setLayout(layout_show)
+        layout_show.addWidget(label_image, 0, 0)
+        display_img.exec_()
+
+        print("model button clicked")
