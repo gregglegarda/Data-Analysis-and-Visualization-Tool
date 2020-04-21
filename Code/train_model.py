@@ -1,4 +1,7 @@
 
+import pydotplus
+import collections
+from sklearn.tree import plot_tree
 import numpy as np
 from sklearn.metrics import accuracy_score
 from sklearn import tree
@@ -6,6 +9,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
+import matplotlib as mpl
 
 
 class train():
@@ -35,7 +40,7 @@ class train():
         model_algorithim = self.train_inputs[2]
 
         # make table for preprocessing
-        column_names = ["Distance(mi)", "Temperature(F)","Wind_Chill(F)", "Humidity(%)", "Pressure(in)",
+        column_names = ["Distance(mi)", "Temperature(F)", "Wind_Chill(F)", "Humidity(%)", "Pressure(in)",
                         "Visibility(mi)", "Wind_Speed(mph)", "Precipitation(in)",
                         "Severity"]
 
@@ -96,6 +101,41 @@ class train():
         self.model_algorithm = clf
         print("train model is:", clf)
 
+        feature_names = ["Distance(mi)", "Temperature(F)", "Wind_Chill(F)", "Humidity(%)", "Pressure(in)",
+                        "Visibility(mi)", "Wind_Speed(mph)", "Precipitation(in)"]
+
+        ####VISUALIZE PLOT THE MODEL AND SAVE
+        # dot_data = tree.export_graphviz(clf,
+        #                                 feature_names=feature_names,
+        #                                 out_file=None,
+        #                                 filled=True,
+        #                                 rounded=True,
+        #                                 )
+        # graph = pydotplus.graph_from_dot_data(dot_data)
+        #
+        # colors = ('turquoise', 'orange', 'yellow')
+        # edges = collections.defaultdict(list)
+        #
+        # for edge in graph.get_edge_list():
+        #     edges[edge.get_source()].append(int(edge.get_destination()))
+        #
+        # for edge in edges:
+        #     edges[edge].sort()
+        #     for i in range(2):
+        #         dest = graph.get_node(str(edges[edge][i]))[0]
+        #         dest.set_fillcolor(colors[i])
+        #
+        # #graph.write_png('model_image.png')
+
+        ####### alternate tree with dark background
+        plt.style.use('dark_background')
+        mpl.rcParams['text.color'] = 'black'
+        fig, ax = plt.subplots(figsize=(30, 30), facecolor='k')
+        plot_tree(clf, rotate=True, ax=ax, feature_names= feature_names, max_depth= 3)
+
+
+        plt.savefig('model_image.png',facecolor='#1a1a1a')#,transparent=True,)
+
 
     def random_forest(self, X_train, X_test, y_train, y_test):
         rf = RandomForestClassifier(n_estimators=100, random_state=23, verbose=3,
@@ -111,6 +151,10 @@ class train():
         self.accuracy = round(accuracy, 2)
         self.model_algorithm = rf
         print("train model is:", rf)
+
+        ####PLOT THE MODEL
+        plt.rf()
+        plt.savefig('model_image.png',facecolor='#1a1a1a',transparent=True,)
 
     def logistic_regression(self, X_train, X_test, y_train, y_test):
         regressor = LogisticRegression()
@@ -128,8 +172,11 @@ class train():
         self.model_algorithm = regressor
         print("train model is:", regressor)
 
+        ####PLOT THE MODEL
+        plt.regressor()
+        plt.savefig('model_image.png',facecolor='#1a1a1a',transparent=True,)
+
     def knn_classifier(self, X_train_PCA, X_test_PCA, y_train_PCA, y_test_PCA):
-        import matplotlib.pyplot as plt
         from sklearn.neighbors import KNeighborsClassifier
         neigh = KNeighborsClassifier(n_neighbors=self.k_value,n_jobs=-1)
         neigh.fit(X_train_PCA, y_train_PCA)
@@ -156,13 +203,14 @@ class train():
             #scores.append(accuracy_score(y_test_PCA, y_pred))
             scores.append(np.mean(y_pred != y_test_PCA))
             print(k, k_range)
-        # plot the relationship between K and error
-        # plt.plot(x_axis, y_axis)
+
+
+        #PLOT THE MODEL
         plt.clf()
         plt.plot(k_range, scores)
         plt.xlabel('Value of K for KNN')
         plt.ylabel('Error Rate')
-        plt.savefig('model_image.png')
+        plt.savefig('model_image.png',facecolor='#1a1a1a',transparent=True,)
 
     def svm_classifier(self, X_train, X_test, y_train, y_test):
         from sklearn.svm import LinearSVC
@@ -179,6 +227,9 @@ class train():
         self.model_algorithm = clf
         print("train model is:", clf)
 
+        ####PLOT THE MODEL
+        plt.clf()
+        plt.savefig('model_image.png',facecolor='#1a1a1a',transparent=True,)
     def naive_bayes(self, X_train, X_test, y_train, y_test):
         from sklearn.naive_bayes import GaussianNB
         clf = GaussianNB()
@@ -193,6 +244,10 @@ class train():
         self.accuracy = round(accuracy, 2)
         self.model_algorithm = clf
         print("train model is:", clf)
+
+        ####PLOT THE MODEL
+        plt.clf()
+        plt.savefig('model_image.png',facecolor='#1a1a1a',transparent=True,)
 
 #########-------------------------------------- DATA PROCESSING AND ANALYSIS -------------------------------------- #########
     def data_processing(self):
