@@ -294,17 +294,24 @@ class train():
         return self.model_algorithm
 #### change image colors
     def dark_mode_png(self):
-        import PIL
-        import PIL.ImageOps
-        im = PIL.Image.open('model_image.png')
-        im = PIL.ImageOps.invert(im)
+        from PIL import ImageOps
+        from PIL import Image
+        im1 = Image.open('model_image.png')
+        try:
+            im = ImageOps.invert(im1)
+        except:
+            try:
+                im = ImageOps.invert(im1)
+            except:
+                print("color invert error")
+
         im = im.convert('RGBA')
         data = np.array(im)  # "data" is a height x width x 4 numpy array
         red, green, blue, alpha = data.T  # Temporarily unpack the bands for readability
 
-        black_areas = (red <= 90) & (blue <= 90) & (green <= 90)  ###255,255,255 is white
+        black_areas = (red == 0) & (blue == 0) & (green == 0)  ###255,255,255 is white
         data[..., :-1][black_areas.T] = (26, 26, 26)  # Transpose back needed
 
-        im2 = PIL.Image.fromarray(data)
+        im2 = Image.fromarray(data)
         im2.save('model_image.png')
         #im2.show()

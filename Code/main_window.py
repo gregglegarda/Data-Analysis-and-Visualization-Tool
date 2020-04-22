@@ -339,6 +339,7 @@ class main_window(QMainWindow):
         self.scroll.setWidget(self.imageView)
         self.scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        self.scroll.widgetResizable()
         tab1_layout.addWidget(self.scroll)
 
         #SCATTER
