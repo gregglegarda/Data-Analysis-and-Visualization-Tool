@@ -7,6 +7,8 @@ import seaborn as sns
 import matplotlib.ticker as ticker
 import matplotlib.cm as cm
 import matplotlib as mpl
+from PIL import Image
+
 
 
 class eda():
@@ -251,7 +253,18 @@ class eda():
                     facecolor='#1a1a1a',
                     transparent=True, )
 
-
+        ################################### Concatenate histograms ##################################
+        #concatenate
+        im1 = Image.open('sev_hist.png')
+        im2 = Image.open('dis_hist.png')
+        im3 = Image.open('temp_hist.png')
+        im4 = Image.open('wch_hist.png')
+        im5 = Image.open('hum_hist.png')
+        im6 = Image.open('prs_hist.png')
+        im7 = Image.open('vis_hist.png')
+        im8 = Image.open('wsp_hist.png')
+        im9 = Image.open('prc_hist.png')
+        self.get_concat_v_multi_resize([im1, im2, im3, im4, im5, im6, im7, im8, im9]).save('histograms.png')
 
         ################################### HEAT MAP ##################################
 
@@ -316,3 +329,15 @@ class eda():
         plt.savefig('correlation_matrix.png',
                     facecolor='#1a1a1a',
                     transparent=True, )
+
+    def get_concat_v_multi_resize(self, im_list, resample=Image.BICUBIC):
+        min_width = min(im.width for im in im_list)
+        im_list_resize = [im.resize((min_width, int(im.height * min_width / im.width)), resample=resample)
+                          for im in im_list]
+        total_height = sum(im.height for im in im_list_resize)
+        dst = Image.new('RGB', (min_width, total_height))
+        pos_y = 0
+        for im in im_list_resize:
+            dst.paste(im, (0, pos_y))
+            pos_y += im.height
+        return dst

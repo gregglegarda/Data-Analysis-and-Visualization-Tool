@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QGroupBox, QGridLayout
 from PyQt5.QtCore import QUrl
 import sys
 import os
+from PyQt5 import Qt
 from PyQt5.QtWidgets import (QMainWindow, QTableView, QTabWidget, QWidget, QVBoxLayout,
                             QGridLayout, QGroupBox, QDialog,
                             QLabel, QLineEdit, QLCDNumber, QPushButton, QFrame,
@@ -291,65 +292,29 @@ class main_window(QMainWindow):
         self.tab1 = QWidget()
         self.tab2 = QWidget()
         self.tab3 = QWidget()
-        self.tab4 = QWidget()
-        self.tab5 = QWidget()
-        self.tab6 = QWidget()
-        self.tab7 = QWidget()
-        self.tab8 = QWidget()
-        self.tab9 = QWidget()
         #self.tabs.resize(300, 200)
 
 
         # Add tabs
         # tab0
-        self.tabs.addTab(self.tab0, "cor")
+        self.tabs.addTab(self.tab0, "Correlogram")
         tab0_layout = QVBoxLayout(self)
         self.tab0.setLayout(tab0_layout)
 
         #tab1
-        self.tabs.addTab(self.tab1, "sev")
+        self.tabs.addTab(self.tab1, "Histograms")
         tab1_layout = QVBoxLayout(self)
         self.tab1.setLayout(tab1_layout)
 
         # tab2
-        self.tabs.addTab(self.tab2, "dis")
+        self.tabs.addTab(self.tab2, "Scatterplots")
         self.tab2_layout = QVBoxLayout(self)
         self.tab2.setLayout(self.tab2_layout)
 
         # tab3
-        self.tabs.addTab(self.tab3, "tmp")
+        self.tabs.addTab(self.tab3, "Graphs")
         self.tab3_layout = QVBoxLayout(self)
         self.tab3.setLayout(self.tab3_layout)
-
-        # tab4
-        self.tabs.addTab(self.tab4, "wch")
-        self.tab4_layout = QVBoxLayout(self)
-        self.tab4.setLayout(self.tab4_layout)
-
-        # tab5
-        self.tabs.addTab(self.tab5, "hum")
-        self.tab5_layout = QVBoxLayout(self)
-        self.tab5.setLayout(self.tab5_layout)
-
-        # tab6
-        self.tabs.addTab(self.tab6, "prs")
-        self.tab6_layout = QVBoxLayout(self)
-        self.tab6.setLayout(self.tab6_layout)
-
-        # tab7
-        self.tabs.addTab(self.tab7, "vis")
-        self.tab7_layout = QVBoxLayout(self)
-        self.tab7.setLayout(self.tab7_layout)
-
-        # tab8
-        self.tabs.addTab(self.tab8, "wsp")
-        self.tab8_layout = QVBoxLayout(self)
-        self.tab8.setLayout(self.tab8_layout)
-
-        # tab9
-        self.tabs.addTab(self.tab9, "prc")
-        self.tab9_layout = QVBoxLayout(self)
-        self.tab9.setLayout(self.tab9_layout)
 
         # Add tabs to widget
         layout2.addWidget(self.tabs)
@@ -365,62 +330,29 @@ class main_window(QMainWindow):
         tab0_layout.addWidget(self.imageView0)
 
 
-        # Severity
+        # HISTOGRAMS
         self.imageView = QLabel(self.widget)
-        self.pixmap = QPixmap("analysis.png")
+        self.pixmap = QPixmap("longblank.png")
         self.imageView.setPixmap(self.pixmap)
         # scroller
-        #self.scroll = QtWidgets.QScrollArea(self.widget)
-        #self.scroll.setWidget(self.imageView)
-        tab1_layout.addWidget(self.imageView)
+        self.scroll = QtWidgets.QScrollArea(self.widget)
+        self.scroll.setWidget(self.imageView)
+        self.scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        tab1_layout.addWidget(self.scroll)
 
-        #Distance
+        #SCATTER
         self.imageView2 = QLabel(self.widget)
         self.pixmap2 = QPixmap("analysis.png")
         self.imageView2.setPixmap(self.pixmap2)
         self.tab2_layout.addWidget(self.imageView2)
 
-        #temperature
+        #GRAPHS
         self.imageView3 = QLabel(self.widget)
         self.pixmap3 = QPixmap("analysis.png")
         self.imageView3.setPixmap(self.pixmap3)
         self.tab3_layout.addWidget(self.imageView3)
 
-        # wind chill
-        self.imageView4 = QLabel(self.widget)
-        self.pixmap4 = QPixmap("analysis.png")
-        self.imageView4.setPixmap(self.pixmap4)
-        self.tab4_layout.addWidget(self.imageView4)
-
-        # humidity
-        self.imageView5 = QLabel(self.widget)
-        self.pixmap5 = QPixmap("analysis.png")
-        self.imageView5.setPixmap(self.pixmap5)
-        self.tab5_layout.addWidget(self.imageView5)
-
-        # pressure
-        self.imageView6 = QLabel(self.widget)
-        self.pixmap6 = QPixmap("analysis.png")
-        self.imageView6.setPixmap(self.pixmap6)
-        self.tab6_layout.addWidget(self.imageView6)
-
-        # visibility
-        self.imageView7 = QLabel(self.widget)
-        self.pixmap7 = QPixmap("analysis.png")
-        self.imageView7.setPixmap(self.pixmap7)
-        self.tab7_layout.addWidget(self.imageView7)
-
-        # wind speed
-        self.imageView8 = QLabel(self.widget)
-        self.pixmap8 = QPixmap("analysis.png")
-        self.imageView8.setPixmap(self.pixmap8)
-        self.tab8_layout.addWidget(self.imageView8)
-
-        # precipitation
-        self.imageView9 = QLabel(self.widget)
-        self.pixmap9 = QPixmap("analysis.png")
-        self.imageView9.setPixmap(self.pixmap9)
-        self.tab9_layout.addWidget(self.imageView9)
 
         # ==================# GROUP 3 WIDGETS (TABLE DATABASE) #==================#
         filename = os.path.expanduser(os.path.abspath(os.path.join(os.path.dirname(__file__), "statistic_summary.csv")))
@@ -648,56 +580,26 @@ class main_window(QMainWindow):
 
 
     def update_screen_widgets(self, attributes):
-        # update image in screen
+        # update image in screen correlation
         self.pixmap0 = QPixmap("correlation_matrix.png")
         self.imageView0.setPixmap(self.pixmap0)
         self.imageView0.update()
 
-        # update image in screen
-        self.pixmap = QPixmap("sev_hist.png")
+        # update image in screen histograms
+        self.pixmap = QPixmap("histograms.png")
         self.imageView.setPixmap(self.pixmap)
         self.imageView.update()
+        self.scroll.update()
 
-        # update image in screen
+        # update image in screen scatter
         self.pixmap2 = QPixmap("dis_hist.png")
         self.imageView2.setPixmap(self.pixmap2)
         self.imageView2.update()
 
-        # update image in screen
+        # update image in screen graphs
         self.pixmap3 = QPixmap("temp_hist.png")
         self.imageView3.setPixmap(self.pixmap3)
         self.imageView3.update()
-
-
-        # update image in screen
-        self.pixmap4 = QPixmap("wch_hist.png")
-        self.imageView4.setPixmap(self.pixmap4)
-        self.imageView4.update()
-
-        # update image in screen
-        self.pixmap5 = QPixmap("hum_hist.png")
-        self.imageView5.setPixmap(self.pixmap5)
-        self.imageView5.update()
-
-        # update image in screen
-        self.pixmap6 = QPixmap("prs_hist.png")
-        self.imageView6.setPixmap(self.pixmap6)
-        self.imageView6.update()
-
-        # update image in screen
-        self.pixmap7 = QPixmap("vis_hist.png")
-        self.imageView7.setPixmap(self.pixmap7)
-        self.imageView7.update()
-
-        # update image in screen
-        self.pixmap8 = QPixmap("wsp_hist.png")
-        self.imageView8.setPixmap(self.pixmap8)
-        self.imageView8.update()
-
-        # update image in screen
-        self.pixmap9 = QPixmap("prc_hist.png")
-        self.imageView9.setPixmap(self.pixmap9)
-        self.imageView9.update()
 
 
 
@@ -797,11 +699,12 @@ class main_window(QMainWindow):
         display_img.setLayout(layout_show)
 
         # scroller
-        scroll = QtWidgets.QScrollArea()
-        scroll.setWidget(label_image)
-        layout_show.addWidget(scroll, 0, 0)
+        #scroll = QtWidgets.QScrollArea()
+        #scroll.setWidget(label_image)
+        #layout_show.addWidget(scroll, 0, 0)
 
-        #layout_show.addWidget(label_image, 0, 0)
+
+        layout_show.addWidget(label_image, 0, 0)
         display_img.exec_()
 
         print("model button clicked")

@@ -99,7 +99,7 @@ except:
 mainrun = main_window.runit(app)
 #mainrun.get_attributes
 
-
+#jgcjhcjhcjgc
 
 
 
