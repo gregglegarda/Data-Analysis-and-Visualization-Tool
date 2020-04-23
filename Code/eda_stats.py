@@ -179,6 +179,7 @@ class eda():
         plt.savefig('correlation_matrix.png',
                     facecolor='#1a1a1a',
                     transparent=True, )
+        plt.close()
 
     def get_concat_v_multi_resize(self, im_list, resample=Image.BICUBIC):
         min_width = min(im.width for im in im_list)
