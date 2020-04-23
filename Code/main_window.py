@@ -535,7 +535,7 @@ class main_window(QMainWindow):
                 import train_model
             except:
                 print("import exception")
-            model1 = train_model.train(attributes, k_value)
+            model1 = train_model.train(attributes, k_value, self.app)
             self.points = model1.get_map_data_points()
             self.current_model = model1.get_model()
 

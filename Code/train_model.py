@@ -14,9 +14,10 @@ import matplotlib as mpl
 
 
 class train():
-    def __init__(self, train_inputs, k_value):
+    def __init__(self, train_inputs, k_value,app ):
         super(train, self).__init__()
        #attributes
+        self.app = app
         self.accuracy = 0
         self.data = 0
         self.train_inputs = train_inputs
@@ -296,15 +297,32 @@ class train():
     def dark_mode_png(self):
         from PIL import ImageOps
         from PIL import Image
-        im1 = Image.open('model_image.png')
+        rgba_image = Image.open('model_image.png')
+        print("rgba",np.shape(rgba_image))
+
+        rgba_image.load()
+        background = Image.new("RGB", rgba_image.size, (255, 255, 255))
+
         try:
-            im = ImageOps.invert(im1)
+            self.app.processEvents()
+            print("rgba", np.shape(rgba_image))
+            background.paste(rgba_image, mask=rgba_image.split()[3])
+            background.save("model_image.png", "PNG", quality=100)
+            rgb_image = Image.open("model_image.png")
+            im = ImageOps.invert(rgb_image)
+            print("im", np.shape(rgb_image))
         except:
+            print("tuple error")
             try:
-                im = ImageOps.invert(im1)
+                self.app.processEvents()
+                im = ImageOps.invert(rgba_image) ##rgba really rgb at this point
+                print("im", np.shape(rgba_image))
             except:
-                im=im1
+                im=rgba_image
                 print("color invert error")
+
+
+
 
         im = im.convert('RGBA')
         data = np.array(im)  # "data" is a height x width x 4 numpy array
