@@ -214,12 +214,12 @@ class eda():
         plt.savefig(png_title,
                     facecolor='#1a1a1a',
                     transparent=True, )
-
+        plt.close()
     def create_scatter(self, scat_title, column, png_title ):
         x = np.arange(0, len(self.data), 1)
         y = self.data[column]
 
-        if len(self.data) >=1000:
+        if len(self.data) >=5000:
             self.create_scatter_heatmap(column, png_title)
         else:
             # make and save scatter plot
@@ -244,6 +244,7 @@ class eda():
             plt.savefig(png_title,
                         facecolor='#1a1a1a',
                         transparent=True, )
+            plt.close()
 
     def create_scatter_heatmap(self, column, png_title):
         xdata = np.arange(0, len(self.data), 1)
@@ -268,3 +269,4 @@ class eda():
         plt.savefig(png_title,
                     facecolor='#1a1a1a',
                     transparent=True, )
+        plt.close()

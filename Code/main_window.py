@@ -698,21 +698,24 @@ class main_window(QMainWindow):
         display_img = QDialog()
         label_image = QLabel()
         if self.current_model == 0:
-            pixmap1 = QPixmap('analysis.png')
+            msg = QMessageBox()
+            msg.setText('No Model Available')
+            msg.exec_()
+            #pixmap1 = QPixmap('analysis.png')
         else:
             pixmap1 = QPixmap('model_image.png')
 
-        label_image.setPixmap(pixmap1)
-        layout_show = QGridLayout()
-        display_img.setLayout(layout_show)
+            label_image.setPixmap(pixmap1)
+            layout_show = QGridLayout()
+            display_img.setLayout(layout_show)
 
-        # scroller
-        #scroll = QtWidgets.QScrollArea()
-        #scroll.setWidget(label_image)
-        #layout_show.addWidget(scroll, 0, 0)
+            # scroller
+            #scroll = QtWidgets.QScrollArea()
+            #scroll.setWidget(label_image)
+            #layout_show.addWidget(scroll, 0, 0)
 
 
-        layout_show.addWidget(label_image, 0, 0)
-        display_img.exec_()
+            layout_show.addWidget(label_image, 0, 0)
+            display_img.exec_()
 
         print("model button clicked")

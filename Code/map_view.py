@@ -23,7 +23,7 @@ class map_webview(QWebView):
 
         try:
             len(data) #it is initialized as 0 so it will error if its 0 and will go to except
-            if len(data) > 5000:
+            if len(data) >= 5000:
 
             # ============================== FAST CLUSTER ==============================
                 print("Creating map...")

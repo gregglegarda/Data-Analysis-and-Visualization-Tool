@@ -146,15 +146,29 @@ class train():
         accuracy = accuracy_score(y_test, predictions)*100
         print('Random Forest Model Accuracy:', round(accuracy, 2), '%.')
 
-
         self.accuracy = round(accuracy, 2)
         self.model_algorithm = rf
         print("train model is:", rf)
 
-        ####PLOT THE MODEL
-        #plt.rf()
-        #plt.savefig('model_image.png',facecolor='#1a1a1a',transparent=True,)
 
+
+        #PICK A TREE FROM THE RANDOM FOREST
+        tree = rf.estimators_[5]
+
+
+
+        ####PLOT THE MODEL #style is dark background plot_tree different look from decision tree
+        plt.figure()
+        feature_names = ["Distance(mi)", "Temperature(F)", "Wind_Chill(F)", "Humidity(%)", "Pressure(in)",
+                         "Visibility(mi)", "Wind_Speed(mph)", "Precipitation(in)"]
+        plt.style.use('dark_background')
+        mpl.rcParams['text.color'] = 'black'
+        fig, ax = plt.subplots(figsize=(8, 6), facecolor='k')
+        fig.suptitle('SINGLE TREE FROM RANDOM FOREST', fontsize=12, color='w')
+        plot_tree(tree, rotate=True, ax=ax, feature_names= feature_names, max_depth= 3 )
+        plt.savefig('model_image.png',facecolor='#1a1a1a')#,transparent=True,)
+        #plt.savefig('model_image.png',facecolor='#1a1a1a',transparent=True,)
+        plt.close()
     ##========================  LOGISTIC REGRESSION ===================###
     def logistic_regression(self, X_train, X_test, y_train, y_test):
         regressor = LogisticRegression()
@@ -172,9 +186,15 @@ class train():
         self.model_algorithm = regressor
         print("train model is:", regressor)
 
+
         ####PLOT THE MODEL
+        plt.figure()
+        title_obj = plt.title('LOGISTIC REGRESSION')
+        plt.setp(title_obj, color='w')
         #plt.regressor()
-        #plt.savefig('model_image.png',facecolor='#1a1a1a',transparent=True,)
+        plt.savefig('model_image.png',facecolor='#1a1a1a',transparent=True,)
+        plt.close()
+
 
     ##========================  K_NEAREST NEIGHBORS  ===================###
     def knn_classifier(self, X_train_PCA, X_test_PCA, y_train_PCA, y_test_PCA):
@@ -207,10 +227,17 @@ class train():
 
 
         #PLOT THE MODEL
+
+        plt.figure()
         plt.clf()
         plt.plot(k_range, scores)
-        plt.xlabel('Value of K for KNN')
-        plt.ylabel('Error Rate')
+        title_obj = plt.title('KNN')
+        plt.setp(title_obj, color='w')
+        x_label = plt.xlabel('Value of K for KNN')
+        y_label = plt.ylabel('Error Rate')
+        plt.setp(x_label, color='w')
+        plt.setp(y_label, color='w')
+
 
         #model look
         plt.tick_params(axis='both', colors='white', labelsize = 6)
@@ -220,6 +247,7 @@ class train():
         ax.spines['right'].set_color('w')
         ax.spines['left'].set_color('w')
         plt.savefig('model_image.png',facecolor='#1a1a1a',transparent=True,)
+        plt.close()
 
     ##========================  SUPORT VECTOR MACHINE ===================###
     def svm_classifier(self, X_train, X_test, y_train, y_test):
@@ -238,8 +266,12 @@ class train():
         print("train model is:", clf)
 
         ####PLOT THE MODEL
+        plt.figure()
+        title_obj = plt.title('SVM')
+        plt.setp(title_obj, color='w')
         #plt.clf()
-        #plt.savefig('model_image.png',facecolor='#1a1a1a',transparent=True,)
+        plt.savefig('model_image.png',facecolor='#1a1a1a',transparent=True,)
+        plt.close()
 
     ##========================  NAIVE BAYES  ===================###
     def naive_bayes(self, X_train, X_test, y_train, y_test):
@@ -258,8 +290,12 @@ class train():
         print("train model is:", clf)
 
         ####PLOT THE MODEL
+        plt.figure()
+        title_obj = plt.title('NAIVE BAYES')
+        plt.setp(title_obj, color='w')
         #plt.clf()
-        #plt.savefig('model_image.png',facecolor='#1a1a1a',transparent=True,)
+        plt.savefig('model_image.png',facecolor='#1a1a1a',transparent=True,)
+        plt.close()
 
 #########-------------------------------------- DATA PROCESSING AND ANALYSIS -------------------------------------- #########
     def data_processing(self):
