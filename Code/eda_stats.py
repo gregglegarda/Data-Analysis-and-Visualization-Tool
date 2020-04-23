@@ -244,8 +244,8 @@ class eda():
 
             #save scatter
             plt.savefig(png_title,
-                        facecolor='#1a1a1a',
-                        transparent=True, )
+                        facecolor='#1a1a1a',)
+                        #transparent=True, )
             plt.close()
 
     def create_scatter_heatmap(self, column, png_title):
@@ -269,6 +269,6 @@ class eda():
 
         # save scatter
         plt.savefig(png_title,
-                    facecolor='#1a1a1a',
-                    transparent=True, )
+                    facecolor='#1a1a1a',)
+                    #transparent=True, )
         plt.close()

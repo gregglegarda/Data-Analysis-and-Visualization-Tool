@@ -399,7 +399,17 @@ class main_window(QMainWindow):
         # make map ready message
         self.app.processEvents()
         msg = QMessageBox()
-        msg.setText("<p align = 'center'>WELCOME TO <br>US ACCIDENTS DATA ANALYSIS<br>AND VISUALIZATION TOOL<br>WITH GEO-GRAPHICAL MAPS</p>")
+        msg.setText("<p align = 'center'>"
+                    "<i><br>(US Accidents Dataset)</i><br>"
+                    "<h2>DATA ANALYSIS &<br>"
+                    "DATA VISUALIZATION TOOL w/<br> "
+                    "GEOGRAPHICAL MAPPING</h2>"
+                    "<br>"
+                    "<i>Introduction to Data Mining</i><br>"
+                    "<i>(DATS 6103)</i><br>"
+                    "<i>Professor: Amir Jafari, PhD</i></h6><br>"
+                    ""
+                    "</p>")
         msg.exec_()
 
         self.app.processEvents()
