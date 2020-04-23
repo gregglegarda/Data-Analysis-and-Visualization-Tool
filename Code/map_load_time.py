@@ -171,6 +171,7 @@ class map_load_time():
         plt.savefig('map_load_time.png',
                     facecolor='#1a1a1a',
                     transparent=True, )
+        plt.close()
         return y_predict_point
 
 

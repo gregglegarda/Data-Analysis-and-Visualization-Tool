@@ -153,6 +153,7 @@ class eda():
         print("info of sns:", self.sns_data.info())
 
         #create correlation matrix
+        plt.figure()
         corrmatrix = self.sns_data.corr()
         fig, ax = plt.subplots(1, 1, figsize=(4, 3))
         heatplot = ax.imshow(corrmatrix, cmap='PuBu')
@@ -258,7 +259,7 @@ class eda():
         #fig, ax = plt.subplots(figsize=a4_dims)
         #sns.violinplot(ax=ax, data=df, **violin_options)
 
-
+        plt.figure()
         cmap = sns.cubehelix_palette(3, start=2.74, rot=0, dark=0, light=.95, reverse=True, as_cmap=True)
         sns.set_style("white", {'xtick.color': 'w',
                                 'ytick.color': 'w', 'axes.edgecolor': 'w', 'axes.labelcolor': 'w'})
