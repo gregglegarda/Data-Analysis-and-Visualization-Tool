@@ -28,230 +28,64 @@ class eda():
         print(summary)
 
 
-
-
-
-
-
         ################################### DISTANCE HISTOGRAM ##################################
 
-        # create histogram
-        plt.figure(figsize=(4, 3))
-        plt.hist(self.data['Distance(mi)'], bins=10, range=[0,0.02], edgecolor='darkgray',
-                 linewidth=0.5)  # color="gray",)
-
-        # figure settings
-        title_obj = plt.title('Distance Histogram')
-        plt.setp(title_obj, color='w')
-        plt.tick_params(axis='both', colors='white')
-        ax = plt.gca()
-        # ax.locator_params(axis='x', integer=True)
-        ax.spines['bottom'].set_color('w')
-        ax.spines['top'].set_color('w')
-        ax.spines['right'].set_color('w')
-        ax.spines['left'].set_color('w')
-        plt.tight_layout()
-
-        # save hist
-        plt.savefig('dis_hist.png',
-                    facecolor='#1a1a1a',
-                    transparent=True, )
-
+        self.create_histo('Distance(mi)', [0,0.02], 10, 'Distance Histogram', 'dis_hist.png')
+        self.create_scatter('Distance Scatterplot', 'Distance(mi)', 'dis_scat.png')
 
 
         ################################### TEMPERATURE HISTOGRAM ##################################
-        # fairly evenly distributed histogram; most accidents occur around the 60-70 degree mark
 
-        #create histogram
-        plt.figure(figsize=(4, 3))
-        plt.hist(self.data['Temperature(F)'],bins=30, range=[-9,121],  edgecolor='darkgray', linewidth=0.5) #color="gray",)
-
-        #figure settings
-        title_obj = plt.title('Temperature Histogram')
-        plt.setp(title_obj, color='w')
-        plt.tick_params(axis='both', colors='white')
-        ax = plt.gca()
-        ax.spines['bottom'].set_color('w')
-        ax.spines['top'].set_color('w')
-        ax.spines['right'].set_color('w')
-        ax.spines['left'].set_color('w')
-        plt.tight_layout()
-
-        #save hist
-        plt.savefig('temp_hist.png',
-                    facecolor = '#1a1a1a',
-                    transparent = True,)
+        self.create_histo('Temperature(F)', [-9,121], 30,  'Temperature Histogram', 'temp_hist.png')
+        self.create_scatter('Temperature Scatterplot', 'Temperature(F)', 'temp_scat.png')
 
 
         ################################### WIND CHILL HISTOGRAM ##################################
 
-        # create histogram
-        plt.figure(figsize=(4, 3))
-        plt.hist(self.data['Wind_Chill(F)'], bins=30, edgecolor='darkgray',
-                 linewidth=0.5,  range=[24, 76], align='mid') # color="gray",)
-
-        # figure settings
-        title_obj = plt.title('Wind Chill Histogram')
-        plt.setp(title_obj, color='w')
-        plt.tick_params(axis='both', colors='white')
-        ax = plt.gca()
-        #ax.locator_params(axis='x', integer=True)
-        ax.spines['bottom'].set_color('w')
-        ax.spines['top'].set_color('w')
-        ax.spines['right'].set_color('w')
-        ax.spines['left'].set_color('w')
-        plt.tight_layout()
-
-        # save hist
-        plt.savefig('wch_hist.png',
-                    facecolor='#1a1a1a',
-                    transparent=True, )
-
+        self.create_histo('Wind_Chill(F)', [24, 76], 30, 'Wind Chill Histogram', 'wch_hist.png')
+        self.create_scatter('Wind Chill Scatterplot', 'Wind_Chill(F)', 'wch_scat.png')
 
 
         ################################### HUMIDITY HISTOGRAM ##################################
 
-        # create histogram
-        plt.figure(figsize=(4, 3))
-        plt.hist(self.data['Humidity(%)'], bins=30, edgecolor='darkgray',
-                 linewidth=0.5,  range=[-1, 101]) # color="gray",)
+        self.create_histo('Humidity(%)', [-1, 101], 30, 'Humidity Histogram', 'hum_hist.png')
+        self.create_scatter('Humidity Scatterplot', 'Humidity(%)', 'hum_scat.png')
 
-        # figure settings
-        title_obj = plt.title('Humidity Histogram')
-        plt.setp(title_obj, color='w')
-        plt.tick_params(axis='both', colors='white')
-        ax = plt.gca()
-        #ax.locator_params(axis='x', integer=True)
-        ax.spines['bottom'].set_color('w')
-        ax.spines['top'].set_color('w')
-        ax.spines['right'].set_color('w')
-        ax.spines['left'].set_color('w')
-        plt.tight_layout()
 
-        # save hist
-        plt.savefig('hum_hist.png',
-                    facecolor='#1a1a1a',
-                    transparent=True, )
 
         ################################### PRESSURE HISTOGRAM ##################################
 
-        # create histogram
-        plt.figure(figsize=(4, 3))
-        plt.hist(self.data['Pressure(in)'], bins=10, range=[28,32],edgecolor='darkgray',
-                 linewidth=0.5)  # color="gray",)
+        self.create_histo('Pressure(in)', [28,32], 10, 'Pressure Histogram', 'prs_hist.png')
+        self.create_scatter('Pressure Scatterplot', 'Pressure(in)', 'prs_scat.png')
 
-        # figure settings
-        title_obj = plt.title('Pressure Histogram')
-        plt.setp(title_obj, color='w')
-        plt.tick_params(axis='both', colors='white')
-        ax = plt.gca()
-        # ax.locator_params(axis='x', integer=True)
-        ax.spines['bottom'].set_color('w')
-        ax.spines['top'].set_color('w')
-        ax.spines['right'].set_color('w')
-        ax.spines['left'].set_color('w')
-        plt.tight_layout()
-
-        # save hist
-        plt.savefig('prs_hist.png',
-                    facecolor='#1a1a1a',
-                    transparent=True, )
 
         ################################### VISIBILITY HISTOGRAM ##################################
 
-        # create histogram
-        plt.figure(figsize=(4, 3))
-        plt.hist(self.data['Visibility(mi)'], bins=np.arange(-1,11)+0.5, edgecolor='darkgray',
-                 linewidth=0.5)  # color="gray",)
+        self.create_histo('Visibility(mi)', None, np.arange(-1,11)+0.5, 'Visibility Histogram', 'vis_hist.png', )
+        self.create_scatter('Visibility Scatterplot', 'Visibility(mi)', 'vis_scat.png')
 
-        # figure settings
-        title_obj = plt.title('Visibility Histogram')
-        plt.setp(title_obj, color='w')
-        plt.tick_params(axis='both', colors='white')
-        ax = plt.gca()
-        # ax.locator_params(axis='x', integer=True)
-        ax.spines['bottom'].set_color('w')
-        ax.spines['top'].set_color('w')
-        ax.spines['right'].set_color('w')
-        ax.spines['left'].set_color('w')
-        plt.tight_layout()
 
-        # save hist
-        plt.savefig('vis_hist.png',
-                    facecolor='#1a1a1a',
-                    transparent=True, )
 
         ################################### WIND SPEED HISTOGRAM ##################################
 
-        # create histogram
-        plt.figure(figsize=(4, 3))
-        plt.hist(self.data['Wind_Speed(mph)'], bins=20, edgecolor='darkgray',
-                 linewidth=0.5, range=[0, 21])  # color="gray",)
+        self.create_histo('Wind_Speed(mph)', [0, 21], 20, 'Wind Speed Histogram',
+                            'wsp_hist.png', )
+        self.create_scatter('Wind Speed Scatterplot', 'Wind_Speed(mph)', 'wsp_scat.png')
 
-        # figure settings
-        title_obj = plt.title('Wind Speed Histogram')
-        plt.setp(title_obj, color='w')
-        plt.tick_params(axis='both', colors='white')
-        ax = plt.gca()
-        # ax.locator_params(axis='x', integer=True)
-        ax.spines['bottom'].set_color('w')
-        ax.spines['top'].set_color('w')
-        ax.spines['right'].set_color('w')
-        ax.spines['left'].set_color('w')
-        plt.tight_layout()
 
-        # save hist
-        plt.savefig('wsp_hist.png',
-                    facecolor='#1a1a1a',
-                    transparent=True, )
 
         ################################### PRECIPITATION HISTOGRAM ##################################
+        self.create_histo('Precipitation(in)', [0,0.5], 10, 'Precipitation Histogram',
+                            'prc_hist.png', )
+        self.create_scatter('Precipitation Scatterplot', 'Precipitation(in)', 'prc_scat.png')
 
-        # create histogram
-        plt.figure(figsize=(4, 3))
-        plt.hist(self.data['Precipitation(in)'], bins=10, range = [0,0.5], edgecolor='darkgray',
-                 linewidth=0.5 ) # color="gray",)
-
-        # figure settings
-        title_obj = plt.title('Precipitation Histogram')
-        plt.setp(title_obj, color='w')
-        plt.tick_params(axis='both', colors='white')
-        ax = plt.gca()
-        # ax.locator_params(axis='x', integer=True)
-        ax.spines['bottom'].set_color('w')
-        ax.spines['top'].set_color('w')
-        ax.spines['right'].set_color('w')
-        ax.spines['left'].set_color('w')
-        plt.tight_layout()
-
-        # save hist
-        plt.savefig('prc_hist.png',
-                    facecolor='#1a1a1a',
-                    transparent=True, )
 
         ################################### SEVERITY HISTOGRAM ##################################
+        self.create_histo('Severity', None, np.arange(0, 5) + 0.5, 'Severity Histogram',
+                            'sev_hist.png', )
+        self.create_scatter('Severity Scatterplot', 'Severity', 'sev_scat.png')
 
-        # create histogram
-        plt.figure(figsize=(4, 3))
-        plt.hist(self.data['Severity'], bins=np.arange(0, 5) + 0.5, ec="k", edgecolor='darkgray',
-                 linewidth=0.5)  # range=[1, 4], # color="gray",)
 
-        # figure settings
-        title_obj = plt.title('Severity Histogram')
-        plt.setp(title_obj, color='w')
-        plt.tick_params(axis='both', colors='white')
-        ax = plt.gca()
-        ax.locator_params(axis='x', integer=True)
-        ax.spines['bottom'].set_color('w')
-        ax.spines['top'].set_color('w')
-        ax.spines['right'].set_color('w')
-        ax.spines['left'].set_color('w')
-        plt.tight_layout()
-
-        # save hist
-        plt.savefig('sev_hist.png',
-                    facecolor='#1a1a1a',
-                    transparent=True, )
 
         ################################### Concatenate histograms ##################################
         #concatenate
@@ -265,6 +99,22 @@ class eda():
         im8 = Image.open('wsp_hist.png')
         im9 = Image.open('prc_hist.png')
         self.get_concat_v_multi_resize([im1, im2, im3, im4, im5, im6, im7, im8, im9]).save('histograms.png')
+
+
+
+
+        ################################### Concatenate scatterplots ##################################
+        #concatenate
+        im1s = Image.open('sev_scat.png')
+        im2s = Image.open('dis_scat.png')
+        im3s = Image.open('temp_scat.png')
+        im4s = Image.open('wch_scat.png')
+        im5s = Image.open('hum_scat.png')
+        im6s = Image.open('prs_scat.png')
+        im7s = Image.open('vis_scat.png')
+        im8s = Image.open('wsp_scat.png')
+        im9s = Image.open('prc_scat.png')
+        self.get_concat_v_multi_resize([im1s, im2s, im3s, im4s, im5s, im6s, im7s, im8s, im9s]).save('scatterplots.png')
 
         ################################### HEAT MAP ##################################
 
@@ -341,3 +191,80 @@ class eda():
             dst.paste(im, (0, pos_y))
             pos_y += im.height
         return dst
+
+    def create_histo(self, column, range, bins,   hist_title, png_title,):
+        # create histogram
+        plt.figure(figsize=(4, 3))
+        plt.hist(self.data[column], bins=bins, edgecolor='darkgray',
+                 linewidth=0.5, range=range, align='mid')  # color="gray",)
+
+        # figure settings
+        title_obj = plt.title(hist_title)
+        plt.setp(title_obj, color='w')
+        plt.tick_params(axis='both', colors='white')
+        ax = plt.gca()
+        # ax.locator_params(axis='x', integer=True)
+        ax.spines['bottom'].set_color('w')
+        ax.spines['top'].set_color('w')
+        ax.spines['right'].set_color('w')
+        ax.spines['left'].set_color('w')
+        plt.tight_layout()
+
+        # save hist
+        plt.savefig(png_title,
+                    facecolor='#1a1a1a',
+                    transparent=True, )
+
+    def create_scatter(self, scat_title, column, png_title ):
+        x = np.arange(0, len(self.data), 1)
+        y = self.data[column]
+
+        if len(self.data) >=1000:
+            self.create_scatter_heatmap(column, png_title)
+        else:
+            # make and save scatter plot
+            plt.figure(figsize=(4, 3))
+            plt.title(scat_title)
+            plt.scatter(x, y, edgecolor='darkgray')  # color="gray",)
+
+            # figure settings
+            title_obj = plt.title(scat_title)
+            plt.setp(title_obj, color='w')
+            plt.tick_params(axis='both', colors='white')
+            ax = plt.gca()
+            # ax.locator_params(axis='x', integer=True)
+            ax.spines['bottom'].set_color('w')
+            ax.spines['top'].set_color('w')
+            ax.spines['right'].set_color('w')
+            ax.spines['left'].set_color('w')
+            plt.tight_layout()
+
+
+            #save scatter
+            plt.savefig(png_title,
+                        facecolor='#1a1a1a',
+                        transparent=True, )
+
+    def create_scatter_heatmap(self, column, png_title):
+        xdata = np.arange(0, len(self.data), 1)
+        ydata = self.data[column]
+
+        #import mylib
+
+        #a4_dims = (11.7, 8.27)
+        #df = mylib.load_data()
+        #fig, ax = plt.subplots(figsize=a4_dims)
+        #sns.violinplot(ax=ax, data=df, **violin_options)
+
+
+        cmap = sns.cubehelix_palette(3, start=2.74, rot=0, dark=0, light=.95, reverse=True, as_cmap=True)
+        sns.set_style("white", {'xtick.color': 'w',
+                                'ytick.color': 'w', 'axes.edgecolor': 'w', 'axes.labelcolor': 'w'})
+
+        sns.jointplot(x=xdata, y=ydata, kind="kde", cmap=cmap, height = 3)
+        plt.gcf().set_size_inches(4, 3)
+
+        # save scatter
+        plt.savefig(png_title,
+                    facecolor='#1a1a1a',
+                    transparent=True, )

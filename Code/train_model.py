@@ -303,6 +303,7 @@ class train():
             try:
                 im = ImageOps.invert(im1)
             except:
+                im=im1
                 print("color invert error")
 
         im = im.convert('RGBA')

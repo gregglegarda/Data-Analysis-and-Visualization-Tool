@@ -344,9 +344,15 @@ class main_window(QMainWindow):
 
         #SCATTER
         self.imageView2 = QLabel(self.widget)
-        self.pixmap2 = QPixmap("analysis.png")
+        self.pixmap2 = QPixmap("longblank.png")
         self.imageView2.setPixmap(self.pixmap2)
-        self.tab2_layout.addWidget(self.imageView2)
+        # scroller
+        self.scroll2 = QtWidgets.QScrollArea(self.widget)
+        self.scroll2.setWidget(self.imageView2)
+        self.scroll2.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.scroll2.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        self.scroll2.widgetResizable()
+        self.tab2_layout.addWidget(self.scroll2)
 
         #GRAPHS
         self.imageView3 = QLabel(self.widget)
@@ -593,9 +599,10 @@ class main_window(QMainWindow):
         self.scroll.update()
 
         # update image in screen scatter
-        self.pixmap2 = QPixmap("dis_hist.png")
+        self.pixmap2 = QPixmap("scatterplots.png")
         self.imageView2.setPixmap(self.pixmap2)
         self.imageView2.update()
+        self.scroll2.update()
 
         # update image in screen graphs
         self.pixmap3 = QPixmap("temp_hist.png")
