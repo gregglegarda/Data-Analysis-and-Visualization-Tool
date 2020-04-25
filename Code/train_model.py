@@ -74,11 +74,11 @@ class train():
         elif self.train_inputs[2] == "Naive Bayes":
             self.naive_bayes(X_train, X_test, y_train, y_test)
 
-
 ###================================ MACHINE LEARNING FUNCTIONS =====================================###
 
     ##========================  DECISION TREE ===================###
     def decision_tree(self, X_train, X_test, y_train, y_test):
+        from sklearn.tree import DecisionTreeClassifier
         from sklearn.preprocessing import StandardScaler
         sc = StandardScaler()
         sc.fit(X_train)
@@ -89,21 +89,45 @@ class train():
 
         # Build decision tree model
         # visualize tree train
-        clf = tree.DecisionTreeClassifier(max_depth= 3)
-        clf = clf.fit(X_train, y_train)
-        print("Model created")
+
+
+
+
+        # Decision tree gridsearch
+        clf = tree.DecisionTreeClassifier(random_state=23)
+        clf.fit(X_train_std,y_train)
+        from sklearn.model_selection import \
+            GridSearchCV  # https://medium.com/@haydar_ai/learning-data-science-day-22-cross-validation-and-parameter-tuning-b14bcbc6b012
+
+        parameter_grid = {'criterion': ['gini', 'entropy'],  # provides better parameters for model above
+                          'splitter': ['best', 'random'],
+                          'max_depth': [1, 2, 3, 4, 5],
+                          'max_features': [1, 2, 3, 4]}
+
+        grid_search = GridSearchCV(clf, param_grid=parameter_grid, cv=10)
+
+        grid_result = grid_search.fit(X_train_std, y_train)
+        best_params = grid_result.best_params_
+        print(best_params)
+        best_clf = tree.DecisionTreeClassifier(criterion=best_params['criterion'],splitter=best_params['splitter'],
+                                         max_depth=best_params['max_depth'], max_features=best_params['max_features'],random_state=23)
+
+        best_clf.fit(X_train_std,y_train)
+
+        print('Model created')
 
         # Predict test from train
-        y_pred = clf.predict(X_test)
-        print("shape of y_pred:", X_test.shape)
-        print("y_pred:", X_test)
+        y_pred = best_clf.predict(X_test_std)
+        print("shape of y_pred:", X_test_std.shape)
+        print("y_pred:", X_test_std)
         acc_score = accuracy_score(y_test, y_pred)
         self.accuracy = (acc_score * 100).round(2)
         # Accuracy
         print('DT Accuracy:', acc_score)
         print('DT Accuracy:', self.accuracy)
-        self.model_algorithm = clf
-        print("train model is:", clf)
+        self.model_algorithm = best_clf
+        print("train model is:", best_clf)
+
 
         feature_names = ["Distance(mi)", "Temperature(F)", "Wind_Chill(F)", "Humidity(%)", "Pressure(in)",
                         "Visibility(mi)", "Wind_Speed(mph)", "Precipitation(in)"]
@@ -128,6 +152,7 @@ class train():
         graph.write_png('model_image.png')
         self.dark_mode_png()
 
+
         ####### alternate tree with dark background
         #plt.style.use('dark_background')
         #mpl.rcParams['text.color'] = 'black'
@@ -137,24 +162,42 @@ class train():
 
     ##========================  RANDOM FOREST ===================###
     def random_forest(self, X_train, X_test, y_train, y_test):
-        rf = RandomForestClassifier(n_estimators=100, random_state=23, verbose=3,n_jobs=-1)
+        rf = RandomForestClassifier(n_estimators=100, random_state=23, verbose=3, n_jobs=-1)
+        from sklearn.preprocessing import StandardScaler
+        sc = StandardScaler()
+        sc.fit(X_train)
+        X_train_std = sc.transform(X_train)
+        X_test_std = sc.transform(X_test)
+        rf.fit(X_train_std,y_train)
         # https://stackoverflow.com/questions/43640546/how-to-make-randomforestclassifier-faster
-        rf.fit(X_train, y_train)
+        # random forest GridSearch
+        from sklearn.model_selection import \
+            GridSearchCV  # https://medium.com/@haydar_ai/learning-data-science-day-22-cross-validation-and-parameter-tuning-b14bcbc6b012
+        parameter_grid = {'criterion': ['gini', 'entropy'],  # provides better parameters for model above
+                          'max_depth': [1, 2, 3, 4, 5],
+                          'max_features': [1, 2, 3, 4]}
+        CV_rf = GridSearchCV(rf,param_grid=parameter_grid,cv=10)
+        grid_result = CV_rf.fit(X_train_std,y_train)
+        best_params = grid_result.best_params_
+        print(best_params)
+
+        best_rf = RandomForestClassifier(n_estimators=100,criterion=best_params['criterion'],
+                                         max_depth=best_params['max_depth'],max_features=best_params['max_features'],
+                                         verbose=3,n_jobs=-1,random_state=23)
+        best_rf.fit(X_train_std,y_train)
         # https://towardsdatascience.com/random-forest-in-python-24d0893d51c0
-        predictions = rf.predict(X_test)  # Calculate the absolute errors
+        predictions = best_rf.predict(X_test_std)  # Calculate the absolute errors
 
         # Accuracy
         accuracy = accuracy_score(y_test, predictions)*100
         print('Random Forest Model Accuracy:', round(accuracy, 2), '%.')
 
         self.accuracy = round(accuracy, 2)
-        self.model_algorithm = rf
-        print("train model is:", rf)
-
-
+        self.model_algorithm = best_rf
+        print("train model is:", best_rf)
 
         #PICK A TREE FROM THE RANDOM FOREST
-        tree = rf.estimators_[5]
+        tree = best_rf.estimators_[5]
 
 
 
@@ -188,6 +231,11 @@ class train():
         print("train model is:", regressor)
 
 
+        self.accuracy = round(accuracy, 2)
+        self.model_algorithm = best_regression
+        print("train model is:", best_regression)
+
+
         ####PLOT THE MODEL
 
         plt.figure()
@@ -200,7 +248,7 @@ class train():
         y_min, y_max = X_test[:, 1].min() - .5, X_test[:, 1].max() + .5
         h = .02  # step size in the mesh
         xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
-        Z = regressor.predict(np.c_[xx.ravel(), yy.ravel()])
+        Z = best_regression.predict(np.c_[xx.ravel(), yy.ravel()])
 
         # Put the result into a color plot
         Z = Z.reshape(xx.shape)
@@ -225,17 +273,33 @@ class train():
     ##========================  K_NEAREST NEIGHBORS  ===================###
     def knn_classifier(self, X_train_PCA, X_test_PCA, y_train_PCA, y_test_PCA):
         from sklearn.neighbors import KNeighborsClassifier
-        neigh = KNeighborsClassifier(n_neighbors=self.k_value,n_jobs=-1)
-        neigh.fit(X_train_PCA, y_train_PCA)
-        predictions = neigh.predict(X_test_PCA)
+        neigh = KNeighborsClassifier(n_jobs=-1)
+        # KNN  GridSearch
+        from sklearn.model_selection import \
+            GridSearchCV  # https://medium.com/@haydar_ai/learning-data-science-day-22-cross-validation-and-parameter-tuning-b14bcbc6b012
+        parameter_grid = {'metric': ['minkowski','manhattan','euclidean'],
+                          'leaf_size': [1,2,3,4,5],
+                          'weights': ['uniform', 'distance'],
+                          'n_neighbors': [1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49]}
+        CV_knn = GridSearchCV(neigh, param_grid=parameter_grid, cv=10)
+        grid_result = CV_knn.fit(X_train_PCA, y_train_PCA)
+        best_params = grid_result.best_params_
+        print(grid_result.best_params_)
+
+        best_knn = KNeighborsClassifier(n_neighbors=best_params['n_neighbors'],n_jobs=-1, leaf_size=best_params['leaf_size'],
+                                         metric=best_params['metric'],weights=best_params['weights'])
+        best_knn.fit(X_train_PCA, y_train_PCA)
+
+        # https://towardsdatascience.com/random-forest-in-python-24d0893d51c0
+        predictions = best_knn.predict(X_test_PCA)  # Calculate the absolute errors
 
         # Accuracy
         accuracy = accuracy_score(y_test_PCA, predictions)*100
         print('KNN Model Accuracy:', round(accuracy, 2), '%.')
 
         self.accuracy = round(accuracy, 2)
-        self.model_algorithm = neigh
-        print("train model is:", neigh)
+        self.model_algorithm = best_knn
+        print("train model is:", best_knn)
 
         ####================create a graph for KNN curve to find optimal elbow
         # from 1 to length of training samples (usually 70%), step size is divided by 100
@@ -244,7 +308,7 @@ class train():
         k_range = range(1, 50, 2)
         scores = []
         for k in k_range:
-            knn = KNeighborsClassifier(n_neighbors=k)
+            knn = KNeighborsClassifier(n_neighbors=k,n_jobs=-1,metric='minkowski',weights='uniform',leaf_size=1)
             knn.fit(X_train_PCA, y_train_PCA)
             y_pred = knn.predict(X_test_PCA)
             #scores.append(accuracy_score(y_test_PCA, y_pred))
@@ -278,18 +342,28 @@ class train():
     ##========================  SUPORT VECTOR MACHINE ===================###
     def svm_classifier(self, X_train, X_test, y_train, y_test):
         from sklearn.svm import LinearSVC
-        clf = LinearSVC(random_state=0, tol=1e-5)
-        clf.fit(X_train, y_train)
+        from sklearn.model_selection import \
+            GridSearchCV  # https://medium.com/@haydar_ai/learning-data-science-day-22-cross-validation-and-parameter-tuning-b14bcbc6b012
+        svc = LinearSVC(random_state=0, tol=1e-5)
+        parameter_grid = {'max_iter': [1000,5000,10000],
+                          'C': [1.0,2.0,3.0,4.0,5.0]}
+        CV_svc = GridSearchCV(svc, param_grid=parameter_grid, cv=10)
+        grid_result = CV_svc.fit(X_train, y_train)
+        best_params = grid_result.best_params_
+        print(grid_result.best_params_)
 
-        predictions = clf.predict(X_test)
+        best_svc = LinearSVC(dual=False, C=best_params['C'],max_iter=best_params['max_iter'])
+        best_svc.fit(X_train, y_train)
+
+        predictions = best_svc.predict(X_test)
 
         # Accuracy
         accuracy = accuracy_score(y_test, predictions) * 100
         print('SVM Accuracy:', round(accuracy, 2), '%.')
 
         self.accuracy = round(accuracy, 2)
-        self.model_algorithm = clf
-        print("train model is:", clf)
+        self.model_algorithm = best_svc
+        print("train model is:", best_svc)
 
         ####PLOT THE MODEL
         plt.figure()
