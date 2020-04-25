@@ -541,6 +541,27 @@ class main_window(QMainWindow):
 
 
             # train model
+
+            try:  # Following code (try/except clauses) searches for this script, and then changes the current working directory to the folder that houses it.
+                start = '/Users'  # Code from https://stackoverflow.com/questions/43553742/finding-particular-path-in-directory-in-python
+                for dirpath, dirnames, filenames in os.walk(start):
+                    for filename in filenames:
+                        if filename == "US_Accidents_Dec19.csv":
+                            filename = os.path.join(dirpath, filename)
+                            os.chdir(dirpath)
+            except:
+                pass
+
+            try:
+                start1 = "C:\\Users"
+                for dirpath, dirnames, filenames in os.walk(start1):
+                    for filename in filenames:
+                        if filename == "US_Accidents_Dec19.csv":
+                            filename = os.path.join(dirpath, filename)
+                            os.chdir(dirpath)
+            except:
+                pass
+
             try:
                 import train_model
             except:
