@@ -232,8 +232,8 @@ class train():
 
 
         self.accuracy = round(accuracy, 2)
-        self.model_algorithm = best_regression
-        print("train model is:", best_regression)
+        self.model_algorithm = regressor
+        print("train model is:", regressor)
 
 
         ####PLOT THE MODEL
@@ -248,7 +248,7 @@ class train():
         y_min, y_max = X_test[:, 1].min() - .5, X_test[:, 1].max() + .5
         h = .02  # step size in the mesh
         xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
-        Z = best_regression.predict(np.c_[xx.ravel(), yy.ravel()])
+        Z = regressor.predict(np.c_[xx.ravel(), yy.ravel()])
 
         # Put the result into a color plot
         Z = Z.reshape(xx.shape)
