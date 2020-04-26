@@ -215,7 +215,7 @@ class train():
         plt.close()
     ##========================  LOGISTIC REGRESSION ===================###
     def logistic_regression(self, X_train, X_test, y_train, y_test):
-        regressor = LogisticRegression(multi_class="multinomial")
+        regressor = LogisticRegression(multi_class="multinomial", solver='saga')
         regressor.fit(X_train, y_train)  # training the algorithm
         predictions = regressor.predict(X_test)
 
