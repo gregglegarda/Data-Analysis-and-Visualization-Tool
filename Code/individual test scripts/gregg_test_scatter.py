@@ -90,6 +90,10 @@ Astronomical_Twilight
 
 
 
+'''
+
+
+
 
 
 
@@ -100,17 +104,17 @@ data = pd.read_csv("pre_processed_data.csv")
 
 # create scatter
 
-'''
-Temperature(F)	
-Wind_Chill(F)	
-Humidity(%)	
-Pressure(in)	
-Visibility(mi)	
-Wind_Direction	
-Wind_Speed(mph)	
-Precipitation(in)
 
-'''
+#Temperature(F)	
+#Wind_Chill(F)	
+#Humidity(%)	
+#Pressure(in)	
+#Visibility(mi)	
+#Wind_Direction	
+#Wind_Speed(mph)	
+#Precipitation(in)
+
+
 
 #################################      SCATTER          #############################
 xdata = np.arange(0,len(data),1)
@@ -208,6 +212,9 @@ plt.close()
 
 
 
+'''
+import numpy as np
+gs= 3
+gs = np.reshape(gs, (2,1))
 
-
-
+print(gs.shape)

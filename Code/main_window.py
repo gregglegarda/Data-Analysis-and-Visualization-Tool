@@ -264,7 +264,7 @@ class main_window(QMainWindow):
 
 
         self.status_label_model = QPushButton(self.widget)
-        self.status_label_model.setText("CURRENT ML MODEL:")
+        self.status_label_model.setText("VIEW CURRENT MODEL")
         self.status_label_model.clicked.connect(self.on_Button_model_clicked)
         self.layoutstatus.addWidget(self.status_label_model, 0, 0, 1, 1)
         self.status_display_model = QLabel("NO MODEL")
@@ -272,7 +272,7 @@ class main_window(QMainWindow):
         self.layoutstatus.addWidget(self.status_display_model, 1, 0, 1, 1)
 
         self.status_map = QPushButton(self.widget)
-        self.status_map.setText("GEOMAP STATUS:")
+        self.status_map.setText("VIEW GEOMAP STATUS")
         self.status_map.clicked.connect(self.on_Button_geomap_clicked)
         self.layoutstatus.addWidget(self.status_map, 0, 1, 1, 1)
         self.status_display_map = QLabel("WAIT...")

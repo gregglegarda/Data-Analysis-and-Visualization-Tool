@@ -70,7 +70,7 @@ class map_load_time():
         print("lenght of indexes in csv",len(data.index) )
         print("x1 and y1v", x1, y1)
         y_predict_point =  self.fit_the_curve(len(data.index), x1,y1, num_samples)
-        print("prediction for ", num_samples," is ", y_predict_point)
+        print("geo map prediction for ", num_samples," is ", y_predict_point)
 
 
         #if new data point is not in the csv file, save.

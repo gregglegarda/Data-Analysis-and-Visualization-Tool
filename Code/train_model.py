@@ -11,6 +11,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+from sklearn.model_selection import \
+    GridSearchCV
 
 
 class train():
@@ -25,8 +27,8 @@ class train():
         self.k_value = int(k_value)
 
         #functions
-        self.data_processing()
-        self.create_model()
+        self.data_processing() ### initial preprocessing included
+        self.create_model() # more preprocessing included
 
         print("Training complete")
 ####==================================   CREATE MODEL FUNCTION ====================================############
@@ -35,16 +37,11 @@ class train():
         print("Creating model...")
         print("Data in model class is:",self.train_inputs)
 
-        #######  TRAIN AND SPLIT #######
-        train_split = int(self.train_inputs[1][0] + self.train_inputs[1][1] ) #only take the first two digits since it has a %
-        test_split = (100 - train_split)/100
-        model_algorithim = self.train_inputs[2]
 
-        # make table for preprocessing
+        #======= SPLIT FEATURES AND TARGET ==========#
         column_names = ["Distance(mi)", "Temperature(F)", "Wind_Chill(F)", "Humidity(%)", "Pressure(in)",
                         "Visibility(mi)", "Wind_Speed(mph)", "Precipitation(in)",
                         "Severity"]
-
         X = [list(self.data["Distance(mi)"]), list(self.data["Temperature(F)"]),
              list(self.data["Wind_Chill(F)"]), list(self.data["Humidity(%)"]), list(self.data["Pressure(in)"]),
              list(self.data["Visibility(mi)"]), list(self.data["Wind_Speed(mph)"]), list(self.data["Precipitation(in)"])]
@@ -52,21 +49,38 @@ class train():
         y = list(self.data["Severity"])
 
 
-        #perform PCA before splitting,
+        #======= PERFORM PCA ==========#
+        #for KNN and Logistic Regression
         if self.train_inputs[2] == "KNN" or self.train_inputs[2] == "Logistic Regression":
             X = PCA(n_components=2).fit_transform(X)
             print("PCA PERFORMED")
 
+
+
+        # ======= SPLIT INTO TRAIN AND TEST ==========#
+        train_split = int(self.train_inputs[1][0] + self.train_inputs[1][1] ) #only take the first two digits since it has a %
+        test_split = (100 - train_split)/100
+        model_algorithim = self.train_inputs[2]
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_split, random_state=0)
 
 
+        # ======= PERFORM STANDARD SCALER ==========#
+        #for DT, RF, LR,
+        from sklearn.preprocessing import StandardScaler
+        sc = StandardScaler()
+        sc.fit(X_train)
+        X_train_std = sc.transform(X_train)
+        X_test_std = sc.transform(X_test)
+        X_combined_std = np.vstack((X_train_std, X_test_std))
+        y_combined = np.hstack((y_train, y_test))
+
         #########   PICKED MODEL GOES HERE   ###
         if self.train_inputs[2] == "Decision Trees":
-            self.decision_tree(X_train, X_test, y_train, y_test)
+            self.decision_tree(X_train_std, X_test_std, y_train, y_test)
         elif self.train_inputs[2] == "Random Forest":
-            self.random_forest(X_train, X_test, y_train, y_test)
+            self.random_forest(X_train_std, X_test_std, y_train, y_test)
         elif self.train_inputs[2] == "Logistic Regression":
-            self.logistic_regression(X_train, X_test, y_train, y_test)
+            self.logistic_regression(X_train_std, X_test_std, y_train, y_test)
         elif self.train_inputs[2] == "KNN":
             self.knn_classifier(X_train, X_test, y_train, y_test)
         elif self.train_inputs[2] == "SVM":
@@ -79,20 +93,11 @@ class train():
 
     ##========================  DECISION TREE ===================###
     def decision_tree(self, X_train, X_test, y_train, y_test):
-        from sklearn.preprocessing import StandardScaler
-        sc = StandardScaler()
-        sc.fit(X_train)
-        X_train_std = sc.transform(X_train)
-        X_test_std = sc.transform(X_test)
-        X_combined_std = np.vstack((X_train_std, X_test_std))
-        y_combined = np.hstack((y_train, y_test))
 
-        # Build decision tree model
-        # visualize tree train
+        #### REGULAR DECISION TREE ######
         clf = tree.DecisionTreeClassifier(max_depth= 3)
         clf = clf.fit(X_train, y_train)
         print("Model created")
-
         # Predict test from train
         y_pred = clf.predict(X_test)
         print("shape of y_pred:", X_test.shape)
@@ -105,11 +110,36 @@ class train():
         self.model_algorithm = clf
         print("train model is:", clf)
 
-        feature_names = ["Distance(mi)", "Temperature(F)", "Wind_Chill(F)", "Humidity(%)", "Pressure(in)",
-                        "Visibility(mi)", "Wind_Speed(mph)", "Precipitation(in)"]
+
+        ###### GRID SEARCH  #######
+        clf_gs = tree.DecisionTreeClassifier()
+        parameter_grid = {'criterion': ['gini', 'entropy'],  # provides better parameters for model above
+                          'splitter': ['best', 'random'],
+                          'max_depth': [1, 2, 3],
+                          'max_features': [1, 2, 3, 4]}
+        grid_search = GridSearchCV(clf_gs, param_grid=parameter_grid, cv=10)
+        grid_result = grid_search.fit(X_train, y_train)
+        best_params = grid_result.best_params_
+        print(best_params)
+        best_clf = tree.DecisionTreeClassifier(criterion=best_params['criterion'],splitter=best_params['splitter'],
+                                         max_depth=best_params['max_depth'], max_features=best_params['max_features'],random_state=23)
+        best_clf.fit(X_train,y_train)
+        # Predict test from grid search
+        y_pred_grid = best_clf.predict(X_test)
+        print("GS shape of y_pred:", X_test.shape)
+        acc_score_gs = accuracy_score(y_test, y_pred_grid)
+        self.accuracy = (acc_score_gs * 100).round(2)
+        # Accuracy
+        print('GS DT Accuracy:', acc_score_gs)
+        print('GS DT Accuracy:', self.accuracy)
+        self.model_algorithm = best_clf
+        print("GS train model is:", best_clf)
+
 
         ####VISUALIZE PLOT THE MODEL AND SAVE
-        dot_data = tree.export_graphviz(clf,
+        feature_names = ["Distance(mi)", "Temperature(F)", "Wind_Chill(F)", "Humidity(%)", "Pressure(in)",
+                         "Visibility(mi)", "Wind_Speed(mph)", "Precipitation(in)"]
+        dot_data = tree.export_graphviz(best_clf,
                                          feature_names=feature_names,
                                          out_file=None,
                                          filled=True,
@@ -128,37 +158,50 @@ class train():
         graph.write_png('model_image.png')
         self.dark_mode_png()
 
-        ####### alternate tree with dark background
-        #plt.style.use('dark_background')
-        #mpl.rcParams['text.color'] = 'black'
-        #fig, ax = plt.subplots(figsize=(30, 30), facecolor='k')
-        #plot_tree(clf, rotate=True, ax=ax, feature_names= feature_names, max_depth= 3)
-        #plt.savefig('model_image.png',facecolor='#1a1a1a')#,transparent=True,)
 
     ##========================  RANDOM FOREST ===================###
     def random_forest(self, X_train, X_test, y_train, y_test):
+
+        #### REGULAR RANDOM FOREST ######
         rf = RandomForestClassifier(n_estimators=100, random_state=23, verbose=3,n_jobs=-1)
         # https://stackoverflow.com/questions/43640546/how-to-make-randomforestclassifier-faster
         rf.fit(X_train, y_train)
         # https://towardsdatascience.com/random-forest-in-python-24d0893d51c0
         predictions = rf.predict(X_test)  # Calculate the absolute errors
-
         # Accuracy
         accuracy = accuracy_score(y_test, predictions)*100
         print('Random Forest Model Accuracy:', round(accuracy, 2), '%.')
-
         self.accuracy = round(accuracy, 2)
         self.model_algorithm = rf
         print("train model is:", rf)
 
+        #### GRID SEARCH ######
+        rf_gs = RandomForestClassifier()
+        parameter_grid = {'criterion': ['gini', 'entropy'],  # provides better parameters for model above
+                          'max_depth': [1, 2, 3, 4],
+                          'max_features': [1, 2, 3, 4]}
+        CV_rf = GridSearchCV(rf_gs, param_grid=parameter_grid, cv=10)
+        grid_result = CV_rf.fit(X_train, y_train)
+        best_params = grid_result.best_params_
+        print(best_params)
+        best_rf = RandomForestClassifier(n_estimators=100, criterion=best_params['criterion'],
+                                         max_depth=best_params['max_depth'], max_features=best_params['max_features'],
+                                         verbose=3, n_jobs=-1, random_state=23)
+        best_rf.fit(X_train, y_train)
+        # https://towardsdatascience.com/random-forest-in-python-24d0893d51c0
+        predictions_gs = best_rf.predict(X_test)
+        # Accuracy
+        accuracy_gs = accuracy_score(y_test, predictions_gs) * 100
+        print('GS Random Forest Model Accuracy:', round(accuracy_gs, 2), '%.')
+        self.accuracy = round(accuracy_gs, 2)
+        self.model_algorithm = best_rf
+        print("GS train model is:", best_rf)
 
 
-        #PICK A TREE FROM THE RANDOM FOREST
-        tree = rf.estimators_[5]
 
-
-
-        ####PLOT THE MODEL #style is dark background plot_tree different look from decision tree
+        ######  PLOT THE MODEL  ######
+        # #style is dark background plot_tree different look from decision tree
+        tree = best_rf.estimators_[5] #pick a tree from the random forest
         plt.figure()
         feature_names = ["Distance(mi)", "Temperature(F)", "Wind_Chill(F)", "Humidity(%)", "Pressure(in)",
                          "Visibility(mi)", "Wind_Speed(mph)", "Precipitation(in)"]
@@ -166,7 +209,7 @@ class train():
         mpl.rcParams['text.color'] = 'black'
         fig, ax = plt.subplots(figsize=(8, 6), facecolor='k')
         fig.suptitle('SINGLE TREE FROM RANDOM FOREST', fontsize=12, color='w')
-        plot_tree(tree, rotate=True, ax=ax, feature_names= feature_names, max_depth= 3 )
+        plot_tree(tree, rotate=True, ax=ax, feature_names= feature_names, max_depth= best_params['max_depth'] )
         plt.savefig('model_image.png',facecolor='#1a1a1a')#,transparent=True,)
         #plt.savefig('model_image.png',facecolor='#1a1a1a',transparent=True,)
         plt.close()
@@ -224,24 +267,53 @@ class train():
 
     ##========================  K_NEAREST NEIGHBORS  ===================###
     def knn_classifier(self, X_train_PCA, X_test_PCA, y_train_PCA, y_test_PCA):
+
+        ######### REGULAR KNN ###############
         from sklearn.neighbors import KNeighborsClassifier
         neigh = KNeighborsClassifier(n_neighbors=self.k_value,n_jobs=-1)
         neigh.fit(X_train_PCA, y_train_PCA)
         predictions = neigh.predict(X_test_PCA)
-
         # Accuracy
         accuracy = accuracy_score(y_test_PCA, predictions)*100
         print('KNN Model Accuracy:', round(accuracy, 2), '%.')
-
         self.accuracy = round(accuracy, 2)
         self.model_algorithm = neigh
         print("train model is:", neigh)
 
+
+
+        ########## GRID SEARCH ################
+        k_range = range(1, 50, 4)
+        print("k range:\n",k_range)
+        parameter_grid = {'metric': ['minkowski', 'manhattan', 'euclidean'],
+                          'leaf_size': [1, 2, 3, 4, 5],
+                          'weights': ['uniform', 'distance'],
+                          'n_neighbors': k_range}
+        CV_knn = GridSearchCV(neigh, param_grid=parameter_grid, cv=10)
+        grid_result = CV_knn.fit(X_train_PCA, y_train_PCA)
+        best_params = grid_result.best_params_
+        print(grid_result.best_params_)
+        best_knn = KNeighborsClassifier(n_neighbors=best_params['n_neighbors'], n_jobs=-1,
+                                        leaf_size=best_params['leaf_size'],
+                                        metric=best_params['metric'], weights=best_params['weights'])
+        best_knn.fit(X_train_PCA, y_train_PCA)
+        # https://towardsdatascience.com/random-forest-in-python-24d0893d51c0
+        predictions_gs = best_knn.predict(X_test_PCA)  # Calculate the absolute errors
+        # Accuracy
+        accuracy_gs = accuracy_score(y_test_PCA, predictions_gs) * 100
+        print('GS KNN Model Accuracy:', round(accuracy_gs, 2), '%.')
+        self.accuracy = round(accuracy_gs, 2)
+        self.model_algorithm = best_knn
+        print("GS train model is:", best_knn)
+
+        ##PRINT GS MODEL PARAMETERS
+        gs_nn = best_knn.n_neighbors
+        print ("GS MODEL N_NEIGHBORS:\n",gs_nn)
+
+
         ####================create a graph for KNN curve to find optimal elbow
         # from 1 to length of training samples (usually 70%), step size is divided by 100
         #k_range = range(1, len(X_train_PCA)-1, int(int(self.train_inputs[0])/100))
-
-        k_range = range(1, 50, 2)
         scores = []
         for k in k_range:
             knn = KNeighborsClassifier(n_neighbors=k)
@@ -249,14 +321,15 @@ class train():
             y_pred = knn.predict(X_test_PCA)
             #scores.append(accuracy_score(y_test_PCA, y_pred))
             scores.append(np.mean(y_pred != y_test_PCA))
-            print(k, k_range)
+            print("KNN OPTIMAL:\n:",k, k_range)
 
 
         #PLOT THE MODEL
 
         plt.figure()
         plt.clf()
-        plt.plot(k_range, scores)
+        plt.plot(k_range, scores, '-', label='Elbow Curve')
+        plt.axvline(x=gs_nn, label='KNN Grid Search', color='red')
         title_obj = plt.title('KNN')
         plt.setp(title_obj, color='w')
         x_label = plt.xlabel('Value of K for KNN')
@@ -277,19 +350,38 @@ class train():
 
     ##========================  SUPORT VECTOR MACHINE ===================###
     def svm_classifier(self, X_train, X_test, y_train, y_test):
+        ###### REGULAR SVM ###########
         from sklearn.svm import LinearSVC
         clf = LinearSVC(random_state=0, tol=1e-5)
         clf.fit(X_train, y_train)
-
         predictions = clf.predict(X_test)
-
         # Accuracy
         accuracy = accuracy_score(y_test, predictions) * 100
         print('SVM Accuracy:', round(accuracy, 2), '%.')
-
         self.accuracy = round(accuracy, 2)
         self.model_algorithm = clf
         print("train model is:", clf)
+
+
+        ####### GRID SEARCH  #############
+        svc_gc = LinearSVC(random_state=0, tol=1e-5)
+        parameter_grid = {'max_iter': [1000, 5000, 10000],
+                          'C': [1.0, 2.0, 3.0, 4.0, 5.0]}
+        CV_svc = GridSearchCV(svc_gc, param_grid=parameter_grid, cv=10)
+        grid_result = CV_svc.fit(X_train, y_train)
+        best_params = grid_result.best_params_
+        print(grid_result.best_params_)
+        best_svc = LinearSVC(dual=False, C=best_params['C'], max_iter=best_params['max_iter'])
+        best_svc.fit(X_train, y_train)
+        predictions_gc = best_svc.predict(X_test)
+        # Accuracy
+        accuracy_gc = accuracy_score(y_test, predictions_gc) * 100
+        print('GC SVM Accuracy:', round(accuracy_gc, 2), '%.')
+        self.accuracy = round(accuracy_gc, 2)
+        self.model_algorithm = best_svc
+        print("GC train model is:", best_svc)
+
+
 
         ####PLOT THE MODEL
         plt.figure()
