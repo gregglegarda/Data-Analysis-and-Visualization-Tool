@@ -4,8 +4,11 @@ from PyQt5.QtWidgets import ( QMessageBox, QAbstractItemView,
                             QPlainTextEdit)
 from PyQt5.QtWebEngineWidgets import QWebEngineView as QWebView
 from PyQt5.QtCore import QUrl
+from PyQt5.Qt import QPalette, QColor
 from folium.plugins import FastMarkerCluster
 import numpy as np
+from PyQt5 import Qt
+from PyQt5.QtCore import Qt
 from matplotlib import pyplot as plt
 import matplotlib
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap
@@ -15,8 +18,10 @@ class map_webview(QWebView):
 
         super(map_webview, self).__init__()
         local_url = QUrl.fromLocalFile(file_path)
+
         self.load(local_url)
         self.create_map(data)
+
         self.show()
 
     def create_map(self, data):
@@ -28,7 +33,7 @@ class map_webview(QWebView):
             # ============================== FAST CLUSTER ==============================
                 print("Creating map...")
                 m2 = folium.Map(
-                    location=[37.0902, -95.7129],
+                    location=[40, -100],
                     tiles='cartodbdark_matter',
                     # cartodbdark_matter #cartodbpositron #stamenwatercolor #stamenterrain #openstreetmap
                     zoom_start=3.5,
@@ -65,7 +70,7 @@ class map_webview(QWebView):
                 print(list(colors))
 
                 m = folium.Map(
-                    location=[37.0902, -95.7129],
+                    location=[40, -100],
                     tiles='cartodbdark_matter',
                     # cartodbdark_matter #cartodbpositron #stamenwatercolor #stamenterrain #openstreetmap
                     zoom_start=3.5,
@@ -108,7 +113,7 @@ class map_webview(QWebView):
         except:
             print("Initializing map...")
             m3 = folium.Map(
-                location=[37.0902, -95.7129],
+                location=[40, -100],#37.0902, -95.7129
                 tiles='cartodbdark_matter',
                 # cartodbdark_matter #cartodbpositron #stamenwatercolor #stamenterrain #openstreetmap
                 zoom_start=3.5,

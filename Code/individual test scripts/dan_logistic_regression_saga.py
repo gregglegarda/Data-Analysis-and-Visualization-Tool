@@ -1,3 +1,5 @@
+x=0
+'''
     def logistic_regression(self, X_train, X_test, y_train, y_test):
         regressor = LogisticRegression(multi_class="multinomial",solver='saga')
         regressor.fit(X_train, y_train)  # training the algorithm
@@ -47,3 +49,4 @@
 
         plt.savefig('model_image.png', facecolor='#1a1a1a', transparent=True, )
         plt.close()
+'''
