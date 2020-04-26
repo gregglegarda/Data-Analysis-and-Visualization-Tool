@@ -56,7 +56,6 @@ class train():
             print("PCA PERFORMED")
 
 
-
         # ======= SPLIT INTO TRAIN AND TEST ==========#
         train_split = int(self.train_inputs[1][0] + self.train_inputs[1][1] ) #only take the first two digits since it has a %
         test_split = (100 - train_split)/100
