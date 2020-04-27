@@ -29,6 +29,7 @@ class train():
         self.model_algorithm = 0
         self.k_value = int(k_value)
         self.pca=pca
+        self.Xy_test_df = 0
 
         #functions
         self.data_processing() ### initial preprocessing included
@@ -65,13 +66,13 @@ class train():
         model_algorithim = self.train_inputs[2]
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_split, random_state=0)
         #save train and test in a csv file
-        Xdf = pd.DataFrame(data=X_test)
+        self.Xy_test_df = pd.DataFrame(data=X_test)
         ydf = pd.DataFrame(data=y_test)
-        Xdf["target"] = (ydf)
-        Xdf.columns = column_names
-        print("Xdf\n", Xdf.head())
-        print("ytest\n", ydf)
-        Xdf.to_csv("X_test.csv")
+        self.Xy_test_df["target"] = (ydf)
+        self.Xy_test_df.columns = column_names
+        #print("Xdf\n", self.Xy_test_df.head())
+        #print("ytest\n", ydf)
+        #self.Xy_test_df.to_csv("X_test.csv")
 
         #======= PERFORM PCA ==========#
         #for KNN and Logistic Regression
@@ -175,6 +176,10 @@ class train():
         self.dark_mode_png()
 
 
+        #####save the predictions
+        self.Xy_test_df["prediction"] = (y_pred_grid)
+        self.Xy_test_df.to_csv("X_test.csv")
+
     ##========================  RANDOM FOREST ===================###
     def random_forest(self, X_train, X_test, y_train, y_test):
 
@@ -229,6 +234,11 @@ class train():
         plt.savefig('model_image.png',facecolor='#1a1a1a')#,transparent=True,)
         #plt.savefig('model_image.png',facecolor='#1a1a1a',transparent=True,)
         plt.close()
+
+        #####save the predictions
+        self.Xy_test_df["prediction"] = (predictions_gs)
+        self.Xy_test_df.to_csv("X_test.csv")
+
     ##========================  LOGISTIC REGRESSION ===================###
     def logistic_regression(self, X_train, X_test, y_train, y_test):
         regressor = LogisticRegression(multi_class="multinomial", solver='saga')
@@ -281,6 +291,10 @@ class train():
         plt.close()
 
 
+        #####save the predictions
+        self.Xy_test_df["prediction"] = (predictions)
+        self.Xy_test_df.to_csv("X_test.csv")
+
     ##========================  K_NEAREST NEIGHBORS  ===================###
     def knn_classifier(self, X_train_PCA, X_test_PCA, y_train_PCA, y_test_PCA):
 
@@ -313,6 +327,9 @@ class train():
                 scores.append(np.mean(y_pred != y_test_PCA))
                 print("KNN OPTIMAL:\n:", k, k_range)
 
+            #####save the predictions
+            self.Xy_test_df["prediction"] = (predictions)
+            self.Xy_test_df.to_csv("X_test.csv")
 
         else:
             ########## GRID SEARCH ################
@@ -346,6 +363,10 @@ class train():
             k_vert_line = gs_knn
             print("GS MODEL N_NEIGHBORS:\n", gs_knn)
             label_knn = "KNN GRID SEARCH K="+str(gs_knn)
+
+            #####save the predictions
+            self.Xy_test_df["prediction"] = (predictions_gs)
+            self.Xy_test_df.to_csv("X_test.csv")
 
             ####================create a graph for KNN curve to find optimal elbow
             # from 1 to length of training samples (usually 70%), step size is divided by 100
@@ -384,6 +405,9 @@ class train():
         plt.savefig('model_image.png',facecolor='#1a1a1a',transparent=True,)
         plt.close()
 
+
+
+
     ##========================  SUPORT VECTOR MACHINE ===================###
     def svm_classifier(self, X_train, X_test, y_train, y_test):
         ###### REGULAR SVM ###########
@@ -417,7 +441,9 @@ class train():
         self.model_algorithm = best_svc
         print("GC train model is:", best_svc)
 
-
+        #####save the predictions
+        self.Xy_test_df["prediction"] = (predictions_gc)
+        self.Xy_test_df.to_csv("X_test.csv")
 
         ####PLOT THE MODEL
         plt.figure()
@@ -442,6 +468,10 @@ class train():
         self.accuracy = round(accuracy, 2)
         self.model_algorithm = clf
         print("train model is:", clf)
+
+        #####save the predictions
+        self.Xy_test_df["prediction"] = (predictions)
+        self.Xy_test_df.to_csv("X_test.csv")
 
         ####PLOT THE MODEL
         plt.figure()

@@ -191,14 +191,14 @@ class main_window(QMainWindow):
 
 
         #Distance(mi)
-        self.distance = QLabel("Distance (0 to 0.010 mi):")
+        self.distance = QLabel("Distance (mi):")
         layout1.addWidget(self.distance, 2, 0, 1, 1)
         ####
         self.line_edit_distance = QtWidgets.QDoubleSpinBox(self.widget)
-        self.line_edit_distance.setDecimals(3)
-        self.line_edit_distance.setMaximum(0.01)
+        self.line_edit_distance.setDecimals(4)
+        self.line_edit_distance.setMaximum(100)
         self.line_edit_distance.setMinimum(0)
-        self.line_edit_distance.setSingleStep(0.001)
+        self.line_edit_distance.setSingleStep(0.0001)
         self.line_edit_distance.setSuffix(" mi ")
         #self.line_edit_distance = QLineEdit()
         #self.line_edit_distance.setPlaceholderText('Enter Distance')
@@ -206,31 +206,31 @@ class main_window(QMainWindow):
 
 
         #Temperature
-        self.temperature = QLabel("Temperature (-25 to 125 F):")
+        self.temperature = QLabel("Temperature (F):")
         layout1.addWidget(self.temperature, 4, 0, 1, 1)
         ####
         self.line_edit_temperature = QtWidgets.QDoubleSpinBox(self.widget)
-        self.line_edit_temperature.setMaximum(125)
-        self.line_edit_temperature.setMinimum(-25)
+        self.line_edit_temperature.setMaximum(150)
+        self.line_edit_temperature.setMinimum(-150)
         self.line_edit_temperature.setSuffix(" F  ")
         #self.line_edit_temperature = QLineEdit()
         #self.line_edit_temperature.setPlaceholderText('Enter Temperature')
         layout1.addWidget(self.line_edit_temperature, 4, 1, 1, 1)
 
         #Wind Chill(F)
-        self.wind_chill = QLabel("Wind Chill (20 to 80 F):")
+        self.wind_chill = QLabel("Wind Chill (F):")
         layout1.addWidget(self.wind_chill, 5, 0, 1, 1)
         ####
         self.line_edit_wind_chill = QtWidgets.QSpinBox(self.widget)
-        self.line_edit_wind_chill.setMaximum(80)
-        self.line_edit_wind_chill.setMinimum(20)
+        self.line_edit_wind_chill.setMaximum(150)
+        self.line_edit_wind_chill.setMinimum(-150)
         self.line_edit_wind_chill.setSuffix(" F  ")
         #self.line_edit_wind_chill = QLineEdit()
         #self.line_edit_wind_chill.setPlaceholderText('Enter Wind Chill')
         layout1.addWidget(self.line_edit_wind_chill, 5, 1, 1, 1)
 
         #Humidity%
-        self.humidity = QLabel("Humidity (0 to 100 %):")
+        self.humidity = QLabel("Humidity (%):")
         layout1.addWidget(self.humidity, 6, 0, 1, 1)
         ####
         self.line_edit_humidity = QtWidgets.QSpinBox(self.widget)
@@ -242,23 +242,23 @@ class main_window(QMainWindow):
         layout1.addWidget(self.line_edit_humidity, 6, 1, 1, 1)
 
         #Pressure(in)
-        self.pressure = QLabel("Pressure (28 to 31 in):")
+        self.pressure = QLabel("Pressure (in):")
         layout1.addWidget(self.pressure, 7, 0, 1, 1)
         ####
         self.line_edit_pressure = QtWidgets.QSpinBox(self.widget)
-        self.line_edit_pressure.setMaximum(31)
-        self.line_edit_pressure.setMinimum(28)
+        self.line_edit_pressure.setMaximum(150)
+        self.line_edit_pressure.setMinimum(0)
         self.line_edit_pressure.setSuffix(" in ")
         #self.line_edit_pressure = QLineEdit()
         #self.line_edit_pressure.setPlaceholderText('Enter Pressure')
         layout1.addWidget(self.line_edit_pressure, 7, 1, 1, 1)
 
         #Visibility(mi)
-        self.visibility = QLabel("Visibility (0 to 10 mi):")
+        self.visibility = QLabel("Visibility (mi):")
         layout1.addWidget(self.visibility, 8, 0, 1, 1)
         ####
         self.line_edit_visibility = QtWidgets.QSpinBox(self.widget)
-        self.line_edit_visibility.setMaximum(10)
+        self.line_edit_visibility.setMaximum(100)
         self.line_edit_visibility.setMinimum(0)
         self.line_edit_visibility.setSuffix(" mi ")
         #self.line_edit_visibility = QLineEdit()
@@ -266,11 +266,11 @@ class main_window(QMainWindow):
         layout1.addWidget(self.line_edit_visibility, 8, 1, 1, 1)
 
         #Wind Speed(mph)
-        self.wind_speed = QLabel("Wind Speed (0 to 20 mph):")
+        self.wind_speed = QLabel("Wind Speed (mph):")
         layout1.addWidget(self.wind_speed, 9, 0, 1, 1)
         ####
         self.line_edit_wind_speed = QtWidgets.QSpinBox(self.widget)
-        self.line_edit_wind_speed.setMaximum(20)
+        self.line_edit_wind_speed.setMaximum(100)
         self.line_edit_wind_speed.setMinimum(0)
         self.line_edit_wind_speed.setSuffix(" mph")
         #self.line_edit_wind_speed = QLineEdit()
@@ -278,14 +278,14 @@ class main_window(QMainWindow):
         layout1.addWidget(self.line_edit_wind_speed, 9, 1, 1, 1)
 
         #Precipitation(in)
-        self.precipitation = QLabel("Precipitation (0 to 0.20 in):")
+        self.precipitation = QLabel("Precipitation (in):")
         layout1.addWidget(self.precipitation, 10, 0, 1, 1)
         ####
         self.line_edit_precipitation = QtWidgets.QDoubleSpinBox(self.widget)
-        self.line_edit_precipitation.setDecimals(2)
-        self.line_edit_precipitation.setMaximum(0.2)
+        self.line_edit_precipitation.setDecimals(4)
+        self.line_edit_precipitation.setMaximum(100)
         self.line_edit_precipitation.setMinimum(0)
-        self.line_edit_precipitation.setSingleStep(0.01)
+        self.line_edit_precipitation.setSingleStep(0.0001)
         self.line_edit_precipitation.setSuffix(" in ")
         #self.line_edit_precipitation = QLineEdit()
         #self.line_edit_precipitation.setPlaceholderText('Enter Precipitation')
