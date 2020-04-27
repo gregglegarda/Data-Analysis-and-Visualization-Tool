@@ -54,10 +54,9 @@ class train():
 
         #======= PERFORM PCA ==========#
         #for KNN and Logistic Regression
-        if self.train_inputs[2] == "KNN" or self.train_inputs[2] == "Logistic Regression":
-
-            X = self.pca.fit_transform(X)
-            print("PCA PERFORMED")
+        #if self.train_inputs[2] == "KNN" or self.train_inputs[2] == "Logistic Regression":
+            #X = self.pca.fit_transform(X)
+            #print("PCA PERFORMED")
 
 
         # ======= SPLIT INTO TRAIN AND TEST ==========#
@@ -66,20 +65,20 @@ class train():
         model_algorithim = self.train_inputs[2]
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_split, random_state=0)
         #save train and test in a csv file
-        #Xdf = pd.DataFrame(data=X_test)
-        #ydf = pd.DataFrame(data=y_test)
-        #Xdf["target"] = (ydf)
-        #Xdf.columns = column_names
-        #print("Xdf\n", Xdf.head())
-        #print("ytest\n", ydf)
-        #Xdf.to_csv("X_test.csv")
+        Xdf = pd.DataFrame(data=X_test)
+        ydf = pd.DataFrame(data=y_test)
+        Xdf["target"] = (ydf)
+        Xdf.columns = column_names
+        print("Xdf\n", Xdf.head())
+        print("ytest\n", ydf)
+        Xdf.to_csv("X_test.csv")
 
         #======= PERFORM PCA ==========#
         #for KNN and Logistic Regression
-        #if self.train_inputs[2] == "KNN" or self.train_inputs[2] == "Logistic Regression":
-            #X_train = PCA(n_components=2).fit_transform(X_train)
-            #X_test = PCA(n_components=2).fit_transform(X_test)
-            #print("PCA PERFORMED")
+        if self.train_inputs[2] == "KNN" or self.train_inputs[2] == "Logistic Regression":
+            X_train = PCA(n_components=2).fit_transform(X_train)
+            X_test = PCA(n_components=2).fit_transform(X_test)
+            print("PCA PERFORMED")
 
         # ======= PERFORM STANDARD SCALER ==========#
         #for DT, RF, LR,
