@@ -22,6 +22,7 @@ import os
 import time
 import ntpath
 import qdarkstyle
+from sklearn.decomposition import PCA
 
 def runit(app):
 
@@ -36,6 +37,7 @@ class main_window(QMainWindow):
 
         #current model
         self.current_model =0
+        self.pca_model= PCA(n_components=2)
 
 
 
@@ -189,60 +191,104 @@ class main_window(QMainWindow):
 
 
         #Distance(mi)
-        self.distance = QLabel("Distance:")
+        self.distance = QLabel("Distance (0 to 0.010 mi):")
         layout1.addWidget(self.distance, 2, 0, 1, 1)
-        self.line_edit_distance = QLineEdit()
-        self.line_edit_distance.setPlaceholderText('Enter Distance')
+        ####
+        self.line_edit_distance = QtWidgets.QDoubleSpinBox(self.widget)
+        self.line_edit_distance.setDecimals(3)
+        self.line_edit_distance.setMaximum(0.01)
+        self.line_edit_distance.setMinimum(0)
+        self.line_edit_distance.setSingleStep(0.001)
+        self.line_edit_distance.setSuffix(" mi ")
+        #self.line_edit_distance = QLineEdit()
+        #self.line_edit_distance.setPlaceholderText('Enter Distance')
         layout1.addWidget(self.line_edit_distance, 2, 1, 1, 1)
 
 
         #Temperature
-        self.temperature = QLabel("Temperature:")
+        self.temperature = QLabel("Temperature (-25 to 125 F):")
         layout1.addWidget(self.temperature, 4, 0, 1, 1)
-        self.line_edit_temperature = QLineEdit()
-        self.line_edit_temperature.setPlaceholderText('Enter Temperature')
+        ####
+        self.line_edit_temperature = QtWidgets.QDoubleSpinBox(self.widget)
+        self.line_edit_temperature.setMaximum(125)
+        self.line_edit_temperature.setMinimum(-25)
+        self.line_edit_temperature.setSuffix(" F  ")
+        #self.line_edit_temperature = QLineEdit()
+        #self.line_edit_temperature.setPlaceholderText('Enter Temperature')
         layout1.addWidget(self.line_edit_temperature, 4, 1, 1, 1)
 
         #Wind Chill(F)
-        self.wind_chill = QLabel("Wind Chill:")
+        self.wind_chill = QLabel("Wind Chill (20 to 80 F):")
         layout1.addWidget(self.wind_chill, 5, 0, 1, 1)
-        self.line_edit_wind_chill = QLineEdit()
-        self.line_edit_wind_chill.setPlaceholderText('Enter Wind Chill')
+        ####
+        self.line_edit_wind_chill = QtWidgets.QSpinBox(self.widget)
+        self.line_edit_wind_chill.setMaximum(80)
+        self.line_edit_wind_chill.setMinimum(20)
+        self.line_edit_wind_chill.setSuffix(" F  ")
+        #self.line_edit_wind_chill = QLineEdit()
+        #self.line_edit_wind_chill.setPlaceholderText('Enter Wind Chill')
         layout1.addWidget(self.line_edit_wind_chill, 5, 1, 1, 1)
 
         #Humidity%
-        self.humidity = QLabel("Humidity:")
+        self.humidity = QLabel("Humidity (0 to 100 %):")
         layout1.addWidget(self.humidity, 6, 0, 1, 1)
-        self.line_edit_humidity = QLineEdit()
-        self.line_edit_humidity.setPlaceholderText('Enter Humidity')
+        ####
+        self.line_edit_humidity = QtWidgets.QSpinBox(self.widget)
+        self.line_edit_humidity.setMaximum(100)
+        self.line_edit_humidity.setMinimum(0)
+        self.line_edit_humidity.setSuffix(" %  ")
+        #self.line_edit_humidity = QLineEdit()
+        #self.line_edit_humidity.setPlaceholderText('Enter Humidity')
         layout1.addWidget(self.line_edit_humidity, 6, 1, 1, 1)
 
         #Pressure(in)
-        self.pressure = QLabel("Pressure:")
+        self.pressure = QLabel("Pressure (28 to 31 in):")
         layout1.addWidget(self.pressure, 7, 0, 1, 1)
-        self.line_edit_pressure = QLineEdit()
-        self.line_edit_pressure.setPlaceholderText('Enter Pressure')
+        ####
+        self.line_edit_pressure = QtWidgets.QSpinBox(self.widget)
+        self.line_edit_pressure.setMaximum(31)
+        self.line_edit_pressure.setMinimum(28)
+        self.line_edit_pressure.setSuffix(" in ")
+        #self.line_edit_pressure = QLineEdit()
+        #self.line_edit_pressure.setPlaceholderText('Enter Pressure')
         layout1.addWidget(self.line_edit_pressure, 7, 1, 1, 1)
 
         #Visibility(mi)
-        self.visibility = QLabel("Visibility:")
+        self.visibility = QLabel("Visibility (0 to 10 mi):")
         layout1.addWidget(self.visibility, 8, 0, 1, 1)
-        self.line_edit_visibility = QLineEdit()
-        self.line_edit_visibility.setPlaceholderText('Enter Visibility')
+        ####
+        self.line_edit_visibility = QtWidgets.QSpinBox(self.widget)
+        self.line_edit_visibility.setMaximum(10)
+        self.line_edit_visibility.setMinimum(0)
+        self.line_edit_visibility.setSuffix(" mi ")
+        #self.line_edit_visibility = QLineEdit()
+        #self.line_edit_visibility.setPlaceholderText('Enter Visibility')
         layout1.addWidget(self.line_edit_visibility, 8, 1, 1, 1)
 
         #Wind Speed(mph)
-        self.wind_speed = QLabel("Wind Speed:")
+        self.wind_speed = QLabel("Wind Speed (0 to 20 mph):")
         layout1.addWidget(self.wind_speed, 9, 0, 1, 1)
-        self.line_edit_wind_speed = QLineEdit()
-        self.line_edit_wind_speed.setPlaceholderText('Enter Wind Speed')
+        ####
+        self.line_edit_wind_speed = QtWidgets.QSpinBox(self.widget)
+        self.line_edit_wind_speed.setMaximum(20)
+        self.line_edit_wind_speed.setMinimum(0)
+        self.line_edit_wind_speed.setSuffix(" mph")
+        #self.line_edit_wind_speed = QLineEdit()
+        #self.line_edit_wind_speed.setPlaceholderText('Enter Wind Speed')
         layout1.addWidget(self.line_edit_wind_speed, 9, 1, 1, 1)
 
         #Precipitation(in)
-        self.precipitation = QLabel("Precipitation:")
+        self.precipitation = QLabel("Precipitation (0 to 0.20 in):")
         layout1.addWidget(self.precipitation, 10, 0, 1, 1)
-        self.line_edit_precipitation = QLineEdit()
-        self.line_edit_precipitation.setPlaceholderText('Enter Precipitation')
+        ####
+        self.line_edit_precipitation = QtWidgets.QDoubleSpinBox(self.widget)
+        self.line_edit_precipitation.setDecimals(2)
+        self.line_edit_precipitation.setMaximum(0.2)
+        self.line_edit_precipitation.setMinimum(0)
+        self.line_edit_precipitation.setSingleStep(0.01)
+        self.line_edit_precipitation.setSuffix(" in ")
+        #self.line_edit_precipitation = QLineEdit()
+        #self.line_edit_precipitation.setPlaceholderText('Enter Precipitation')
         layout1.addWidget(self.line_edit_precipitation, 10, 1, 1, 1)
 
         # Severity
@@ -312,9 +358,9 @@ class main_window(QMainWindow):
         self.tab2.setLayout(self.tab2_layout)
 
         # tab3
-        self.tabs.addTab(self.tab3, "Graphs")
-        self.tab3_layout = QVBoxLayout(self)
-        self.tab3.setLayout(self.tab3_layout)
+        #self.tabs.addTab(self.tab3, "Graphs")
+        #self.tab3_layout = QVBoxLayout(self)
+        #self.tab3.setLayout(self.tab3_layout)
 
         # Add tabs to widget
         layout2.addWidget(self.tabs)
@@ -355,10 +401,10 @@ class main_window(QMainWindow):
         self.tab2_layout.addWidget(self.scroll2)
 
         #GRAPHS
-        self.imageView3 = QLabel(self.widget)
-        self.pixmap3 = QPixmap("analysis.png")
-        self.imageView3.setPixmap(self.pixmap3)
-        self.tab3_layout.addWidget(self.imageView3)
+        #self.imageView3 = QLabel(self.widget)
+        #self.pixmap3 = QPixmap("analysis.png")
+        #self.imageView3.setPixmap(self.pixmap3)
+        #self.tab3_layout.addWidget(self.imageView3)
 
 
         # ==================# GROUP 3 WIDGETS (TABLE DATABASE) #==================#
@@ -545,7 +591,7 @@ class main_window(QMainWindow):
                 import train_model
             except:
                 print("import exception")
-            model1 = train_model.train(attributes, k_value, self.app)
+            model1 = train_model.train(attributes, k_value, self.app, self.pca_model)
             self.points = model1.get_map_data_points()
             self.current_model = model1.get_model()
 
@@ -615,9 +661,9 @@ class main_window(QMainWindow):
         self.scroll2.update()
 
         # update image in screen graphs
-        self.pixmap3 = QPixmap("temp_hist.png")
-        self.imageView3.setPixmap(self.pixmap3)
-        self.imageView3.update()
+        #self.pixmap3 = QPixmap("temp_hist.png")
+        #self.imageView3.setPixmap(self.pixmap3)
+        #self.imageView3.update()
 
 
 
@@ -657,7 +703,7 @@ class main_window(QMainWindow):
 
     #########-------------------------------------- PREDICT FUNCTION -------------------------------------- #########
     def on_Button_predict_clicked(self):
-
+        model_name = self.get_train_attributes()
         print("Button predict clicked")
         attributes = self.get_predict_attributes()
         print("button predcit", attributes)
@@ -681,7 +727,7 @@ class main_window(QMainWindow):
                 import predict
             except:
                 print("import exception")
-            predict1 = predict.predict(attributes, self.current_model)
+            predict1 = predict.predict(attributes, self.current_model, model_name[2], self.pca_model)
             predict_result1 = predict1.predict_inputs()
             self.severity_display.display(predict_result1)
 

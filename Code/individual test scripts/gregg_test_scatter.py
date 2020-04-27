@@ -90,7 +90,6 @@ Astronomical_Twilight
 
 
 
-'''
 
 
 
@@ -153,15 +152,45 @@ X = np.transpose(X)
 y = list(data["Severity"])
 
 # perform PCA before splitting,
-print("before PCA:",X.shape)
-X = PCA(n_components=2).fit_transform(X)
-print("PCA:",X.shape)
+#print("before PCA:",X.shape)
+#X = PCA(n_components=2).fit_transform(X)
+#print("PCA:",X.shape)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_split, random_state=0)
+
+Xdf = pd.DataFrame(data = X_test)
+ydf = pd.DataFrame(data = y_test)
+Xdf["target"]= (ydf)
+
+Xdf.columns = ["Distance(mi)", "Temperature(F)", "Wind_Chill(F)", "Humidity(%)", "Pressure(in)",
+                        "Visibility(mi)", "Wind_Speed(mph)", "Precipitation(in)",
+                        "Severity"]
+
+print("Xdf\n",Xdf.head())
+print("ytest\n",ydf)
+
+
+
+
+
+
+'''
+
+
+
 regressor = LogisticRegression(multi_class="multinomial")
 regressor.fit(X_train, y_train)  # training the algorithm
 y_pred = regressor.predict(X_test)
 predictions = regressor.predict_proba(X_test)[:,1]
+
+
+
+
+
+
+
+
+
 
 # Accuracy
 accuracy = accuracy_score(y_test, y_pred) * 100
@@ -212,9 +241,11 @@ plt.close()
 
 
 
-'''
+
 import numpy as np
 gs= 3
 gs = np.reshape(gs, (2,1))
 
 print(gs.shape)
+
+'''

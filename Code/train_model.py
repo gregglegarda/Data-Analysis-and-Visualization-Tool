@@ -13,10 +13,13 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 from sklearn.model_selection import \
     GridSearchCV
+from sklearn.neighbors import KNeighborsClassifier
+import os
+import pandas as pd
 
 
 class train():
-    def __init__(self, train_inputs, k_value,app ):
+    def __init__(self, train_inputs, k_value,app,pca ):
         super(train, self).__init__()
        #attributes
         self.app = app
@@ -25,6 +28,7 @@ class train():
         self.train_inputs = train_inputs
         self.model_algorithm = 0
         self.k_value = int(k_value)
+        self.pca=pca
 
         #functions
         self.data_processing() ### initial preprocessing included
@@ -48,11 +52,11 @@ class train():
         X = np.transpose(X)
         y = list(self.data["Severity"])
 
-
         #======= PERFORM PCA ==========#
         #for KNN and Logistic Regression
         if self.train_inputs[2] == "KNN" or self.train_inputs[2] == "Logistic Regression":
-            X = PCA(n_components=2).fit_transform(X)
+
+            X = self.pca.fit_transform(X)
             print("PCA PERFORMED")
 
 
@@ -61,7 +65,21 @@ class train():
         test_split = (100 - train_split)/100
         model_algorithim = self.train_inputs[2]
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_split, random_state=0)
+        #save train and test in a csv file
+        #Xdf = pd.DataFrame(data=X_test)
+        #ydf = pd.DataFrame(data=y_test)
+        #Xdf["target"] = (ydf)
+        #Xdf.columns = column_names
+        #print("Xdf\n", Xdf.head())
+        #print("ytest\n", ydf)
+        #Xdf.to_csv("X_test.csv")
 
+        #======= PERFORM PCA ==========#
+        #for KNN and Logistic Regression
+        #if self.train_inputs[2] == "KNN" or self.train_inputs[2] == "Logistic Regression":
+            #X_train = PCA(n_components=2).fit_transform(X_train)
+            #X_test = PCA(n_components=2).fit_transform(X_test)
+            #print("PCA PERFORMED")
 
         # ======= PERFORM STANDARD SCALER ==========#
         #for DT, RF, LR,
@@ -267,60 +285,80 @@ class train():
     ##========================  K_NEAREST NEIGHBORS  ===================###
     def knn_classifier(self, X_train_PCA, X_test_PCA, y_train_PCA, y_test_PCA):
 
-        ######### REGULAR KNN ###############
-        from sklearn.neighbors import KNeighborsClassifier
-        neigh = KNeighborsClassifier(n_neighbors=self.k_value,n_jobs=-1)
-        neigh.fit(X_train_PCA, y_train_PCA)
-        predictions = neigh.predict(X_test_PCA)
-        # Accuracy
-        accuracy = accuracy_score(y_test_PCA, predictions)*100
-        print('KNN Model Accuracy:', round(accuracy, 2), '%.')
-        self.accuracy = round(accuracy, 2)
-        self.model_algorithm = neigh
-        print("train model is:", neigh)
+        #perform regular only when its not blank
+        #if k input is not blank, do both grid and regular
+        print("K-value entered in the KNN prompt is:\n",self.k_value)
+        print("type is:\n",type(self.k_value))
+        if self.k_value != 0:
+            ######### REGULAR KNN ###############
+            neigh = KNeighborsClassifier(n_neighbors=self.k_value)
+            neigh.fit(X_train_PCA, y_train_PCA)
+            predictions = neigh.predict(X_test_PCA)
+
+            # Accuracy
+            accuracy = accuracy_score(y_test_PCA, predictions) * 100
+            print('KNN Model Accuracy:', round(accuracy, 2), '%.')
+            self.accuracy = round(accuracy, 2)
+            self.model_algorithm = neigh
+            print("train model is:", neigh)
+            k_vert_line = neigh.n_neighbors
+            label_knn = "KNN WITH CHOSEN K=" + str(k_vert_line)
+
+            k_range = range(1, 50, 4)
+            scores = []
+            for k in k_range:
+                knn = KNeighborsClassifier(n_neighbors=k)
+                knn.fit(X_train_PCA, y_train_PCA)
+                y_pred = knn.predict(X_test_PCA)
+                # scores.append(accuracy_score(y_test_PCA, y_pred))
+                scores.append(np.mean(y_pred != y_test_PCA))
+                print("KNN OPTIMAL:\n:", k, k_range)
 
 
+        else:
+            ########## GRID SEARCH ################
+            k_range = range(1, 50, 4)
+            print("k range:\n",k_range)
+            knn_gs = KNeighborsClassifier()
+            parameter_grid = {'metric': ['minkowski', 'manhattan', 'euclidean'],
+                              'leaf_size': [1, 2, 3, 4, 5],
+                              'weights': ['uniform', 'distance'],
+                              'n_neighbors': k_range}
+            CV_knn = GridSearchCV(knn_gs, param_grid=parameter_grid, cv=10)
+            grid_result = CV_knn.fit(X_train_PCA, y_train_PCA)
+            best_params = grid_result.best_params_
+            print(grid_result.best_params_)
+            best_knn = KNeighborsClassifier(n_neighbors=best_params['n_neighbors'], n_jobs=-1,
+                                            leaf_size=best_params['leaf_size'],
+                                            metric=best_params['metric'], weights=best_params['weights'])
+            best_knn.fit(X_train_PCA, y_train_PCA)
+            # https://towardsdatascience.com/random-forest-in-python-24d0893d51c0
+            predictions_gs = best_knn.predict(X_test_PCA)  # Calculate the absolute errors
 
-        ########## GRID SEARCH ################
-        k_range = range(1, 50, 4)
-        print("k range:\n",k_range)
-        parameter_grid = {'metric': ['minkowski', 'manhattan', 'euclidean'],
-                          'leaf_size': [1, 2, 3, 4, 5],
-                          'weights': ['uniform', 'distance'],
-                          'n_neighbors': k_range}
-        CV_knn = GridSearchCV(neigh, param_grid=parameter_grid, cv=10)
-        grid_result = CV_knn.fit(X_train_PCA, y_train_PCA)
-        best_params = grid_result.best_params_
-        print(grid_result.best_params_)
-        best_knn = KNeighborsClassifier(n_neighbors=best_params['n_neighbors'], n_jobs=-1,
-                                        leaf_size=best_params['leaf_size'],
-                                        metric=best_params['metric'], weights=best_params['weights'])
-        best_knn.fit(X_train_PCA, y_train_PCA)
-        # https://towardsdatascience.com/random-forest-in-python-24d0893d51c0
-        predictions_gs = best_knn.predict(X_test_PCA)  # Calculate the absolute errors
-        # Accuracy
-        accuracy_gs = accuracy_score(y_test_PCA, predictions_gs) * 100
-        print('GS KNN Model Accuracy:', round(accuracy_gs, 2), '%.')
-        self.accuracy = round(accuracy_gs, 2)
-        self.model_algorithm = best_knn
-        print("GS train model is:", best_knn)
+            # Accuracy
+            accuracy_gs = accuracy_score(y_test_PCA, predictions_gs) * 100
+            print('GS KNN Model Accuracy:', round(accuracy_gs, 2), '%.')
+            self.accuracy = round(accuracy_gs, 2)
+            self.model_algorithm = best_knn
+            print("GS train model is:", best_knn)
 
-        ##PRINT GS MODEL PARAMETERS
-        gs_nn = best_knn.n_neighbors
-        print ("GS MODEL N_NEIGHBORS:\n",gs_nn)
+            ##PRINT GS MODEL PARAMETERS
+            gs_knn = best_knn.n_neighbors
+            k_vert_line = gs_knn
+            print("GS MODEL N_NEIGHBORS:\n", gs_knn)
+            label_knn = "KNN GRID SEARCH K="+str(gs_knn)
 
-
-        ####================create a graph for KNN curve to find optimal elbow
-        # from 1 to length of training samples (usually 70%), step size is divided by 100
-        #k_range = range(1, len(X_train_PCA)-1, int(int(self.train_inputs[0])/100))
-        scores = []
-        for k in k_range:
-            knn = KNeighborsClassifier(n_neighbors=k)
-            knn.fit(X_train_PCA, y_train_PCA)
-            y_pred = knn.predict(X_test_PCA)
-            #scores.append(accuracy_score(y_test_PCA, y_pred))
-            scores.append(np.mean(y_pred != y_test_PCA))
-            print("KNN OPTIMAL:\n:",k, k_range)
+            ####================create a graph for KNN curve to find optimal elbow
+            # from 1 to length of training samples (usually 70%), step size is divided by 100
+            #k_range = range(1, len(X_train_PCA)-1, int(int(self.train_inputs[0])/100))
+            scores = []
+            for k in k_range:
+                knn = KNeighborsClassifier(n_neighbors=k, metric=best_knn.metric, leaf_size=best_knn.leaf_size, weights=best_knn.weights)
+                knn.fit(X_train_PCA, y_train_PCA)
+                y_pred = knn.predict(X_test_PCA)
+                #scores.append(accuracy_score(y_test_PCA, y_pred))
+                scores.append(np.mean(y_pred != y_test_PCA))
+                print("KNN OPTIMAL:\n:",k, k_range)
 
 
         #PLOT THE MODEL
@@ -328,8 +366,8 @@ class train():
         plt.figure()
         plt.clf()
         plt.plot(k_range, scores, '-', label='Elbow Curve')
-        plt.axvline(x=gs_nn, label='KNN Grid Search', color='red')
-        title_obj = plt.title('KNN')
+        plt.axvline(x=k_vert_line, color='red')
+        title_obj = plt.title(label_knn)
         plt.setp(title_obj, color='w')
         x_label = plt.xlabel('Value of K for KNN')
         y_label = plt.ylabel('Error Rate')

@@ -40,10 +40,10 @@ class pop_up_entry(QDialog):
 
 
     def makeform(self):
-        self.formGroupBox = QGroupBox()
+        self.formGroupBox = QGroupBox("Performs Grid Search for Empty Submit")
         layout = QFormLayout()
         self.line_edit_K = QLineEdit()
-        self.line_edit_K.setPlaceholderText('Value')
+        self.line_edit_K.setPlaceholderText('Enter K-Value')
 
         self.label_K = QLabel("K = ")
 
@@ -65,8 +65,10 @@ class pop_up_entry(QDialog):
             msg.exec_()
             self.close()
         else:
-            msg.setText('Empty Field')
+            self.submitted = True
+            msg.setText('Training Model with Grid Search')
             msg.exec_()
+            self.close()
 
     def get_status(self):
         return self.k, self.submitted
