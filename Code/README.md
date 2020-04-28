@@ -8,12 +8,9 @@ Getting Started:
 5. Run main.py (this runs all the other scripts as well)
 
 Using the application:
-1. Training
-  a. The first step in using the app is choose the number of samples, select a train/test ratio, and train the models.
-2. Predicting
-  a. The second step is to predict severity level based on your chosen feature inputs.
-3. Tabs
-  a. You can explore the app by clicking on the various tabs within the GUI. You can view an image of the current model, view the loadtime of the map, and view correlation plots, histograms, and scatterplots of the data.
+1. Training: The first step in using the app is choose the number of samples, select a train/test ratio, and train the models.
+2. Predicting: The second step is to predict severity level based on your chosen feature inputs.
+3. Tabs: You can explore the app by clicking on the various tabs within the GUI. You can view an image of the current model, view the loadtime of the map, and view correlation plots, histograms, and scatterplots of the data.
 
 
 Script Descriptions:
