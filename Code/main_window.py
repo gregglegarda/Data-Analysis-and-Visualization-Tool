@@ -358,9 +358,9 @@ class main_window(QMainWindow):
         self.tab2.setLayout(self.tab2_layout)
 
         # tab3
-        #self.tabs.addTab(self.tab3, "Graphs")
-        #self.tab3_layout = QVBoxLayout(self)
-        #self.tab3.setLayout(self.tab3_layout)
+        self.tabs.addTab(self.tab3, "Test Set")
+        self.tab3_layout = QVBoxLayout(self)
+        self.tab3.setLayout(self.tab3_layout)
 
         # Add tabs to widget
         layout2.addWidget(self.tabs)
@@ -400,11 +400,21 @@ class main_window(QMainWindow):
         self.scroll2.widgetResizable()
         self.tab2_layout.addWidget(self.scroll2)
 
-        #GRAPHS
-        #self.imageView3 = QLabel(self.widget)
-        #self.pixmap3 = QPixmap("analysis.png")
-        #self.imageView3.setPixmap(self.pixmap3)
-        #self.tab3_layout.addWidget(self.imageView3)
+        #TEST SET
+        filename_test_set = os.path.expanduser(os.path.abspath(os.path.join(os.path.dirname(__file__), "X_test.csv")))
+        self.items_test_set = []
+        self.filename_test_set = filename_test_set
+        self.model_test_set = QtGui.QStandardItemModel(self.widget)
+        self.model_test_set.setHorizontalHeaderLabels(
+            ["Distance(mi)", "Temperature(F)", "Wind_Chill(F)", "Humidity(%)", "Pressure(in)",
+             "Visibility(mi)", "Wind_Speed(mph)", "Precipitation(in)", "Severity", "Prediction"])
+        self.tableView_test_set = QTableView(self.widget)
+        # self.tableView.setStyleSheet("QTableView{ background-color: rgb(45, 45, 45);  }")  # cell color
+        self.tableView_test_set.horizontalHeader().setStretchLastSection(True)
+        self.tableView_test_set.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.tableView_test_set.setModel(self.model_test_set)
+        self.tab3_layout.addWidget(self.tableView_test_set)
+
 
 
         # ==================# GROUP 3 WIDGETS (TABLE DATABASE) #==================#
@@ -472,6 +482,7 @@ class main_window(QMainWindow):
         #self.loadCsv(self.fileName)
         #print("Statistical summary button clicked")
 
+
     def loadCsv(self, fileName):
         while (self.model.rowCount() > 0):
             self.model.removeRow(0)
@@ -494,7 +505,23 @@ class main_window(QMainWindow):
                  'Wind Speed(mph)                   ', 'Precipitation(in)'])
             print("No Database")
 
+    # =============== VIEW TEST SET FUNCTION ====================#
 
+    def loadCsv_test_set(self, fileName):
+        while (self.model_test_set.rowCount() > 0):
+            self.model_test_set.removeRow(0)
+        try:
+            with open(fileName, "r") as fileInput:
+                csvreader = csv.reader(fileInput)
+                for row in csvreader:
+                    print("row is", row)
+                    self.items_test_set = [
+                        QtGui.QStandardItem(field)
+                        for field in row
+                    ]
+                    self.model_test_set.appendRow(self.items_test_set)
+        except:
+            print("No Database on test set")
 
     #====================== GET ATTRIBUTES  FUNCTION=========================#
 
@@ -678,6 +705,13 @@ class main_window(QMainWindow):
         self.items = []
         self.fileName = filename
         self.loadCsv(self.fileName)
+
+        # update test set table
+        filename_test_set = os.path.expanduser(os.path.abspath(os.path.join(os.path.dirname(__file__), "X_test.csv")))
+        self.items_test_set = []
+        self.fileName_test_set = filename_test_set
+        self.loadCsv_test_set(self.fileName_test_set)
+
 
         #update lcd train (accuracy
         #self.accuracy_display.setStyleSheet("QLCDNumber { color: black ; background-color: #1f77b4 }")

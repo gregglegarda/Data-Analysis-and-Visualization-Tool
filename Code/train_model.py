@@ -70,9 +70,9 @@ class train():
         ydf = pd.DataFrame(data=y_test)
         self.Xy_test_df["target"] = (ydf)
         self.Xy_test_df.columns = column_names
-        #print("Xdf\n", self.Xy_test_df.head())
-        #print("ytest\n", ydf)
-        #self.Xy_test_df.to_csv("X_test.csv")
+        print("Xdf\n", self.Xy_test_df.head())
+        print("ytest\n", ydf)
+
 
         #======= PERFORM PCA ==========#
         #for KNN and Logistic Regression
@@ -181,7 +181,7 @@ class train():
 
         #####save the predictions
         self.Xy_test_df["prediction"] = (y_pred_grid)
-        self.Xy_test_df.to_csv("X_test.csv")
+        self.Xy_test_df.to_csv("X_test.csv",index=False, header=False)
 
     ##========================  RANDOM FOREST ===================###
     def random_forest(self, X_train, X_test, y_train, y_test):
@@ -242,7 +242,7 @@ class train():
 
         #####save the predictions
         self.Xy_test_df["prediction"] = (predictions_gs)
-        self.Xy_test_df.to_csv("X_test.csv")
+        self.Xy_test_df.to_csv("X_test.csv",index=False, header=False)
 
     ##========================  LOGISTIC REGRESSION ===================###
     def logistic_regression(self, X_train, X_test, y_train, y_test):
@@ -298,7 +298,7 @@ class train():
 
         #####save the predictions
         self.Xy_test_df["prediction"] = (predictions)
-        self.Xy_test_df.to_csv("X_test.csv")
+        self.Xy_test_df.to_csv("X_test.csv",index=False, header=False)
 
     ##========================  K_NEAREST NEIGHBORS  ===================###
     def knn_classifier(self, X_train_PCA, X_test_PCA, y_train_PCA, y_test_PCA):
@@ -334,7 +334,7 @@ class train():
 
             #####save the predictions
             self.Xy_test_df["prediction"] = (predictions)
-            self.Xy_test_df.to_csv("X_test.csv")
+            self.Xy_test_df.to_csv("X_test.csv",index=False, header=False)
 
         else:
             ########## GRID SEARCH ################
@@ -371,7 +371,7 @@ class train():
 
             #####save the predictions
             self.Xy_test_df["prediction"] = (predictions_gs)
-            self.Xy_test_df.to_csv("X_test.csv")
+            self.Xy_test_df.to_csv("X_test.csv",index=False, header=False)
 
             ####================create a graph for KNN curve to find optimal elbow
             # from 1 to length of training samples (usually 70%), step size is divided by 100
@@ -448,7 +448,7 @@ class train():
 
         #####save the predictions
         self.Xy_test_df["prediction"] = (predictions_gc)
-        self.Xy_test_df.to_csv("X_test.csv")
+        self.Xy_test_df.to_csv("X_test.csv",index=False, header=False)
 
         ####PLOT THE MODEL
         plt.figure()
@@ -476,7 +476,7 @@ class train():
 
         #####save the predictions
         self.Xy_test_df["prediction"] = (predictions)
-        self.Xy_test_df.to_csv("X_test.csv")
+        self.Xy_test_df.to_csv("X_test.csv",index=False, header=False)
 
         ####PLOT THE MODEL
         plt.figure()
