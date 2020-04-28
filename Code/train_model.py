@@ -77,9 +77,12 @@ class train():
         #======= PERFORM PCA ==========#
         #for KNN and Logistic Regression
         if self.train_inputs[2] == "KNN" or self.train_inputs[2] == "Logistic Regression":
-            X_train = PCA(n_components=2).fit_transform(X_train)
-            X_test = PCA(n_components=2).fit_transform(X_test)
+            X_train = self.pca.fit_transform(X_train)
+            X_test = self.pca.fit_transform(X_test)
             print("PCA PERFORMED")
+            print("PCA model explained variance\n", self.pca.explained_variance_)
+            print("PCA model explained variance ratio \n", self.pca.explained_variance_ratio_)
+            print("PCA model explained variance ratio cumsum\n", self.pca.explained_variance_ratio_.cumsum())
 
         # ======= PERFORM STANDARD SCALER ==========#
         #for DT, RF, LR,
@@ -99,11 +102,11 @@ class train():
         elif self.train_inputs[2] == "Logistic Regression":
             self.logistic_regression(X_train_std, X_test_std, y_train, y_test)
         elif self.train_inputs[2] == "KNN":
-            self.knn_classifier(X_train, X_test, y_train, y_test)
+            self.knn_classifier(X_train_std, X_test_std, y_train, y_test)
         elif self.train_inputs[2] == "SVM":
-            self.svm_classifier(X_train, X_test, y_train, y_test)
+            self.svm_classifier(X_train_std, X_test_std, y_train, y_test)
         elif self.train_inputs[2] == "Naive Bayes":
-            self.naive_bayes(X_train, X_test, y_train, y_test)
+            self.naive_bayes(X_train_std, X_test_std, y_train, y_test)
 
 
 ###================================ MACHINE LEARNING FUNCTIONS =====================================###
@@ -228,11 +231,13 @@ class train():
                          "Visibility(mi)", "Wind_Speed(mph)", "Precipitation(in)"]
         plt.style.use('dark_background')
         mpl.rcParams['text.color'] = 'black'
-        fig, ax = plt.subplots(figsize=(8, 6), facecolor='k')
+        fig, ax = plt.subplots(figsize=(8, 6))#, facecolor='k')
         fig.suptitle('SINGLE TREE FROM RANDOM FOREST', fontsize=12, color='w')
         plot_tree(tree, rotate=True, ax=ax, feature_names= feature_names, max_depth= best_params['max_depth'] )
-        plt.savefig('model_image.png',facecolor='#1a1a1a')#,transparent=True,)
+        plt.savefig('model_image.png',facecolor='#1a1a1a',transparent=True)
         #plt.savefig('model_image.png',facecolor='#1a1a1a',transparent=True,)
+        plt.style.use('default')
+        plt.clf()
         plt.close()
 
         #####save the predictions

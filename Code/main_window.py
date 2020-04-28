@@ -564,18 +564,18 @@ class main_window(QMainWindow):
     #########-------------------------------------- TRAIN FUNCTION -------------------------------------- #########
     def on_Button_train_clicked(self):
         print("Button train clicked")
-        attributes = self.get_train_attributes()
+        attributes_train = self.get_train_attributes()
         submit_status = True
         k_value = 0
 
 
-        if attributes[2] == "KNN":
+        if attributes_train[2] == "KNN":
             # pop up screen
             try:
                 import pop_up_entry
             except:
                 print("import error")
-            pop_up1 = pop_up_entry.pop_up_entry(self.app, attributes[2])
+            pop_up1 = pop_up_entry.pop_up_entry(self.app, attributes_train[2])
             k_value, submit_status = pop_up1.get_status()
             print(k_value)
             print(submit_status)
@@ -591,13 +591,13 @@ class main_window(QMainWindow):
                 import train_model
             except:
                 print("import exception")
-            model1 = train_model.train(attributes, k_value, self.app, self.pca_model)
+            model1 = train_model.train(attributes_train, k_value, self.app, self.pca_model)
             self.points = model1.get_map_data_points()
             self.current_model = model1.get_model()
 
             #update screen
             self.accuracy_display.display(model1.get_model_accuracy())  # set the lcd accuract digit
-            self.update_screen_widgets(attributes)
+            self.update_screen_widgets(attributes_train)
 
             #make model ready message
             self.app.processEvents()
@@ -610,7 +610,7 @@ class main_window(QMainWindow):
             except:
                 print("import exception")
 
-            numsamples = int(attributes[0])
+            numsamples = int(attributes_train[0])
             loadtime1 = map_load_time.map_load_time()
             timetoloadmap = loadtime1.calculate_load_time(numsamples)
 
@@ -642,7 +642,7 @@ class main_window(QMainWindow):
 
 
 
-    def update_screen_widgets(self, attributes):
+    def update_screen_widgets(self, attributes_train):
         # update image in screen correlation
         self.pixmap0 = QPixmap("correlation_matrix.png")
         self.imageView0.setPixmap(self.pixmap0)
@@ -689,7 +689,7 @@ class main_window(QMainWindow):
 
 
         #status bar update
-        self.status_display_model.setText(attributes[2].upper())
+        self.status_display_model.setText(attributes_train[2].upper())
         self.status_display_model.setStyleSheet("QLabel { color: green ; font-weight: bold}")
         self.status_display_model.update()
         self.status_display_map.setText("WAIT...")
@@ -727,7 +727,7 @@ class main_window(QMainWindow):
                 import predict
             except:
                 print("import exception")
-            predict1 = predict.predict(attributes, self.current_model, model_name[2], self.pca_model)
+            predict1 = predict.predict(attributes, self.current_model, self.status_display_model.text(), model_name[2], self.pca_model)
             predict_result1 = predict1.predict_inputs()
             self.severity_display.display(predict_result1)
 
